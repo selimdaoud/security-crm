@@ -1,3 +1,4 @@
+import hashlib
 import json
 import sys
 import tempfile
@@ -233,6 +234,11 @@ class OracleKevTests(unittest.TestCase):
                 (publish_dir / "report-oracle-kev.html").read_text(),
                 rendered,
             )
+            self.assertEqual(
+                (publish_dir / "report-oracle-kev.html.cksum").read_text(),
+                f"{hashlib.sha256(rendered.encode('utf-8')).hexdigest()}  "
+                "report-oracle-kev.html\n",
+            )
 
     def test_publish_dir_overwrites_existing_html(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -241,8 +247,10 @@ class OracleKevTests(unittest.TestCase):
             publish_dir = root / "published"
             publish_dir.mkdir()
             destination = publish_dir / "report-oracle-kev.html"
+            checksum_destination = publish_dir / "report-oracle-kev.html.cksum"
             source.write_text("new report", encoding="utf-8")
             destination.write_text("old report", encoding="utf-8")
+            checksum_destination.write_text("old checksum", encoding="ascii")
 
             published = oracle_kev._publish_html_report(
                 source,
@@ -252,7 +260,15 @@ class OracleKevTests(unittest.TestCase):
 
             self.assertEqual(published, destination)
             self.assertEqual(destination.read_text(encoding="utf-8"), "new report")
-            self.assertEqual(list(publish_dir.iterdir()), [destination])
+            self.assertEqual(
+                checksum_destination.read_text(encoding="ascii"),
+                f"{hashlib.sha256(b'new report').hexdigest()}  "
+                "report-oracle-kev.html\n",
+            )
+            self.assertCountEqual(
+                publish_dir.iterdir(),
+                [destination, checksum_destination],
+            )
 
     def test_parser_accepts_short_publish_directory_flag(self):
         args = oracle_kev._parser().parse_args(["-d", "published"])

@@ -47,14 +47,25 @@ python3 oracle_kev_report.py --output-dir var/output
 ```
 
 To also copy the HTML to a stable publication directory, use `-d`. The command
-creates the directory when necessary and atomically replaces an existing
-`report-oracle-kev.html`:
+creates the directory when necessary and replaces the stable HTML and checksum
+files:
 
 ```bash
 python3 oracle_kev_report.py \
   --output-dir var/output \
   -d /path/to/kev-reports
 ```
+
+The published files are:
+
+```text
+/path/to/kev-reports/report-oracle-kev.html
+/path/to/kev-reports/report-oracle-kev.html.cksum
+```
+
+The `.cksum` file contains the SHA-256 digest followed by two spaces and the
+HTML filename. Consumers can use it to detect a new report or verify the HTML
+before processing its metadata.
 
 Each execution creates a new timestamped bundle:
 

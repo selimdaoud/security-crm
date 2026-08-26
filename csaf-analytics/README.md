@@ -79,8 +79,8 @@ python3 oracle_kev_report.py --output-dir var/output
 ```
 
 Use `-d DIR` (or `--publish-dir DIR`) to additionally publish the generated
-HTML under a stable filename. The directory is created when necessary and an
-existing file with the same name is replaced:
+HTML and its SHA-256 checksum under stable filenames. The directory is created
+when necessary and existing files with the same names are replaced:
 
 ```bash
 python3 oracle_kev_report.py \
@@ -88,8 +88,18 @@ python3 oracle_kev_report.py \
   -d /path/to/kev-reports
 ```
 
-This writes `/path/to/kev-reports/report-oracle-kev.html` without changing the
-timestamped bundle.
+This writes the following files without changing the timestamped bundle:
+
+```text
+/path/to/kev-reports/report-oracle-kev.html
+/path/to/kev-reports/report-oracle-kev.html.cksum
+```
+
+The checksum file uses the conventional format:
+
+```text
+<sha256-hex>  report-oracle-kev.html
+```
 
 An installed source tree also provides:
 

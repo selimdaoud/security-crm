@@ -34,6 +34,7 @@ NVD_BATCH_SIZE = 100
 REPORT_SCHEMA_VERSION = 1
 USER_AGENT = "oracle-kev-report/1.0"
 HTML_REPORT_FILENAME = "report-oracle-kev.html"
+HTML_CHECKSUM_FILENAME = f"{HTML_REPORT_FILENAME}.cksum"
 _CVE_PATTERN = re.compile(r"CVE-\d{4}-\d{4,}", re.IGNORECASE)
 _PRODUCT_ID_PATTERN = re.compile(r"\s*\[(\d+)]\s*$")
 
@@ -591,23 +592,43 @@ def _publish_html_report(
     publish_dir: Path,
     progress: ProgressCallback | None,
 ) -> Path:
-    """Atomically publish the generated HTML under a stable filename."""
+    """Publish stable HTML and SHA-256 checksum files."""
     destination_dir = publish_dir.expanduser()
     destination_dir.mkdir(parents=True, exist_ok=True)
     destination = destination_dir / HTML_REPORT_FILENAME
-    if source.resolve() == destination.resolve():
-        _emit(progress, "INFO", f"Oracle KEV HTML already published: {destination}")
-        return destination
-
-    temporary = destination_dir / f".{HTML_REPORT_FILENAME}.tmp-{uuid.uuid4().hex}"
+    checksum_destination = destination_dir / HTML_CHECKSUM_FILENAME
+    token = uuid.uuid4().hex
+    temporary = destination_dir / f".{HTML_REPORT_FILENAME}.tmp-{token}"
+    checksum_temporary = destination_dir / f".{HTML_CHECKSUM_FILENAME}.tmp-{token}"
+    source_is_destination = source.resolve() == destination.resolve()
     try:
-        shutil.copyfile(source, temporary)
-        os.replace(temporary, destination)
+        if not source_is_destination:
+            shutil.copyfile(source, temporary)
+        checksum_temporary.write_text(
+            f"{_sha256_file(source)}  {HTML_REPORT_FILENAME}\n",
+            encoding="ascii",
+        )
+        if not source_is_destination:
+            os.replace(temporary, destination)
+        os.replace(checksum_temporary, checksum_destination)
     except Exception:
         temporary.unlink(missing_ok=True)
+        checksum_temporary.unlink(missing_ok=True)
         raise
-    _emit(progress, "INFO", f"Oracle KEV HTML published: {destination}")
+    _emit(
+        progress,
+        "INFO",
+        f"Oracle KEV HTML published: {destination}; checksum: {checksum_destination}",
+    )
     return destination
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        while chunk := stream.read(1024 * 1024):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _console_progress(level: str, message: str) -> None:
@@ -637,8 +658,8 @@ def _parser() -> argparse.ArgumentParser:
         "--publish-dir",
         type=Path,
         help=(
-            "Copy report-oracle-kev.html to this directory, overwriting "
-            "an existing copy"
+            "Publish report-oracle-kev.html and its SHA-256 .cksum file to "
+            "this directory, overwriting existing copies"
         ),
     )
     parser.add_argument(

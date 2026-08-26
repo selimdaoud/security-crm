@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "csaf-analytics"
+version = "0.1.0"
+description = "Generate enriched CSAF findings, report data, and standalone reports"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+csaf-analytics = "csaf_analytics.cli:main"
+oracle-kev-report = "csaf_analytics.oracle_kev:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

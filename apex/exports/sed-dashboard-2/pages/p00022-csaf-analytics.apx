@@ -1,0 +1,53 @@
+page 22 (
+    name: CSAF Analytics
+    alias: CSAF-ANALYTICS
+    title: CSAF Analytics
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/modal-dialog
+        templateOptions: #DEFAULT#
+    }
+    dialog {
+        width: 1500
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region csaf-analysis (
+        name: Latest Advisory AI Analysis
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <iframe
+                    src="#APP_FILES#report.html"
+                    style="
+                        width:100%;
+                    height: calc(100vh - 100px);
+                    border: none;
+                        min-height:700px;
+                        border:0;
+                        display:block;
+                    ">
+                </iframe>
+                ```
+        }
+        layout {
+            sequence: 10
+            slot: contentBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+)

@@ -1,0 +1,1365 @@
+page 1 (
+    name: Home Dashboard
+    alias: HOME
+    title: SED Dashboard
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    css {
+        fileUrls: #APP_FILES#dashboard#MIN#.css
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region customer-health (
+        name: Customer Health
+        type: chart
+        layout {
+            sequence: 50
+            slot: body
+            startNewRow: false
+            column: 8
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+        chart {
+            type: pie
+        }
+        title {
+            title: Customer Health
+        }
+        chartLayout {
+            height: 200
+        }
+        value {
+            format: decimal
+            decimalPlaces: 0
+            formatScaling: none
+        }
+
+        series customer-health (
+            name: Customer Health
+            execution {
+                sequence: 10
+            }
+            source {
+                type: sqlQuery
+                sqlQuery:
+                    ```sql
+                    with health_counts as (
+                        select
+                            nvl(h.lookup_code, 'NOT_ASSESSED') as health_code,
+                            count(*)                           as customer_count
+                        from customers c
+                        join customer_statuses cs
+                          on cs.lookup_id = c.status_id
+                        left join health_statuses h
+                          on h.lookup_id = c.current_health_status_id
+                        where cs.lookup_code = 'ACTIVE'
+                        group by nvl(h.lookup_code, 'NOT_ASSESSED')
+                    ),
+                    health_percentages as (
+                        select
+                            health_code,
+                            customer_count,
+                            round(
+                                100 * customer_count
+                                / nullif(sum(customer_count) over (), 0)
+                            ) as percentage
+                        from health_counts
+                    )
+                    select
+                        case health_code
+                            when 'GOOD'            then 'Healthy'
+                            when 'AT_RISK'         then 'At Risk'
+                            when 'NEEDS_ATTENTION' then 'Needs Attention'
+                            else                        'Not Assessed'
+                        end ||
+                        ' (' || to_char(percentage, 'FM990') || '%)' as label,
+                    
+                        customer_count as value,
+                    
+                        case health_code
+                            when 'GOOD'            then 'Healthy'
+                            when 'AT_RISK'         then 'At Risk'
+                            when 'NEEDS_ATTENTION' then 'Needs Attention'
+                            else                        'Not Assessed'
+                        end ||
+                        ': ' || customer_count ||
+                        case
+                            when customer_count = 1 then ' customer'
+                            else ' customers'
+                        end ||
+                        ' (' || to_char(percentage, 'FM990') || '%)' as tooltip,
+                    
+                        case health_code
+                            when 'GOOD'            then '#16a34a'
+                            when 'AT_RISK'         then '#f59e0b'
+                            when 'NEEDS_ATTENTION' then '#dc2626'
+                            else                        '#94a3b8'
+                        end as slice_color
+                    
+                    from health_percentages
+                    
+                    order by
+                        case health_code
+                            when 'GOOD'            then 1
+                            when 'AT_RISK'         then 2
+                            when 'NEEDS_ATTENTION' then 3
+                            else                        4
+                        end
+                    ```
+            }
+            columnMapping {
+                label: LABEL
+                value: VALUE
+                customTooltip: TOOLTIP
+            }
+            appearance {
+                color: &SLICE_COLOR.
+            }
+            label {
+                show: true
+            }
+        )
+
+    )
+
+    region new (
+        name: Total Customers:
+        type: dynamicContent
+        source {
+            plsqlFunctionBody:
+                ```plsql
+                declare
+                  l_total   number;
+                  l_tier_1  number;
+                  l_tier_2  number;
+                  l_tier_3  number;
+                begin
+                  select count(*)
+                    into l_total
+                    from customers c
+                    join customer_statuses s on s.lookup_id = c.status_id
+                   where s.lookup_code = 'ACTIVE';
+                
+                  select count(*)
+                    into l_tier_1
+                    from customers c
+                    join customer_tiers t on t.lookup_id = c.tier_id
+                    join customer_statuses s on s.lookup_id = c.status_id
+                   where t.lookup_code = 'TIER_1'
+                     and s.lookup_code = 'ACTIVE';
+                
+                  select count(*)
+                    into l_tier_2
+                    from customers c
+                    join customer_tiers t on t.lookup_id = c.tier_id
+                    join customer_statuses s on s.lookup_id = c.status_id
+                   where t.lookup_code = 'TIER_2'
+                     and s.lookup_code = 'ACTIVE';
+                
+                  select count(*)
+                    into l_tier_3
+                    from customers c
+                    join customer_tiers t on t.lookup_id = c.tier_id
+                    join customer_statuses s on s.lookup_id = c.status_id
+                   where t.lookup_code = 'TIER_3'
+                     and s.lookup_code = 'ACTIVE';
+                
+                  htp.p('
+                    <div class="sed-metric-card">
+                      <div class="sed-metric-icon">
+                        <span class="fa fa-users" aria-hidden="true"></span>
+                      </div>
+                
+                      <div class="sed-metric-body">
+                        <div class="sed-metric-title">Total Customers</div>
+                        <div class="sed-metric-value">' || l_total || '</div>
+                        <div class="sed-metric-line"></div>
+                
+                        <div class="sed-tier-row">
+                          <span><strong class="tier-blue">Tier 1:</strong> ' || l_tier_1 || '</span>
+                          <span><strong class="tier-green">Tier 2:</strong> ' || l_tier_2 || '</span>
+                          <span><strong class="tier-gray">Tier 3:</strong> ' || l_tier_3 || '</span>
+                        </div>
+                      </div>
+                    </div>
+                  ');
+                end;
+                ```
+        }
+        layout {
+            sequence: 10
+            slot: body
+            columnSpan: 2
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    region new_1 (
+        name: Portfolio
+        type: interactiveReport
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                with portfolio_product_flags as (
+                  select estate.customer_id,
+                         upper(trim(estate.product_or_service_name)) as acronym,
+                         max(
+                           case
+                             when acronym_ref.secalert then 1
+                             else 0
+                           end
+                         ) as secalert
+                    from customer_estate_items estate
+                    join estate_types estate_type
+                      on estate_type.lookup_id = estate.estate_type_id
+                    left join oracle_acronyms acronym_ref
+                      on upper(trim(acronym_ref.acronym)) =
+                         upper(trim(estate.product_or_service_name))
+                   where estate_type.lookup_code = 'PRODUCT'
+                     and trim(estate.product_or_service_name) is not null
+                   group by estate.customer_id,
+                            upper(trim(estate.product_or_service_name))
+                )
+                select
+                  '<div class="sed-customer">
+                     <div class="sed-customer-icon">
+                       <span class="fa fa-building-o"></span>
+                     </div>
+                     <div class="sed-customer-name-row">
+                       <a class="sed-customer-link" href="' ||
+                         apex_escape.html_attribute(
+                           apex_page.get_url(
+                             p_page        => 5,
+                             p_clear_cache => '5',
+                             p_items       => 'P5_CUSTOMER_ID',
+                             p_values      => p.customer_id
+                           )
+                         ) ||
+                       '">
+                         <span class="sed-customer-name">' ||
+                           apex_escape.html(p.customer_name) ||
+                         '</span>
+                       </a>
+                       <a class="sed-customer-360-button t-Button t-Button--small t-Button--hot"
+                          href="' ||
+                         apex_escape.html_attribute(
+                           apex_page.get_url(
+                             p_page        => 21,
+                             p_clear_cache => '21',
+                             p_items       => 'P21_CUSTOMER_ID',
+                             p_values      => p.customer_id
+                           )
+                         ) ||
+                       '">
+                         Customer 360
+                       </a>
+                     </div>
+                   </div>' as customer,
+                
+                  p.country as country,
+                
+                  p.region as customer_region,
+                
+                  sa.full_name as security_advisor,
+                
+                  p.tier_code        as tier,
+                  lower(p.tier_code) as tier_css_class,
+                
+                  cs.lookup_name       as customer_status,
+                  lower(cs.lookup_code) as customer_status_code,
+                
+                  apex_escape.html(p.industry) as industry,
+                
+                  p.registryid as registry_id,
+                
+                  p.arr as arr,
+                
+                  coalesce(p.health_label, 'Not assessed') as health,
+                
+                  case p.health_code
+                    when 'GOOD'            then 'green'
+                    when 'AT_RISK'         then 'orange'
+                    when 'NEEDS_ATTENTION' then 'red'
+                    else                        'gray'
+                  end as health_css_class,
+                
+                  case
+                    when p.days_since_last_contact is null then
+                      'No contact'
+                    else
+                      p.days_since_last_contact || ' days ago'
+                  end as last_contact,
+                
+                  coalesce(
+                    (
+                      select case
+                               when count(*) > 0 then
+                                 '<div class="sed-action">' ||
+                                 listagg(
+                               '<div class="sed-action-item">' ||
+                                 '<div class="sed-action-heading">' ||
+                                   '<a href="' ||
+                                     apex_escape.html_attribute(
+                                       apex_page.get_url(
+                                         p_page        => 'action',
+                                         p_clear_cache => '18',
+                                         p_items       => 'P18_ACTION_ID',
+                                         p_values      => a.action_id
+                                       )
+                                     ) ||
+                                   '">' || apex_escape.html(a.title) || '</a>' ||
+                                   '<span class="sed-action-status sed-action-status-' ||
+                                     lower(s.lookup_code) || '">' ||
+                                     apex_escape.html(s.lookup_name) ||
+                                   '</span>' ||
+                                 '</div>' ||
+                                 '<div class="sed-action-due">' ||
+                                   '<strong>Due Date:</strong> ' ||
+                                   case
+                                     when a.due_date is not null then
+                                       to_char(
+                                         a.due_date,
+                                         'Mon DD, YYYY',
+                                         'NLS_DATE_LANGUAGE=English'
+                                       )
+                                     else
+                                       'Not set'
+                                   end ||
+                                 '</div>' ||
+                               '</div>',
+                               ''
+                                 ) within group (
+                                   order by a.due_date nulls last,
+                                            a.action_id
+                                 ) ||
+                                 '<div class="sed-action-create">' ||
+                                   '<a class="t-Button t-Button--small t-Button--simple" href="' ||
+                                     apex_escape.html_attribute(
+                                       apex_page.get_url(
+                                         p_page        => 'action',
+                                         p_clear_cache => '18',
+                                         p_items       => 'P18_CUSTOMER_ID',
+                                         p_values      => p.customer_id
+                                       )
+                                     ) ||
+                                   '">' ||
+                                     '<span class="fa fa-plus" aria-hidden="true"></span>' ||
+                                     ' Create action' ||
+                                   '</a>' ||
+                                 '</div>' ||
+                                 '</div>'
+                             end
+                        from actions a
+                        join action_statuses s
+                          on s.lookup_id = a.status_id
+                       where a.customer_id = p.customer_id
+                         and s.lookup_code in ('OPEN', 'IN_PROGRESS')
+                    ),
+                    '<div class="sed-action sed-action-empty">' ||
+                      '<div class="sed-action-create">' ||
+                        '<a class="t-Button t-Button--small t-Button--simple" href="' ||
+                          apex_escape.html_attribute(
+                            apex_page.get_url(
+                              p_page        => 'action',
+                              p_clear_cache => '18',
+                              p_items       => 'P18_CUSTOMER_ID',
+                              p_values      => p.customer_id
+                            )
+                          ) ||
+                        '">' ||
+                          '<span class="fa fa-plus" aria-hidden="true"></span>' ||
+                          ' Create action' ||
+                        '</a>' ||
+                      '</div>' ||
+                    '</div>'
+                  ) as next_action,
+                
+                  (
+                    select '<div class="sed-products">' ||
+                           case
+                             when count(*) = 0 then
+                               '<span>N/A</span>'
+                             else
+                               nvl(
+                                 listagg(
+                                   case
+                                     when product.secalert = 1 then
+                                       '<span class="sed-product-alert" ' ||
+                                       'title="Active security alert">' ||
+                                       apex_escape.html(product.acronym) ||
+                                       '</span>'
+                                   end,
+                                   ''
+                                 ) within group (order by product.acronym),
+                                 ''
+                               ) ||
+                               case
+                                 when sum(
+                                        case when product.secalert = 0 then 1 else 0 end
+                                      ) = 0 then
+                                   ''
+                                 else
+                                   '<details class="sed-products-details">' ||
+                                     '<summary>' ||
+                                       to_char(
+                                         sum(
+                                           case
+                                             when product.secalert = 0 then 1
+                                             else 0
+                                           end
+                                         )
+                                       ) ||
+                                       case
+                                         when sum(
+                                                case
+                                                  when product.secalert = 0 then 1
+                                                  else 0
+                                                end
+                                              ) = 1 then
+                                           case
+                                             when sum(product.secalert) > 0 then
+                                               ' other product'
+                                             else
+                                               ' product'
+                                           end
+                                         else
+                                           case
+                                             when sum(product.secalert) > 0 then
+                                               ' other products'
+                                             else
+                                               ' products'
+                                           end
+                                       end ||
+                                     '</summary>' ||
+                                     '<div class="sed-products-list">' ||
+                                       nvl(
+                                         listagg(
+                                           case
+                                             when product.secalert = 0 then
+                                               '<span>' ||
+                                               apex_escape.html(product.acronym) ||
+                                               '</span>'
+                                           end,
+                                           ''
+                                         ) within group (order by product.acronym),
+                                         ''
+                                       ) ||
+                                     '</div>' ||
+                                   '</details>'
+                               end
+                           end ||
+                           '</div>'
+                      from portfolio_product_flags product
+                     where product.customer_id = p.customer_id
+                  ) as oracle_products,
+                
+                  coalesce(c.css_services, '') as css_services
+                
+                from v_apex_customer_portfolio p
+                
+                join customers c
+                  on c.customer_id = p.customer_id
+                
+                join customer_statuses cs
+                  on cs.lookup_id = c.status_id
+                
+                join internal_users sa
+                  on sa.user_id = c.primary_security_advisor_user_id
+                
+                where (
+                    :P1_SECURITY_ADVISOR_USER_ID is null
+                    or c.primary_security_advisor_user_id = :P1_SECURITY_ADVISOR_USER_ID
+                )
+                and (
+                    nvl(:P1_ACTIVE_ACTIONS, 'N') = 'N'
+                    or exists (
+                        select 1
+                        from actions a_filter
+                        join action_statuses s_filter
+                          on s_filter.lookup_id = a_filter.status_id
+                        where a_filter.customer_id = c.customer_id
+                          and s_filter.lookup_code in ('OPEN', 'IN_PROGRESS')
+                    )
+                )
+                
+                order by p.customer_name
+                
+                ```
+            pageItemsToSubmit: [
+                P1_SECURITY_ADVISOR_USER_ID
+                P1_ACTIVE_ACTIONS
+            ]
+        }
+        layout {
+            sequence: 70
+            slot: body
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--noBorders
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+                t-Form--noPadding
+                t-Form--stretchInputs
+            ]
+            cssClasses: sed-portfolio-region
+        }
+        pagination {
+            type: rowRangesXToY
+        }
+        searchBar {
+            rowsPerPageSelector: true
+        }
+        advanced {
+            savedReportMappingIdentifier: 17867817943610696416
+        }
+
+        column ARR (
+            type: plainText
+            heading {
+                heading: Arr
+                alignment: end
+            }
+            layout {
+                sequence: 140
+                columnAlignment: end
+            }
+            source {
+                dataType: NUMBER
+            }
+            advanced {
+                endUserAlias: N
+            }
+        )
+
+        column COUNTRY (
+            type: plainText
+            heading {
+                heading: Country
+            }
+            layout {
+                sequence: 120
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: L
+            }
+        )
+
+        column CSS_SERVICES (
+            type: plainText
+            heading {
+                heading: CSS Services
+            }
+            layout {
+                sequence: 170
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: Q
+            }
+        )
+
+        column CUSTOMER (
+            type: plainText
+            heading {
+                heading: Customer
+            }
+            layout {
+                sequence: 10
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: A
+            }
+            security {
+                escapeSpecialChars: false
+            }
+        )
+
+        column CUSTOMER_REGION (
+            type: plainText
+            heading {
+                heading: Customer Region
+            }
+            layout {
+                sequence: 20
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: K
+            }
+        )
+
+        column CUSTOMER_STATUS (
+            type: plainText
+            heading {
+                heading: Status
+            }
+            layout {
+                sequence: 50
+            }
+            columnFormatting {
+                htmlExpression:
+                    ```html
+                    <span class="sed-customer-status sed-customer-status-#CUSTOMER_STATUS_CODE!ATTR#">
+                      #CUSTOMER_STATUS!HTML#
+                    </span>
+                    ```
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: H
+            }
+            security {
+                escapeSpecialChars: false
+            }
+        )
+
+        column CUSTOMER_STATUS_CODE (
+            type: plainText
+            heading {
+                heading: Customer Status Code
+            }
+            layout {
+                sequence: 110
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: I
+            }
+        )
+
+        column HEALTH (
+            type: plainText
+            heading {
+                heading: Health
+            }
+            layout {
+                sequence: 70
+            }
+            columnFormatting {
+                htmlExpression:
+                    ```html
+                    <span class="sed-health sed-health-#HEALTH_CSS_CLASS!ATTR#">
+                      <span></span>#HEALTH!HTML#
+                    </span>
+                    ```
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: D
+            }
+            security {
+                escapeSpecialChars: false
+            }
+        )
+
+        column HEALTH_CSS_CLASS (
+            type: hidden
+            heading {
+                heading: Health Css Class
+            }
+            layout {
+                sequence: 160
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: P
+            }
+        )
+
+        column INDUSTRY (
+            type: plainText
+            heading {
+                heading: Industry
+            }
+            layout {
+                sequence: 60
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: C
+            }
+        )
+
+        column LAST_CONTACT (
+            type: plainText
+            heading {
+                heading: Last Contact
+            }
+            layout {
+                sequence: 80
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: E
+            }
+        )
+
+        column NEXT_ACTION (
+            type: plainText
+            heading {
+                heading: Next Action
+            }
+            layout {
+                sequence: 90
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: F
+            }
+            security {
+                escapeSpecialChars: false
+            }
+        )
+
+        column ORACLE_PRODUCTS (
+            type: plainText
+            heading {
+                heading: Oracle Products
+            }
+            layout {
+                sequence: 100
+            }
+            source {
+                dataType: STRING
+            }
+            columnFilter {
+                type: definedLovWordContains
+                sqlQuery:
+                    ```sql
+                    select distinct
+                           upper(trim(acronym)) as acronym
+                    from oracle_acronyms
+                    where trim(acronym) is not null
+                    order by acronym
+                    ```
+            }
+            advanced {
+                endUserAlias: G
+            }
+            security {
+                escapeSpecialChars: false
+            }
+        )
+
+        column REGISTRY_ID (
+            type: plainText
+            heading {
+                heading: Registry Id
+            }
+            layout {
+                sequence: 130
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: M
+            }
+        )
+
+        column SECURITY_ADVISOR (
+            type: plainText
+            heading {
+                heading: Security Advisor
+            }
+            layout {
+                sequence: 40
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: J
+            }
+        )
+
+        column TIER (
+            type: plainText
+            heading {
+                heading: Tier
+            }
+            layout {
+                sequence: 30
+            }
+            columnFormatting {
+                htmlExpression: <span class="sed-tier sed-tier-#TIER_CSS_CLASS!ATTR#">#TIER!HTML#</span>
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: B
+            }
+            security {
+                escapeSpecialChars: false
+            }
+        )
+
+        column TIER_CSS_CLASS (
+            type: plainText
+            heading {
+                heading: Tier Css Class
+            }
+            layout {
+                sequence: 150
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: O
+            }
+        )
+
+        page {
+            borderWidth: 0.5
+            borderColor: #666666
+        }
+
+        savedReport primary (
+            visibility: primaryDefault
+            view {
+                rowsPerPage: 50
+            }
+
+            displayColumn CUSTOMER (
+                sequence: 1
+            )
+
+            displayColumn HEALTH (
+                sequence: 4
+            )
+
+            displayColumn INDUSTRY (
+                sequence: 3
+            )
+
+            displayColumn LAST_CONTACT (
+                sequence: 5
+            )
+
+            displayColumn NEXT_ACTION (
+                sequence: 6
+            )
+
+            displayColumn ORACLE_PRODUCTS (
+                sequence: 7
+            )
+
+            displayColumn TIER (
+                sequence: 2
+            )
+
+        )
+
+    )
+
+    region new_2 (
+        name: New
+        type: staticContent
+        layout {
+            sequence: 60
+            slot: body
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region security-events-card (
+        name: Latest Security Publications
+        title: Security Events
+        type: classicReport
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select publication_id as event_row,
+                
+                       title,
+                
+                       case publication_type
+                           when 'SECURITY_ALERT' then 'SECURITY ALERT'
+                           else publication_type
+                       end as type_label,
+                
+                       case publication_type
+                           when 'SECURITY_ALERT' then 'alert'
+                           when 'CSPU'           then 'cspu'
+                           else                       'cpu'
+                       end as type_class,
+                
+                       case
+                           when alert_state in ('NEW', 'UPDATED')
+                            and last_changed_at >= systimestamp - interval '1' day
+                           then alert_state
+                       end as state_label,
+                
+                       'Published ' ||
+                       to_char(
+                           published_on,
+                           'DD Mon YYYY',
+                           'NLS_DATE_LANGUAGE=English'
+                       ) as published_label,
+                
+                       'fa-shield' as icon_class,
+                
+                       advisory_url
+                
+                  from security_publications
+                
+                 where published_on >= add_months(trunc(sysdate), -3)
+                   and published_on < trunc(sysdate) + 1
+                
+                 order by published_on desc,
+                          publication_id desc
+                ```
+        }
+        layout {
+            sequence: 20
+            slot: body
+            startNewRow: false
+            columnSpan: 5
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+            cssClasses: security-events-card
+        }
+        componentAppearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--staticRowColors
+                t-Report--rowHighlightOff
+            ]
+        }
+        heading {
+            type: none
+        }
+
+        column ADVISORY_URL (
+            reportColumnQueryId: 8
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 80
+            }
+        )
+
+        column EVENT_ROW (
+            reportColumnQueryId: 1
+            derivedColumn: N
+            heading {
+                alignment: end
+            }
+            layout {
+                sequence: 10
+                columnAlignment: end
+            }
+            columnFormatting {
+                htmlExpression:
+                    ```html
+                    <div class="sed-security-event sed-security-event--#TYPE_CLASS#">
+                      <div class="sed-security-event-icon">
+                        <span class="fa #ICON_CLASS#" aria-hidden="true"></span>
+                      </div>
+                    
+                      <div class="sed-security-event-content">
+                        <a class="sed-security-event-title"
+                           href="#ADVISORY_URL!ATTR#"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                          #TITLE#
+                        </a>
+                    
+                        <div class="sed-security-event-date">
+                          #PUBLISHED_LABEL#
+                        </div>
+                      </div>
+                    
+                      <div class="sed-security-event-badges">
+                        <span class="sed-security-event-type">
+                          #TYPE_LABEL#
+                        </span>
+                    
+                        {if ?STATE_LABEL/}
+                          <span class="sed-security-event-state sed-security-event-state--#STATE_LABEL#">
+                            #STATE_LABEL#
+                          </span>
+                        {endif/}
+                      </div>
+                    </div>
+                    ```
+            }
+            sorting {
+                sortable: false
+            }
+        )
+
+        column ICON_CLASS (
+            reportColumnQueryId: 7
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 70
+            }
+        )
+
+        column PUBLISHED_LABEL (
+            reportColumnQueryId: 6
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 60
+            }
+        )
+
+        column STATE_LABEL (
+            reportColumnQueryId: 5
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 50
+            }
+        )
+
+        column TITLE (
+            reportColumnQueryId: 2
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 20
+            }
+        )
+
+        column TYPE_CLASS (
+            reportColumnQueryId: 4
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 40
+            }
+        )
+
+        column TYPE_LABEL (
+            reportColumnQueryId: 3
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 30
+            }
+        )
+
+    )
+
+    region sed-dashboard (
+        name: SED Dashboard
+        type: staticContent
+        source {
+            htmlCode: Security Advisor portfolio workflow to manage customers, related records, and operational follow-ups.
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/collapsible
+            templateOptions: [
+                #DEFAULT#
+                is-expanded
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    pageItem P1_ACTIVE_ACTIONS (
+        type: switch
+        label {
+            label: Active Actions Only
+            alignment: left
+        }
+        settings {
+            useDefaults: false
+            onValue: Y
+            onLabel: Active actions only
+            offValue: N
+            offLabel: All
+        }
+        layout {
+            sequence: 10
+            region: @new_2
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    pageItem P1_SECURITY_ADVISOR_USER_ID (
+        type: selectList
+        label {
+            label: Security Advisor User Id
+            alignment: left
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select display_value, return_value
+                from (
+                    select 0 as display_order,
+                           'All Security Advisors' as display_value,
+                           cast(null as number) as return_value
+                    from dual
+                
+                    union all
+                
+                    select 1,
+                           iu.full_name,
+                           iu.user_id
+                    from internal_users iu
+                    where iu.active_flag = 'Y' and upper(trim(iu.role_name)) = 'SECURITY ADVISOR'
+                
+                
+                )
+                order by display_order, display_value
+                ```
+            displayExtraValues: false
+        }
+        layout {
+            sequence: 20
+            region: @sed-dashboard
+            slot: edit
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            height: 1
+        }
+        default {
+            type: sqlQuerySingleValue
+            sqlQuerySingleValue:
+                ```sql
+                select iu.user_id
+                from internal_users iu
+                where lower(iu.email) = lower(:APP_USER)
+                  and iu.active_flag = 'Y'
+                  and upper(trim(iu.role_name)) = 'SECURITY ADVISOR'
+                ```
+        }
+    )
+
+    button 90d-kev (
+        buttonName: 90D_KEV
+        label: 90 Days Kev
+        layout {
+            sequence: 30
+            slot: body
+            startNewRow: false
+            newColumn: false
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--tiny
+                t-Button--danger
+                t-Button--iconLeft
+                t-Button--hoverIconPush
+            ]
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 25
+            }
+        }
+    )
+
+    button latest-advisory-analysis_1 (
+        buttonName: Latest_Advisory_Analysis
+        label: Latest Advisory Analysis
+        layout {
+            sequence: 40
+            slot: body
+            startNewRow: false
+            newColumn: false
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--tiny
+                t-Button--danger
+                t-Button--iconLeft
+                t-Button--hoverIconSpin
+            ]
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 22
+            }
+        }
+    )
+
+    dynamicAction filter-portfolio-by-security-advisor (
+        name: Filter Portfolio by Security Advisor
+        execution {
+            sequence: 30
+        }
+        when {
+            selectionType: items
+            items: P1_SECURITY_ADVISOR_USER_ID
+        }
+
+        action refresh (
+            name: Refresh
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @new_1
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    dynamicAction p1-action-filter (
+        name: P1_ACTION_FILTER
+        execution {
+            sequence: 10
+        }
+        when {
+            selectionType: items
+            items: P1_ACTIVE_ACTIONS
+        }
+
+        action refresh (
+            name: Refresh
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @new_1
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    dynamicAction refresh-dashboard-after-dialog-save (
+        name: Refresh Dashboard After Dialog Save
+        execution {
+            sequence: 20
+        }
+        when {
+            event: apexafterclosedialog
+            selectionType: jQuerySelector
+            jquerySelector: body
+        }
+
+        action native-refresh (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @new_1
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    dynamicAction refresh-portfolio-after-customer-edit (
+        name: Refresh Portfolio After Customer Edit
+        execution {
+            sequence: 10
+        }
+        when {
+            event: apexafterclosedialog
+            selectionType: region
+            region: @new_1
+        }
+
+        action native-refresh (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @new_1
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
+)

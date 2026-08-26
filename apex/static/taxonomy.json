@@ -1,0 +1,515 @@
+[
+  {
+    "canonical_product": "Coherence",
+    "product_family": "middleware",
+    "product_type": "product",
+    "aliases": [
+      "Coherence",
+      "Oracle Coherence"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Fusion Middleware",
+    "csaf_product_name": "Oracle Coherence"
+  },
+  {
+    "canonical_product": "Oracle Access Manager",
+    "product_family": "middleware",
+    "product_type": "product",
+    "aliases": [
+      "Oracle Access Manager",
+      "OAM"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Fusion Middleware",
+    "csaf_product_name": "Oracle Access Manager"
+  },
+  {
+    "canonical_product": "Oracle ASM",
+    "product_family": "database",
+    "product_type": "component",
+    "aliases": [
+      "Oracle ASM",
+      "Oracle Automatic Storage Management",
+      "Automatic Storage Management"
+    ],
+    "version_strategy": "database_ru",
+    "handler": "default_handler",
+    "csaf_matches": [
+      {
+        "family": "Oracle Database Server",
+        "name": "Oracle Database Server",
+        "component": "Oracle ASM"
+      },
+      {
+        "family": "Oracle Database Server",
+        "name": "Oracle Database Server",
+        "component": "ASM"
+      }
+    ]
+  },
+  {
+    "canonical_product": "Oracle Client",
+    "product_family": "database",
+    "product_type": "component",
+    "aliases": [
+      "Oracle Client",
+      "Oracle Database Client",
+      "Oracle Instant Client",
+      "Instant Client"
+    ],
+    "version_strategy": "database_ru",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Database Server",
+    "csaf_product_name": "Oracle Database Server"
+  },
+  {
+    "canonical_product": "Oracle Data Guard",
+    "product_family": "database",
+    "product_type": "component",
+    "aliases": [
+      "Oracle Data Guard",
+      "Data Guard"
+    ],
+    "version_strategy": "database_ru",
+    "handler": "default_handler",
+    "csaf_matches": [
+      {
+        "family": "Oracle Database Server",
+        "name": "Oracle Database Server",
+        "component": "Oracle Data Guard"
+      },
+      {
+        "family": "Oracle Database Server",
+        "name": "Oracle Database Server",
+        "component": "Data Guard"
+      }
+    ]
+  },
+  {
+    "canonical_product": "Oracle Database",
+    "product_family": "database",
+    "product_type": "product",
+    "aliases": [
+      "Oracle Database",
+      "Oracle Database Server"
+    ],
+    "version_strategy": "database_ru",
+    "handler": "database_handler",
+    "csaf_product_family": "Oracle Database Server",
+    "csaf_product_name": "Oracle Database Server",
+    "advisory_mappings": [
+      {
+        "advisory_product": "Oracle Database Server"
+      }
+    ]
+  },
+  {
+    "canonical_product": "Oracle Directory Integration Platform",
+    "product_family": "middleware",
+    "product_type": "product",
+    "aliases": [
+      "Oracle Directory Integration Platform",
+      "DIP"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Fusion Middleware",
+    "csaf_product_name": "Oracle Directory Integration Platform"
+  },
+  {
+    "canonical_product": "Oracle E-Business Suite",
+    "product_family": "applications",
+    "product_type": "suite",
+    "aliases": [
+      "Oracle E-Business Suite",
+      "EBS",
+      "Oracle Applications"
+    ],
+    "version_strategy": "ebs_release_family",
+    "handler": "ebs_handler",
+    "csaf_product_family": "Oracle E-Business Suite",
+    "csaf_product_name": "Oracle E-Business Suite",
+    "advisory_mappings": [
+      {
+        "advisory_product": "Oracle E-Business Suite"
+      }
+    ]
+  },
+  {
+    "canonical_product": "Oracle Forms",
+    "product_family": "middleware",
+    "product_type": "component",
+    "aliases": [
+      "Oracle Forms",
+      "Forms",
+      "Oracle Forms Services"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Fusion Middleware",
+    "csaf_product_name": "Oracle Forms"
+  },
+  {
+    "canonical_product": "Oracle Grid Infrastructure",
+    "product_family": "database",
+    "product_type": "component",
+    "aliases": [
+      "Oracle Grid Infrastructure",
+      "Oracle Grid Infrastructure (GI)",
+      "Oracle GI",
+      "GI"
+    ],
+    "version_strategy": "database_ru",
+    "handler": "default_handler",
+    "csaf_matches": [
+      {
+        "family": "Oracle Database Server",
+        "name": "Oracle Database Server",
+        "component": "Grid Infrastructure"
+      },
+      {
+        "family": "Oracle Database Server",
+        "name": "Oracle Database Server",
+        "component": "Clusterware"
+      },
+      {
+        "family": "Oracle Database Server",
+        "name": "Oracle Database Server",
+        "component": "Portable Clusterware"
+      },
+      {
+        "family": "Oracle Database Server",
+        "name": "Oracle Database Server",
+        "component": "Oracle Database Portable Clusterware"
+      }
+    ],
+    "advisory_mappings": [
+      {
+        "advisory_product": "Oracle Database Server",
+        "component_patterns": [
+          "Grid Infrastructure",
+          "Clusterware",
+          "Portable Clusterware",
+          "Oracle Database Portable Clusterware"
+        ]
+      }
+    ]
+  },
+  {
+    "canonical_product": "Oracle HTTP Server",
+    "product_family": "middleware",
+    "product_type": "component",
+    "aliases": [
+      "Oracle HTTP Server",
+      "Oracle HTTP Server (OHS)",
+      "Oracle OHS",
+      "OHS"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Fusion Middleware",
+    "csaf_product_name": "Oracle HTTP Server, Oracle Weblogic Server Proxy Plug-in",
+    "advisory_mappings": [
+      {
+        "advisory_product": "Oracle HTTP Server"
+      },
+      {
+        "component_patterns": [
+          "Oracle HTTP Server"
+        ]
+      }
+    ]
+  },
+  {
+    "canonical_product": "Oracle Identity Federation",
+    "product_family": "middleware",
+    "product_type": "product",
+    "aliases": [
+      "Oracle Identity Federation",
+      "OIF"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Fusion Middleware",
+    "csaf_product_name": "Oracle Identity Federation"
+  },
+  {
+    "canonical_product": "Oracle Identity Governance",
+    "product_family": "middleware",
+    "product_type": "product",
+    "aliases": [
+      "Oracle Identity Governance",
+      "OIG"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Fusion Middleware",
+    "csaf_product_name": "Oracle Identity Governance"
+  },
+  {
+    "canonical_product": "Oracle Identity Manager",
+    "product_family": "middleware",
+    "product_type": "product",
+    "aliases": [
+      "Oracle Identity Manager",
+      "Identity Manager",
+      "OIM"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_matches": [
+      {
+        "family": "Oracle Fusion Middleware",
+        "name": "Oracle Identity Manager"
+      },
+      {
+        "family": "Oracle Fusion Middleware",
+        "name": "Identity Manager"
+      }
+    ]
+  },
+  {
+    "canonical_product": "Oracle Internet Directory",
+    "product_family": "middleware",
+    "product_type": "product",
+    "aliases": [
+      "Oracle Internet Directory",
+      "OID"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Fusion Middleware",
+    "csaf_product_name": "Oracle Internet Directory"
+  },
+  {
+    "canonical_product": "Oracle Java SE",
+    "product_family": "middleware",
+    "product_type": "product",
+    "aliases": [
+      "Oracle Java",
+      "Oracle Java SE",
+      "Java SE",
+      "JDK",
+      "Oracle JDK"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Java SE",
+    "csaf_product_name": "Oracle Java SE"
+  },
+  {
+    "canonical_product": "Oracle Java Virtual Machine",
+    "product_family": "database",
+    "product_type": "embedded_runtime",
+    "aliases": [
+      "Oracle OJVM",
+      "Oracle Java Virtual Machine",
+      "OJVM"
+    ],
+    "version_strategy": "ojvm_runtime",
+    "handler": "ojvm_handler",
+    "csaf_matches": [
+      {
+        "family": "Oracle Database Server",
+        "name": "Oracle Database Server",
+        "component": "Java VM"
+      }
+    ]
+  },
+  {
+    "canonical_product": "Oracle Net Services",
+    "product_family": "database",
+    "product_type": "component",
+    "aliases": [
+      "Oracle Net Services",
+      "Oracle Net",
+      "SQL*Net"
+    ],
+    "version_strategy": "database_ru",
+    "handler": "default_handler",
+    "csaf_matches": [
+      {
+        "family": "Oracle Database Server",
+        "name": "Oracle Database Server",
+        "component": "Net Service"
+      },
+      {
+        "family": "Oracle Database Server",
+        "name": "Oracle Database Server",
+        "component": "RDBMS Listener"
+      }
+    ]
+  },
+  {
+    "canonical_product": "Oracle OPERA",
+    "product_family": "applications",
+    "product_type": "product",
+    "aliases": [
+      "Oracle OPERA",
+      "OPERA",
+      "OPERA Property Management",
+      "Oracle Hospitality OPERA"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "opera_handler"
+  },
+  {
+    "canonical_product": "Oracle Primavera P6",
+    "product_family": "applications",
+    "product_type": "product",
+    "aliases": [
+      "Oracle Primavera P6",
+      "Primavera P6",
+      "P6"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "primavera_handler"
+  },
+  {
+    "canonical_product": "Oracle RAC",
+    "product_family": "database",
+    "product_type": "component",
+    "aliases": [
+      "Oracle RAC",
+      "Oracle Real Application Clusters",
+      "Real Application Clusters"
+    ],
+    "version_strategy": "database_ru",
+    "handler": "default_handler",
+    "csaf_matches": [
+      {
+        "family": "Oracle Database Server",
+        "name": "Oracle Database Server",
+        "component": "Oracle RAC"
+      },
+      {
+        "family": "Oracle Database Server",
+        "name": "Oracle Database Server",
+        "component": "Real Application Clusters"
+      }
+    ]
+  },
+  {
+    "canonical_product": "Oracle Reports",
+    "product_family": "middleware",
+    "product_type": "component",
+    "aliases": [
+      "Oracle Reports",
+      "Reports",
+      "Oracle Reports Services"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Fusion Middleware",
+    "csaf_product_name": "Oracle Reports"
+  },
+  {
+    "canonical_product": "Oracle REST Data Services",
+    "product_family": "database",
+    "product_type": "product",
+    "aliases": [
+      "Oracle REST Data Services",
+      "Oracle REST Data Services (ORDS)",
+      "ORDS",
+      "Oracle ORDS"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle REST Data Services",
+    "csaf_product_name": "Oracle REST Data Services",
+    "advisory_mappings": [
+      {
+        "advisory_product": "Oracle REST Data Services"
+      },
+      {
+        "component_patterns": [
+          "ORDS",
+          "Oracle REST Data Services"
+        ]
+      }
+    ]
+  },
+  {
+    "canonical_product": "Oracle Transportation Management",
+    "product_family": "unknown",
+    "product_type": "product",
+    "aliases": [
+      "Oracle Transportation Management",
+      "transportation"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Supply Chain",
+    "csaf_product_name": "Oracle Transportation Management"
+  },
+  {
+    "canonical_product": "Oracle Tuxedo",
+    "product_family": "unknown",
+    "product_type": "product",
+    "aliases": [
+      "Oracle Tuxedo",
+      "tuxedo",
+      "BEA Tuxedo"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Fusion Middleware",
+    "csaf_product_name": "Oracle Tuxedo"
+  },
+  {
+    "canonical_product": "Oracle Unified Directory",
+    "product_family": "middleware",
+    "product_type": "product",
+    "aliases": [
+      "Oracle Unified Directory",
+      "OUD"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Fusion Middleware",
+    "csaf_product_name": "Oracle Unified Directory"
+  },
+  {
+    "canonical_product": "Oracle WebLogic Server",
+    "product_family": "middleware",
+    "product_type": "product",
+    "aliases": [
+      "Oracle WebLogic Server",
+      "WebLogic Server",
+      "WebLogic",
+      "WLS"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle Fusion Middleware",
+    "csaf_product_name": "Oracle WebLogic Server",
+    "csaf_matches": [
+      {
+        "family": "Oracle Fusion Middleware",
+        "name": "WebLogic Server"
+      }
+    ],
+    "advisory_mappings": [
+      {
+        "advisory_product": "Oracle WebLogic Server"
+      }
+    ]
+  },
+  {
+    "canonical_product": "PeopleSoft Enterprise PeopleTools",
+    "product_family": "applications",
+    "product_type": "product",
+    "aliases": [
+      "PeopleSoft Enterprise PeopleTools",
+      "PeopleSoft",
+      "PeopleSoft Enterprise",
+      "Oracle Peoplesoft"
+    ],
+    "version_strategy": "direct_semver",
+    "handler": "default_handler",
+    "csaf_product_family": "Oracle PeopleSoft",
+    "csaf_product_name": "PeopleSoft Enterprise PeopleTools"
+  }
+]

@@ -1,0 +1,5 @@
+/* Add to Page 1 -> CSS -> Inline. */
+.sed-action.sed-action-priority-high a,
+.sed-action.sed-action-priority-high div {
+  color: #dc2626;
+}

@@ -1,0 +1,996 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Oracle Security Alerts</title>
+        <link>http://www.oracle.com/technetwork/topics/security/alerts-086861.html</link>
+        <description>Security Alerts Issued by Oracle</description>
+        <generator>Feeder 2.3.2(1632); Mac OS X Version 10.7.4 (Build 11E53) http://reinventedsoftware.com/feeder/</generator>
+        <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+        <language>en</language>
+        <copyright>Copyright 2026 Oracle. All Rights Reserved.</copyright>
+        <managingEditor>secalert_us@oracle.com (SecAlerts_us)</managingEditor>
+        <pubDate>Tue, 18 Aug 2026 13:00:00 -0700</pubDate>
+ 	<lastBuildDate>Tue, 18 Aug 2026 13:00:00 -0700</lastBuildDate>
+
+	<item>
+	  <title>Oracle Critical Security Patch Update Advisory - August 2026
+          </title>
+          <link>https://www.oracle.com/security-alerts/cspuaug2026.html
+	  </link>
+	  <pubDate>Tue, 18 Aug 2026 13:00:00 -0700</pubDate>
+          <guid isPermaLink="false">CSPUAug2026</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - July 2026
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujul2026.html
+	  </link>
+	  <pubDate>Tue, 21 Jul 2026 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJul2026</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Security Patch Update Advisory - June 2026
+          </title>
+          <link>https://www.oracle.com/security-alerts/cspujun2026.html
+	  </link>
+	  <pubDate>Tue, 16 Jun 2026 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CSPUJun2026</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Security Alert Advisory - CVE-2026-35273
+          </title>
+          <link>https://www.oracle.com/security-alerts/alert-cve-2026-35273.html
+	  </link>
+	  <pubDate>Wed, 10 Jun 2026 18:00:00 -0700</pubDate>
+          <guid isPermaLink="false">alertcve202635273</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Security Patch Update Advisory - May 2026
+          </title>
+          <link>https://www.oracle.com/security-alerts/cspumay2026.html
+	  </link>
+	  <pubDate>Thu, 28 May 2026 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CSPUMay2026</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - April 2026
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpuapr2026.html
+	  </link>
+	  <pubDate>Tue, 21 Apr 2026 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUApr2026</guid>
+	</item>
+
+	<item> 
+	  <title>Oracle Security Alert for CVE-2026-21992 - 19 March 2026
+          </title>
+          <link>https://www.oracle.com/security-alerts/alert-cve-2026-21992.html
+          </link>
+	  <pubDate>Thu, 19 Mar 2026 18:00:00 -0700</pubDate>
+          <guid isPermaLink="false">alertcve202621992</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - January 2026
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujan2026.html
+	  </link>
+	  <pubDate>Tue, 20 Jan 2026 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJan2026</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - October 2025
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpuoct2025.html
+	  </link>
+	  <pubDate>Tue, 21 Oct 2025 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUOct2025</guid>
+	</item>
+
+	<item> 
+	  <title>Oracle Security Alert for CVE-2025-61884 - 11 October 2025
+          </title>
+          <link>https://www.oracle.com/security-alerts/alert-cve-2025-61884.html
+          </link>
+	  <pubDate>Sat, 11 Oct 2025 19:00:00 -0700</pubDate>
+          <guid isPermaLink="false">alertcve202561884</guid>
+	</item>
+
+	<item> 
+	  <title>Oracle Security Alert for CVE-2025-61882 - 4 October 2025
+          </title>
+          <link>https://www.oracle.com/security-alerts/alert-cve-2025-61882.html
+          </link>
+	  <pubDate>Sat, 4 Oct 2025 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve202561882</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - July 2025
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujul2025.html
+	  </link>
+	  <pubDate>Tue, 15 Jul 2025 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJul2025</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - April 2025
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpuapr2025.html
+	  </link>
+	  <pubDate>Tue, 15 Apr 2025 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUApr2025</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - January 2025
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujan2025.html
+	  </link>
+	  <pubDate>Tue, 21 Jan 2025 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJan2025</guid>
+	</item>
+
+	<item> 
+	  <title>Oracle Security Alert for CVE-2024-21287 - 18 November 2024
+          </title>
+          <link>https://www.oracle.com/security-alerts/alert-cve-2024-21287.html
+          </link>
+	  <pubDate>Mon, 18 Nov 2024 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve202421287</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - October 2024
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpuoct2024.html
+	  </link>
+	  <pubDate>Tue, 15 Oct 2024 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUOct2024</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - July 2024
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujul2024.html
+	  </link>
+	  <pubDate>Tue, 16 Jul 2024 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJul2024</guid>
+	</item>
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - April 2024
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpuapr2024.html
+	  </link>
+	  <pubDate>Tue, 16 Apr 2024 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUApr2024</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - January 2024
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujan2024.html
+	  </link>
+	  <pubDate>Tue, 16 Jan 2024 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJan2024</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - October 2023
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpuoct2023.html
+	  </link>
+	  <pubDate>Tue, 17 Oct 2023 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUOct2023</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - July 2023
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujul2023.html
+	  </link>
+	  <pubDate>Tue, 18 Jul 2023 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJul2023</guid>
+	</item>
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - April 2023
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpuapr2023.html
+	  </link>
+	  <pubDate>Tue, 18 Apr 2023 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUApr2023</guid>
+	</item>
+
+ 	<item>
+	  <title>Oracle Critical Patch Update Advisory - January 2023
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujan2023.html
+	  </link>
+	  <pubDate>Tue, 17 Jan 2023 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJan2023</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - October 2022
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpuoct2022.html
+	  </link>
+	  <pubDate>Tue, 18 Oct 2022 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUOct2022</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - July 2022
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujul2022.html
+	  </link>
+	  <pubDate>Tue, 19 Jul 2022 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJul2022</guid>
+	</item>
+
+	<item> 
+	  <title>Oracle Security Alert for CVE-2022-21500 - 19 May 2022
+          </title>
+          <link>https://www.oracle.com/security-alerts/alert-cve-2022-21500.html
+          </link>
+	  <pubDate>Thu, 19 May 2022 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve202221500</guid>
+	</item>
+
+ 	<item>
+	  <title>Oracle Critical Patch Update Advisory - April 2022
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpuapr2022.html
+	  </link>
+	  <pubDate>Tue, 19 Apr 2022 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUApr2022</guid>
+	</item>
+
+ 	<item>
+	  <title>Oracle Critical Patch Update Advisory - January 2022
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujan2022.html
+	  </link>
+	  <pubDate>Tue, 18 Jan 2022 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJan2022</guid>
+	</item>
+
+	<item> 
+	  <title>Oracle Security Alert for CVE-2021-44228 - 10 December 2021
+          </title>
+          <link>https://www.oracle.com/security-alerts/alert-cve-2021-44228.html
+	  </link>
+	  <pubDate>Fri, 10 Dec 2021 18:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve202044228</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - October 2021
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpuoct2021.html
+	  </link>
+	  <pubDate>Tue, 19 Oct 2021 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUOct2021</guid>
+	</item>
+
+ 	<item>
+	  <title>Oracle Critical Patch Update Advisory - July 2021
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujul2021.html
+	  </link>
+	  <pubDate>Tue, 20 Jul 2021 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJul2021</guid>
+	</item>
+
+ 	
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - April 2021
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpuapr2021.html
+	  </link>
+	  <pubDate>Tue, 20 Apr 2021 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUApr2021</guid>
+	</item>
+
+ 	<item>
+	  <title>Oracle Critical Patch Update Advisory - January 2021
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujan2021.html
+	  </link>
+	  <pubDate>Tue, 19 Jan 2021 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJan2021</guid>
+	</item>
+
+	<item> 
+	  <title>Oracle Security Alert for CVE-2020-14750 - 01 November 2020
+          </title>
+      		<link>https://www.oracle.com/security-alerts/alert-cve-2020-14750.html
+	</link>
+	  <pubDate>Sun, 01 Nov 2020 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve202014750</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - October 2020
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpuoct2020.html
+	  </link>
+	  <pubDate>Tue, 20 Oct 2020 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUOct2020</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - July 2020
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujul2020.html
+	  </link>
+	  <pubDate>Tue, 14 Jul 2020 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJul2020</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - April 2020
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpuapr2020.html
+	  </link>
+	  <pubDate>Tue, 14 Apr 2020 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUApr2020</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - January 2020
+          </title>
+          <link>https://www.oracle.com/security-alerts/cpujan2020.html
+	  </link>
+	  <pubDate>Tue, 14 Jan 2020 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJan2020</guid>
+	</item>
+	
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - October 2019
+          </title>
+      		<link>https://www.oracle.com/technetwork/security-advisory/cpuoct2019-5072832.html
+	</link>
+	  <pubDate>Tue, 15 Oct 2019 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUOct2019</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - July 2019
+          </title>
+      	<link>https://www.oracle.com/technetwork/security-advisory/cpujul2019-5072835.html
+	      </link>
+	  <pubDate>Tue, 16 Jul 2019 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJul2019</guid>
+	</item>
+
+	<item> 
+	  <title>Oracle Security Alert for CVE-2019-2729 - 18 Jun 2019
+          </title>
+      	<link>https://www.oracle.com/technetwork/security-advisory/alert-cve-2019-2729-5570780.html
+	      </link>
+	  <pubDate>Tue, 18 Jun 2019 15:00:00 -0700</pubDate>
+          <guid isPermaLink="false">alertcve20192729</guid>
+	</item>	
+
+	<item> 
+	  <title>Oracle Security Alert for CVE-2019-2725 - 26 Apr 2019
+          </title>
+      	<link>https://www.oracle.com/technetwork/security-advisory/alert-cve-2019-2725-5466295.html
+	      </link>
+	  <pubDate>Fri, 26 Apr 2019 10:00:00 -0700</pubDate>
+          <guid isPermaLink="false">alertcve20192725</guid>
+	</item>	
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - April 2019
+          </title>
+      	<link>https://www.oracle.com/technetwork/security-advisory/cpuapr2019-5072813.html
+	      </link>
+	  <pubDate>Tue, 16 Apr 2019 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUApr2019</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - January 2019
+          </title>
+      	<link>https://www.oracle.com/technetwork/security-advisory/cpujan2019-5072801.html
+	      </link>
+	  <pubDate>Tue, 15 Jan 2019 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJan2019</guid>
+	</item>
+	
+        <item>
+	  <title>Oracle Critical Patch Update Advisory - October 2018
+          </title>
+      	<link>https://www.oracle.com/technetwork/security-advisory/cpuoct2018-4428296.html
+	      </link>
+	  <pubDate>Tue, 16 Oct 2018 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUOct2018</guid>
+	</item>
+
+        <item> 
+	  <title>Oracle Security Alert for CVE-2018-11776 - 31 August 2018
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/alert-cve-2018-11776-5072787.html
+	      </link>
+	  <pubDate>Fri, 31 Aug 2018 17:00:00 -0700</pubDate>
+          <guid isPermaLink="false">alertcve201811776</guid>
+	</item>
+
+	<item> 
+	  <title>Oracle Security Alert for CVE-2018-3110 - 10 August 2018
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/alert-cve-2018-3110-5032149.html
+	      </link>
+	  <pubDate>Fri, 10 Aug 2018 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve20183110</guid>
+	</item>
+
+        <item>
+	  <title>Oracle Critical Patch Update Advisory - July 2018
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/cpujul2018-4258247.html
+	      </link>
+	  <pubDate>Tue, 17 Jul 2018 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJul2018</guid>
+	</item>
+
+        <item>
+	  <title>Oracle Critical Patch Update Advisory - April 2018
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/cpuapr2018-3678067.html
+	      </link>
+	  <pubDate>Tue, 17 Apr 2018 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUApr2018</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - January 2018
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/cpujan2018-3236628.html
+	      </link>
+	  <pubDate>Tue, 16 Jan 2018 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJan2018</guid>
+	</item>
+
+	<item> 
+	  <title>Oracle Security Alert for CVE-2017-10269 - 13 November 2017
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/alert-cve-2017-10269-4021872.html
+	      </link>
+	  <pubDate>Mon, 13 Nov 2017 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve201710269</guid>
+	</item>
+
+	<item> 
+	  <title>Oracle Security Alert for CVE-2017-10151 - 27 October 2017
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/alert-cve-2017-10151-4016513.html
+	      </link>
+	  <pubDate>Fri, 27 Oct 2017 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve201710151</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - October 2017
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/cpuoct2017-3236626.html
+	      </link>
+	  <pubDate>Tue, 17 Oct 2017 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUOct2017</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Security Alert for CVE-2017-9805 - 22 September 2017
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/alert-cve-2017-9805-3889403.html
+	      </link>
+	  <pubDate>Fri, 22 Sep 2017 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve20179805</guid>
+	</item>
+        
+        <item>
+	  <title>Oracle Critical Patch Update Advisory - July 2017
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/cpujul2017-3236622.html
+	      </link>
+	  <pubDate>Tue, 18 Jul 2017 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJul2017</guid>
+	</item>
+	
+	<item>
+	  <title>Oracle Security Alert for CVE-2017-3629
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/alert-cve-2017-3629-3757403.html
+	      </link>
+	  <pubDate>Mon, 19 Jun 2017 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve20173629</guid>
+	</item>
+
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - April 2017
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/cpuapr2017-3236618.html
+	      </link>
+	  <pubDate>Tue, 18 Apr 2017 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUApr2017</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - January 2017
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/cpujan2017-2881727.html
+	      </link>
+	  <pubDate>Tue, 17 Jan 2017 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJan2017</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - October 2016
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/cpuoct2016-2881722.html
+	      </link>
+	  <pubDate>Tue, 18 Oct 2016 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUOct2016</guid>
+	</item>
+
+        <item>
+	  <title>Oracle Critical Patch Update Advisory - July 2016
+          </title>
+      	<link>http://www.oracle.com/technetwork/security-advisory/cpujul2016-2881720.html
+	      </link>
+	  <pubDate>Tue, 19 Jul 2016 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJul2016</guid>
+	</item>
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - April 2016
+          </title>
+      	<link>http://www-content.oracle.com/technetwork/security-advisory/cpuapr2016v3-2985753.html
+	      </link>
+	  <pubDate>Tue, 19 Apr 2016 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUApr2016</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Security Alert for CVE-2016-0636 - 23 Mar 2016 
+          </title>
+      	<link>http://www.oracle.com/technetwork/topics/security/alert-cve-2016-0636-2949497.html
+	      </link>
+	  <pubDate>Wed, 23 Mar 2016 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve20160636</guid>
+	</item>
+
+<item>
+	  <title>Oracle Security Alert for CVE-2016-0603 - 5 February 2016
+          </title>
+      	<link>http://www.oracle.com/technetwork/topics/security/alert-cve-2016-0603-2874360.html
+	      </link>
+	  <pubDate>Thu, 5 Feb 2015 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve20160603</guid>
+	</item>
+
+<item>
+	  <title>Oracle Critical Patch Update Advisory - January 2016
+          </title>
+      	<link>http://www.oracle.com/technetwork/topics/security/cpujan2016-2367955.html
+	      </link>
+	  <pubDate>Tue, 19 Jan 2016 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJan2016</guid>
+	</item>
+        
+<item>
+	  <title>Oracle Security Alert for CVE-2015-4852 - 10 November 2015
+          </title>
+      	<link>http://www.oracle.com/technetwork/topics/security/alert-cve-2015-4852-2763333.html
+	      </link>
+	  <pubDate>Tue, 10 Nov 2015 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve20154852</guid>
+	</item>
+
+<item>
+	  <title>Oracle Critical Patch Update Advisory - October 2015
+          </title>
+      	<link>http://www.oracle.com/technetwork/topics/security/cpuoct2015-2367953.html
+	      </link>
+	  <pubDate>Tue, 20 Oct 2015 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUOct2015</guid>
+	</item>
+
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - July 2015
+          </title>
+      	<link>http://www.oracle.com/technetwork/topics/security/cpujul2015-2367936.html
+	      </link>
+	  <pubDate>Tue, 14 Jul 2015 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJul2015</guid>
+	</item>
+
+<item>
+	  <title>Oracle Security Alert for CVE-2015-3456 - 15 May 2015
+          </title>
+      	<link>http://www.oracle.com/technetwork/topics/security/alert-cve-2015-3456-2542656.html
+	      </link>
+	  <pubDate>Fri, 15 May 2015 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">alertcve20153456</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - April 2015
+          </title>
+      	<link>http://www.oracle.com/technetwork/topics/security/cpuapr2015-2365600.html
+	      </link>
+	  <pubDate>Tue, 14 Apr 2015 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUApr2015</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - January 2015
+          </title>
+      	<link>http://www.oracle.com/technetwork/topics/security/cpujan2015-1972971.html
+	      </link>
+	  <pubDate>Tue, 20 Jan 2015 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUJan2015</guid>
+	</item>
+
+	<item>
+	  <title>Oracle Critical Patch Update Advisory - October 2014
+          </title>
+      	<link>http://www.oracle.com/technetwork/topics/security/cpuoct2014-1972960.html
+	      </link>
+	  <pubDate>Tue, 14 Oct 2014 12:30:54 -0700</pubDate>
+          <guid isPermaLink="false">CPUOct2014</guid>
+	</item>
+
+	
+        <item>            
+	<title>Oracle Security Alert for CVE-2014-7169 - 26 September 2014</title>            <link>http://www.oracle.com/technetwork/topics/security/alert-cve-2014-7169-2303276.html</link>            <pubDate>Fri, 26 Sep 2014 12:30:54 -0700</pubDate>            <guid isPermaLink="false">alertcve20147169</guid>        </item> 
+
+<item>
+            <title>Oracle Critical Patch Update Advisory - July 2014</title>
+           <link>http://www.oracle.com/technetwork/topics/security/cpujul2014-1972956.html</link>
+            <pubDate>Tue, 15 Jul 2014 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">CPUJul2014</guid>
+        </item>
+        <item>
+            <title>Oracle Security Alert for CVE-2014-0160 - 18 April 2014</title>
+            <link>http://www.oracle.com/technetwork/topics/security/alert-cve-2014-0160-2190703.html</link>
+            <pubDate>Fri, 18 Apr 2014 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">alertcve20140160</guid>
+        </item>
+        <item>
+            <title>Oracle Critical Patch Update Advisory - April 2014</title>
+           <link>http://www.oracle.com/technetwork/topics/security/cpuapr2014-1972952.html</link>
+            <pubDate>Tue, 15 Apr 2014 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">CPUApr2014</guid>
+        </item>
+        <item>
+            <title>Oracle Critical Patch Update Advisory - January 2014</title>
+           <link>http://www.oracle.com/technetwork/topics/security/cpujan2014-1972949.html</link>
+            <pubDate>Tue, 14 Jan 2014 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">CPUJan2014</guid>
+        </item>   
+       <item>
+            <title>Oracle Critical Patch Update Advisory - October 2013</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuoct2013-1899837.html</link>
+            <pubDate>Tue, 15 Oct 2013 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">CPUOct2013</guid>
+        </item>   
+        <item>
+            <title>Oracle Critical Patch Update Advisory - July 2013</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujuly2013-1899826.html</link>
+            <pubDate>Tue, 16 Jul 2013 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">CPUJul2013</guid>
+        </item>       
+        <item>
+            <title>Oracle Java SE Critical Patch Update Advisory - June 2013</title>
+            <link>http://www.oracle.com/technetwork/topics/security/javacpujun2013-1899847.html</link>
+            <pubDate>Tue, 18 Jun 2013 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">JavaCPUJun2013</guid>
+        </item>       
+        <item>
+            <title>Oracle Java SE Critical Patch Update Advisory - April 2013</title>
+            <link>http://www.oracle.com/technetwork/topics/security/javacpuapr2013-1928497.html</link>
+            <pubDate>Tue, 16 Apr 2013 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">JavaCPUApr2013</guid>
+        </item>       
+        <item>
+            <title>Oracle Critical Patch Update Advisory - April 2013</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuapr2013-1899555.html</link>
+            <pubDate>Tue, 16 Apr 2013 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">CPUApr2013</guid>
+        </item>
+        <item>
+            <title>Oracle Security Alert for CVE-2013-1493 - 04 Mar 2013</title>
+            <link>http://www.oracle.com/technetwork/topics/security/alert-cve-2013-1493-1915081.html</link>
+            <pubDate>Mon, 04 Mar 2013 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">alertcve20131493</guid>
+        </item>       
+        <item>
+            <title>Updated Release of the Oracle Java SE Critical Patch Update - February 2013</title>
+            <link>http://www.oracle.com/technetwork/topics/security/javacpufeb2013update-1905892.html</link>
+            <pubDate>Tue, 19 Feb 2013 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">JavaCPUFeb2013Update</guid>
+        </item>
+        <item>
+            <title>Oracle Java SE Critical Patch Update Advisory - February 2013</title>
+            <link>http://www.oracle.com/technetwork/topics/security/javacpufeb2013-1841061.html</link>
+            <pubDate>Fri, 1 Feb 2013 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">javacpufeb2013</guid>
+        </item>
+        <item>
+            <title>Oracle Critical Patch Update Advisory - January 2013</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujan2013-1515902.html</link>
+            <pubDate>Tue, 15 Jan 2013 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">cpujan2013</guid>
+        </item>
+        <item>
+            <title>Oracle Security Alert for CVE-2013-0422 - 13 Jan 2013</title>
+            <link>http://www.oracle.com/technetwork/topics/security/alert-cve-2013-0422-1896849.html</link>
+            <pubDate>Sun, 13 Jan 2013 12:30:54 -0700</pubDate>
+            <guid isPermaLink="false">alertcve20130422</guid>
+        </item>
+        <item>
+            <title>Oracle Critical Patch Update Advisory - October 2012</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuoct2012-1515893.html</link>
+            <pubDate>Tue, 16 Oct 2012 12:26:29 -0700</pubDate>
+            <guid isPermaLink="false">cpuoct2012</guid>
+        </item>
+        <item>
+            <title>Oracle Java SE Critical Patch Update Advisory - October 2012</title>
+            <link>http://www.oracle.com/technetwork/topics/security/javacpuoct2012-1515924.html</link>
+            <pubDate>Tue, 16 Oct 2012 12:26:29 -0700</pubDate>
+            <guid isPermaLink="false">javacpuoct2012</guid>
+        </item>
+        <item>
+            <title>Oracle Security Alert for CVE-2012-4681 - 30 Aug 2012</title>
+            <link>http://www.oracle.com/technetwork/topics/security/alert-cve-2012-4681-1835715.html</link>
+            <pubDate>Thu, 30 Aug 2012 12:26:29 -0700</pubDate>
+            <guid isPermaLink="false">alertcve20124681</guid>
+        </item>
+		<item>
+            <title>Oracle Security Alert for CVE-2012-3132 - 10 Aug 2012</title>
+            <link>http://www.oracle.com/technetwork/topics/security/alert-cve-2012-3132-1721017.html</link>
+            <pubDate>Fri, 10 Aug 2012 12:14:29 -0700</pubDate>
+            <guid isPermaLink="false">alertcve20123132</guid>
+        </item>
+		<item>
+            <title>Oracle Critical Patch Update (CPU) Advisory - July 2012</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujul2012-392727.html</link>
+            <pubDate>Thu, 19 Jul 2012 15:15:29 -0700</pubDate>
+            <guid isPermaLink="false">C792E31D-6B7B-4372-978D-5D59A2DD14BA</guid>
+        </item>
+        <item>
+            <title>Oracle Java SE Critical Patch Update Advisory - June 2012</title>
+            <link>http://www.oracle.com/technetwork/topics/security/javacpujun2012-1515912.html</link>
+            <pubDate>Tue, 12 Jun 2012 13:00:00 -0700</pubDate>
+            <guid isPermaLink="false">47B2CA14-3C86-477D-A269-C43F5884DA1B</guid>
+        </item>
+        <item>
+            <title>Oracle Security Alert for CVE-2012-1675</title>
+            <link>http://www.oracle.com/technetwork/topics/security/alert-cve-2012-1675-1608180.html</link>
+            <pubDate>Mon, 30 Apr 2012 13:01:09 -0700</pubDate>
+            <guid isPermaLink="false">13243DE2-7DBE-4FB9-824A-ECEB7A9E8B33</guid>
+        </item>
+        <item>
+            <title>Oracle Critical Patch Update (CPU) Advisory - April 2012</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuapr2012-366314.html</link>
+            <pubDate>Wed, 18 Apr 2012 08:40:13 -0700</pubDate>
+            <guid isPermaLink="false">56628847-5FA5-485E-B325-5EEA26A13855</guid>
+        </item>
+        <item>
+            <title>Oracle Java SE Critical Patch Update Advisory - February 2012</title>
+            <link>http://www.oracle.com/technetwork/topics/security/javacpufeb2012-366318.html</link>
+            <pubDate>Tue, 14 Feb 2012 12:00:00 -0800</pubDate>
+            <guid isPermaLink="false">47B2CA14-3C86-477D-A269-D60F5583DAAB</guid>
+        </item>
+        <item>
+            <title>Oracle Security Alert for CVE-2011-5035</title>
+            <link>http://www.oracle.com/technetwork/topics/security/alert-cve-2011-5035-1506603.html</link>
+            <pubDate>Tue, 31 Jan 2012 13:20:32 -0800</pubDate>
+            <guid isPermaLink="false">47B2CA14-3C86-477D-A269-D60C7583D786</guid>
+        </item>
+        <item>
+            <title>Oracle Critical Patch Update (CPU) Advisory - January 2012</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujan2012-366304.html</link>
+            <pubDate>Tue, 17 Jan 2012 12:44:45 -0800</pubDate>
+            <guid isPermaLink="false">0662C19F-1B31-4605-BA9E-C6091206146F</guid>
+        </item>
+        <item>
+            <title>Oracle Critical Patch Update (CPU) Advisory - October 2011</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuoct2011-330135.html</link>
+            <pubDate>Mon, 24 Oct 2011 11:33:06 -0700</pubDate>
+            <guid isPermaLink="false">2EDE7947-152D-47CF-A79B-C0BD28205596</guid>
+        </item>
+        <item>
+            <title>Oracle Security Alert for CVE-2011-3192</title>
+            <link>http://www.oracle.com/technetwork/topics/security/alerts-086861.html#SecurityAlerts</link>
+            <pubDate>Thu, 15 Sep 2011 14:22:26 -0700</pubDate>
+            <guid isPermaLink="false">B1668B46-DC48-42D1-91F0-B6221CD41F81</guid>
+        </item>
+        <item>
+            <title>Oracle Critical Patch Update (CPU) Advisory - July 2011</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujuly2011-313328.html</link>
+            <pubDate>Tue, 19 Jul 2011 15:45:34 -0700</pubDate>
+            <guid isPermaLink="false">3315AE34-B386-446B-A274-C515282612A5</guid>
+        </item>
+        <item>
+            <title>Oracle Java SE Critical Patch Update Advisory - June 2011</title>
+            <link>http://www.oracle.com/technetwork/topics/security/javacpujune2011-313339.html</link>
+            <pubDate>Tue, 07 Jun 2011 15:18:00 -0700</pubDate>
+            <guid isPermaLink="false">javacpujune2011-313339</guid>
+        </item>
+        <item>
+            <title>Oracle Critical Patch Update (CPU) - April 2011</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuapr2011-301950.html</link>
+            <pubDate>Tue, 19 Apr 2011 13:00:00 -0700</pubDate>
+            <guid isPermaLink="false">cpuapr2011-301950</guid>
+        </item>
+        <item>
+            <title>Oracle Java SE and Java for Business Critical Patch Update Advisory - February 2011</title>
+            <link>http://www.oracle.com/technetwork/topics/security/javacpufeb2011-304611.html</link>
+            <pubDate>Tue, 15 Feb 2011 14:00:00 -0800</pubDate>
+            <guid isPermaLink="false">javacpufeb2011-304611</guid>
+        </item>
+        <item>
+            <title>Oracle Critical Patch Update (CPU) - January 2011</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujan2011-194091.html</link>
+            <pubDate>Tue, 18 Jan 2011 11:40:56 -0800</pubDate>
+            <guid isPermaLink="false">3096C799-A958-43FD-BF65-34466313F7A5</guid>
+        </item>
+        <item>
+            <title>Oracle Critical Patch Update (CPU) - October 2010</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuoct2010-175626.html</link>
+            <pubDate>Tue, 12 Oct 2010 09:07:09 -0700</pubDate>
+            <guid isPermaLink="false">oracle-critical-patch-update-cpu-october-2010</guid>
+        </item>
+        <item>
+            <title>Oracle Critical Patch Update (CPU) - July 2010</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujul2010-155308.html</link>
+            <pubDate>Wed, 14 Jul 2010 12:35:31 -0700</pubDate>
+            <guid isPermaLink="false">{4276bfde-a687-9256-dda1-32504ca464}</guid>
+        </item>
+        <item>
+            <title>Oracle Critical Patch Update (CPU) - April 2010</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuapr2010-099504.html</link>
+            <pubDate>Tue, 13 Apr 2010 14:01:14 -0700</pubDate>
+            <guid isPermaLink="false">{e97c2ccd-ff0f-3861-4f08-85e22eb8aa05}</guid>
+        </item>
+        <item>
+            <title>Oracle Security Alert for CVE-2010-0073 - February 2010</title>
+            <link>http://www.oracle.com/technetwork/topics/security/alert-cve-2010-0073-099291.html</link>
+            <description><![CDATA[Oracle Security Alert for CVE-2010-0073]]></description>
+            <pubDate>Thu, 04 Feb 2010 12:00:00 -0800</pubDate>
+            <guid isPermaLink="false">1263406073</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - January 2010</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujan2010-084891.html</link>
+            <pubDate>Wed, 13 Jan 2010 10:05:22 -0800</pubDate>
+            <guid isPermaLink="false">1263405922</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - October 2009</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuoct2009-096303.html</link>
+            <pubDate>Tue, 20 Oct 2009 08:39:36 -0700</pubDate>
+            <guid isPermaLink="false">1256053176</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - July 2009</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujul2009-091332.html</link>
+            <pubDate>Wed, 15 Jul 2009 18:00:00 -0700</pubDate>
+            <guid isPermaLink="false">1247706000</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - April 2009</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuapr2009-099563.html</link>
+            <pubDate>Tue, 14 Apr 2009 15:40:58 -0700</pubDate>
+            <guid isPermaLink="false">1239748858</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - January 2009</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujan2009-097901.html</link>
+            <pubDate>Tue, 14 Apr 2009 15:40:50 -0700</pubDate>
+            <guid isPermaLink="false">1239748850</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - October 2008</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuoct2008-100299.html</link>
+            <pubDate>Wed, 15 Oct 2008 11:53:46 -0700</pubDate>
+            <guid isPermaLink="false">1224096826</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - July 2008</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujul2008-090335.html</link>
+            <pubDate>Tue, 15 Jul 2008 13:01:17 -0700</pubDate>
+            <guid isPermaLink="false">1216152077</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - April 2008</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuapr2008-082075.html</link>
+            <pubDate>Tue, 15 Apr 2008 15:13:44 -0700</pubDate>
+            <guid isPermaLink="false">1208297624</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - January 2008</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujan2008-086860.html</link>
+            <pubDate>Tue, 15 Jan 2008 14:55:07 -0800</pubDate>
+            <guid isPermaLink="false">1200437707</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - October 2007</title>
+            <link>http://www.oracle.com/technology/deploy/security/critical-patch-updates/cpuoct2007.html</link>
+            <pubDate>Tue, 16 Oct 2007 13:47:15 -0700</pubDate>
+            <guid isPermaLink="false">1192567635</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - July 2007</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuoct2007-092913.html</link>
+            <pubDate>Tue, 17 Jul 2007 13:21:34 -0700</pubDate>
+            <guid isPermaLink="false">1184703694</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - April 2007</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuapr2007-090632.html</link>
+            <pubDate>Wed, 18 Apr 2007 08:57:25 -0700</pubDate>
+            <guid isPermaLink="false">1176911845</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - January 2007</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujan2007-101493.html</link>
+            <pubDate>Tue, 16 Jan 2007 15:35:52 -0800</pubDate>
+            <guid isPermaLink="false">1168990552</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - October 2006</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuoct2006-095368.html</link>
+            <pubDate>Tue, 17 Oct 2006 11:37:45 -0700</pubDate>
+            <guid isPermaLink="false">1161110265</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - April 2006</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuapr2006-090826.html</link>
+            <pubDate>Tue, 18 Apr 2006 13:42:18 -0700</pubDate>
+            <guid isPermaLink="false">1145392938</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - January 2006</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujan2006-082403.html</link>
+            <pubDate>Tue, 17 Jan 2006 16:20:10 -0800</pubDate>
+            <guid isPermaLink="false">1137543610</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - October 2005</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpuoct2005-090497.html</link>
+            <pubDate>Tue, 18 Oct 2005 15:25:52 -0700</pubDate>
+            <guid isPermaLink="false">1129674352</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - July 2005</title>
+            <link>http://www.oracle.com/technetwork/topics/security/cpujul2005-090619.html</link>
+            <pubDate>Tue, 12 Jul 2005 12:46:55 -0700</pubDate>
+            <guid isPermaLink="false">1121197615</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - April 2005</title>
+            <link>http://www.oracle.com/technology/deploy/security/pdf/cpuapr2005.pdf</link>
+            <pubDate>Tue, 18 Oct 2005 15:28:17 -0700</pubDate>
+            <guid isPermaLink="false">1129674497</guid>
+        </item>
+        <item>
+            <title>Critical Patch Update - January 2005</title>
+            <link>http://www.oracle.com/technology/deploy/security/pdf/cpu-jan-2005_advisory.pdf</link>
+            <pubDate>Tue, 18 Oct 2005 15:28:22 -0700</pubDate>
+            <guid isPermaLink="false">1129674502</guid>
+        </item>
+    </channel>
+</rss>

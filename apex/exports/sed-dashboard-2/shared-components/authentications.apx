@@ -1,0 +1,10 @@
+authentication css-sed (
+    name: css-sed-SAML
+    type: samlSignIn
+)
+
+authentication oracle-apex-accounts (
+    name: Oracle APEX Accounts
+    type: oracleApexAccounts
+)
+

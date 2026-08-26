@@ -1,0 +1,596 @@
+page 1 (
+    name: Home Dashboard
+    alias: HOME
+    title: SED Dashboard
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    css {
+        inline:
+            ```css
+            /* Metric cards */
+            
+            .sed-metric-card {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              max-width: 252px;
+              padding: 12px 13px;
+              border: 1px solid #d8e5ff;
+              border-radius: 9px;
+              background: #fff;
+              box-shadow: 0 2px 8px rgba(30, 64, 175, 0.06);
+            }
+            
+            .sed-metric-icon {
+              width: 32px;
+              height: 32px;
+              border-radius: 9px;
+              background: #eef4ff;
+              color: #315be8;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 17px;
+              flex: 0 0 auto;
+            }
+            
+            .sed-metric-title {
+              font-size: 10px;
+              font-weight: 700;
+              color: #1f2937;
+              margin-bottom: 3px;
+            }
+            
+            .sed-metric-value {
+              font-size: 22px;
+              line-height: 1;
+              font-weight: 800;
+              color: #111827;
+            }
+            
+            .sed-metric-line {
+              width: 15px;
+              height: 2px;
+              background: #2563eb;
+              border-radius: 999px;
+              margin: 7px 0 6px;
+            }
+            
+            .sed-tier-row {
+              display: flex;
+              gap: 12px;
+              flex-wrap: wrap;
+              font-size: 12px;
+              color: #374151;
+            }
+            
+            .tier-blue {
+              color: #2563eb;
+            }
+            
+            .tier-green {
+              color: #15803d;
+            }
+            
+            .tier-gray {
+              color: #374151;
+            }
+            
+            
+            /* Portfolio classic report */
+            
+            .sed-portfolio-region .t-Region {
+              border: 1px solid #e3e8f2;
+              border-radius: 14px;
+              box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+              overflow: hidden;
+            }
+            
+            .sed-portfolio-region .t-Region-header {
+              background: #fff;
+              border-bottom: 0;
+              padding: 18px 22px 8px;
+            }
+            
+            .sed-portfolio-region .t-Region-title {
+              font-size: 20px;
+              font-weight: 800;
+              color: #111827;
+            }
+            
+            .sed-portfolio-region .t-Report-report {
+              width: 100%;
+              border-collapse: collapse;
+            }
+            
+            .sed-portfolio-region .t-Report-colHead {
+              color: #111827;
+              font-size: 13px;
+              font-weight: 800;
+              background: #fff;
+              border-bottom: 1px solid #e8edf5;
+              padding: 10px 14px;
+            }
+            
+            .sed-portfolio-region .t-Report-cell {
+              padding: 14px;
+              border-bottom: 1px solid #e8edf5;
+              font-size: 14px;
+              color: #1f2937;
+              vertical-align: middle;
+            }
+            
+            .sed-portfolio-region .t-Report-report tr:last-child .t-Report-cell {
+              border-bottom: 0;
+            }
+            
+            .sed-portfolio-region .t-Report-cell[headers="CUSTOMER_NAME"] {
+              font-weight: 800;
+              color: #111827;
+            }
+            
+            .sed-portfolio-region .t-Report-cell[headers="REGION"] {
+              color: #4b5563;
+            }
+            
+            .sed-portfolio-region .t-Report-cell[headers="TIER_CODE"] {
+              font-weight: 800;
+            }
+            
+            .sed-portfolio-region .t-Report-cell[headers="HEALTH_LABEL"] {
+              font-weight: 800;
+            }
+            
+            .sed-portfolio-region .t-Report-cell[headers="NEXT_ACTION"] {
+              color: #2563eb;
+              font-weight: 800;
+            }
+            
+            .sed-portfolio-region .t-Report-cell[headers="ORACLE_PRODUCTS"] {
+              font-weight: 700;
+            }
+            .sed-portfolio-region .t-Report-colHead {
+              background: #fff;
+              color: #111827;
+              font-weight: 800;
+              font-size: 13px;
+              padding: 12px 14px;
+              border-bottom: 1px solid #e8edf5;
+            }
+            
+            .sed-portfolio-region .t-Report-cell {
+              padding: 14px;
+              border-bottom: 1px solid #e8edf5;
+              vertical-align: middle;
+              font-size: 14px;
+            }
+            
+            .sed-customer {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            }
+            
+            .sed-customer-icon {
+              width: 34px;
+              height: 34px;
+              border-radius: 999px;
+              background: #0b5cab;
+              color: white;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            
+            .sed-customer-name {
+              font-weight: 800;
+              color: #111827;
+            }
+            
+            .sed-customer-region {
+              color: #4b5563;
+              margin-top: 2px;
+            }
+            
+            .sed-tier {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              min-width: 34px;
+              height: 28px;
+              border-radius: 8px;
+              font-weight: 800;
+            }
+            
+            .sed-tier-t1 {
+              color: #ef4444;
+              background: #fff1f2;
+              border: 1px solid #fecdd3;
+            }
+            
+            .sed-tier-t2 {
+              color: #16a34a;
+              background: #ecfdf3;
+              border: 1px solid #bbf7d0;
+            }
+            
+            .sed-tier-t3 {
+              color: #2563eb;
+              background: #eff6ff;
+              border: 1px solid #bfdbfe;
+            }
+            
+            .sed-health {
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+              font-weight: 800;
+            }
+            
+            .sed-health span {
+              width: 10px;
+              height: 10px;
+              border-radius: 999px;
+            }
+            
+            .sed-health-green {
+              color: #16a34a;
+            }
+            
+            .sed-health-green span {
+              background: #16a34a;
+            }
+            
+            .sed-health-orange {
+              color: #f59e0b;
+            }
+            
+            .sed-health-orange span {
+              background: #f59e0b;
+            }
+            
+            .sed-health-red {
+              color: #ef4444;
+            }
+            
+            .sed-health-red span {
+              background: #ef4444;
+            }
+            
+            .sed-action a {
+              color: #2563eb;
+              font-weight: 800;
+              text-decoration: none;
+            }
+            
+            .sed-action div {
+              color: #374151;
+              margin-top: 3px;
+            }
+            
+            .sed-products {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 6px;
+            }
+            
+            .sed-products span {
+              display: inline-flex;
+              align-items: center;
+              height: 26px;
+              padding: 0 9px;
+              border-radius: 8px;
+              background: #eaf1fb;
+              border: 1px solid #d6e3f5;
+              color: #1f2937;
+              font-size: 12px;
+              font-weight: 800;
+            }
+            ```
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region new (
+        name: Total Customers:
+        type: dynamicContent
+        source {
+            plsqlFunctionBody:
+                ```plsql
+                declare
+                  l_total   number;
+                  l_tier_1  number;
+                  l_tier_2  number;
+                  l_tier_3  number;
+                begin
+                  select count(*)
+                    into l_total
+                    from customers c
+                    join customer_statuses s on s.lookup_id = c.status_id
+                   where s.lookup_code = 'ACTIVE';
+                
+                  select count(*)
+                    into l_tier_1
+                    from customers c
+                    join customer_tiers t on t.lookup_id = c.tier_id
+                    join customer_statuses s on s.lookup_id = c.status_id
+                   where t.lookup_code = 'TIER_1'
+                     and s.lookup_code = 'ACTIVE';
+                
+                  select count(*)
+                    into l_tier_2
+                    from customers c
+                    join customer_tiers t on t.lookup_id = c.tier_id
+                    join customer_statuses s on s.lookup_id = c.status_id
+                   where t.lookup_code = 'TIER_2'
+                     and s.lookup_code = 'ACTIVE';
+                
+                  select count(*)
+                    into l_tier_3
+                    from customers c
+                    join customer_tiers t on t.lookup_id = c.tier_id
+                    join customer_statuses s on s.lookup_id = c.status_id
+                   where t.lookup_code = 'TIER_3'
+                     and s.lookup_code = 'ACTIVE';
+                
+                  htp.p('
+                    <div class="sed-metric-card">
+                      <div class="sed-metric-icon">
+                        <span class="fa fa-users" aria-hidden="true"></span>
+                      </div>
+                
+                      <div class="sed-metric-body">
+                        <div class="sed-metric-title">Total Customers</div>
+                        <div class="sed-metric-value">' || l_total || '</div>
+                        <div class="sed-metric-line"></div>
+                
+                        <div class="sed-tier-row">
+                          <span><strong class="tier-blue">Tier 1:</strong> ' || l_tier_1 || '</span>
+                          <span><strong class="tier-green">Tier 2:</strong> ' || l_tier_2 || '</span>
+                          <span><strong class="tier-gray">Tier 3:</strong> ' || l_tier_3 || '</span>
+                        </div>
+                      </div>
+                    </div>
+                  ');
+                end;
+                ```
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    region new_1 (
+        name: Portfolio
+        type: classicReport
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select
+                  '<div class="sed-customer">
+                     <div class="sed-customer-icon"><span class="fa fa-building-o"></span></div>
+                     <div>
+                       <div class="sed-customer-name">' || apex_escape.html(customer_name) || '</div>
+                       <div class="sed-customer-region">' || apex_escape.html(region) || '</div>
+                     </div>
+                   </div>' as customer,
+                
+                  '<span class="sed-tier sed-tier-' || lower(tier_code) || '">' ||
+                     apex_escape.html(tier_code) ||
+                   '</span>' as tier,
+                
+                  apex_escape.html(industry) as industry,
+                
+                  '<span class="sed-health sed-health-' ||
+                    case health_code
+                      when 'GOOD' then 'green'
+                      when 'AT_RISK' then 'orange'
+                      when 'NEEDS_ATTENTION' then 'red'
+                      else 'gray'
+                    end ||
+                  '"><span></span>' || apex_escape.html(health_label) || '</span>' as health,
+                
+                  case
+                    when days_since_last_contact is null then 'No contact'
+                    else days_since_last_contact || ' days ago'
+                  end as last_contact,
+                
+                  '<div class="sed-action">
+                     <a href="f?p=&APP_ID.:10:&SESSION.::&DEBUG.:::">' ||
+                       apex_escape.html(nvl(next_action, 'No open action')) ||
+                     '</a>
+                     <div>' ||
+                       case
+                         when next_action_due_date is not null
+                         then to_char(next_action_due_date, 'Mon DD, YYYY')
+                       end ||
+                     '</div>
+                   </div>' as next_action,
+                
+                  '<div class="sed-products">' ||
+                    case
+                      when oracle_products is null then '<span>OCI</span>'
+                      else '<span>' || replace(apex_escape.html(oracle_products), ', ', '</span><span>') || '</span>'
+                    end ||
+                  '</div>' as oracle_products
+                
+                from v_apex_customer_portfolio
+                order by customer_name
+                fetch first 50 rows only;
+                ```
+        }
+        layout {
+            sequence: 50
+            slot: body
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+            cssClasses: sed-portfolio-region
+        }
+        componentAppearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--altRowsDefault
+                t-Report--rowHighlight
+            ]
+        }
+
+        column CUSTOMER (
+            reportColumnQueryId: 1
+            derivedColumn: N
+            heading {
+                heading: Customer
+            }
+            layout {
+                sequence: 10
+            }
+            sorting {
+                sortable: false
+            }
+            security {
+                escapeSpecialChars: false
+            }
+        )
+
+        column HEALTH (
+            reportColumnQueryId: 4
+            derivedColumn: N
+            heading {
+                heading: Health
+            }
+            layout {
+                sequence: 80
+            }
+            sorting {
+                sortable: false
+            }
+            security {
+                escapeSpecialChars: false
+            }
+        )
+
+        column INDUSTRY (
+            reportColumnQueryId: 3
+            derivedColumn: N
+            heading {
+                heading: Industry
+            }
+            layout {
+                sequence: 20
+            }
+            sorting {
+                sortable: false
+            }
+        )
+
+        column LAST_CONTACT (
+            reportColumnQueryId: 5
+            derivedColumn: N
+            heading {
+                heading: Last Contact
+            }
+            layout {
+                sequence: 30
+            }
+            sorting {
+                sortable: false
+            }
+        )
+
+        column NEXT_ACTION (
+            reportColumnQueryId: 6
+            derivedColumn: N
+            heading {
+                heading: Next Action
+            }
+            layout {
+                sequence: 40
+            }
+            sorting {
+                sortable: false
+            }
+            security {
+                escapeSpecialChars: false
+            }
+        )
+
+        column ORACLE_PRODUCTS (
+            reportColumnQueryId: 7
+            derivedColumn: N
+            heading {
+                heading: Oracle Products
+            }
+            layout {
+                sequence: 50
+            }
+            sorting {
+                sortable: false
+            }
+            security {
+                escapeSpecialChars: false
+            }
+        )
+
+        column TIER (
+            reportColumnQueryId: 2
+            derivedColumn: N
+            heading {
+                heading: Tier
+            }
+            layout {
+                sequence: 70
+            }
+            sorting {
+                sortable: false
+            }
+            security {
+                escapeSpecialChars: false
+            }
+        )
+
+    )
+
+    region sed-dashboard (
+        name: SED Dashboard
+        type: staticContent
+        source {
+            htmlCode: Security Advisor portfolio workflow to manage customers, related records, and operational follow-ups.
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/collapsible
+            templateOptions: [
+                #DEFAULT#
+                is-expanded
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+)
+

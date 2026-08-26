@@ -1,0 +1,254 @@
+automation monitor-oracle-security-publications (
+    name: Monitor Oracle Security Publications
+    execution {
+        scheduleExpression: FREQ=DAILY;INTERVAL=1;BYHOUR=6;BYMINUTE=0
+        scheduleStatus: active
+        actionsInitiatedOn: always
+    }
+    actionExecution {
+        actionErrorHandling: terminate
+    }
+
+    action monitor_oracle_security_publications (
+        name: Check Oracle Security Publications
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                declare
+                    l_feed_url varchar2(2000) :=
+                        'https://www.oracle.com/ocom/groups/public/@otn/documents/webcontent/rss-otn-sec.xml';
+                
+                    l_response         clob;
+                    l_publication_id   number;
+                    l_type             varchar2(30);
+                    l_title            varchar2(1000);
+                    l_url              varchar2(2000);
+                    l_pub_date_raw     varchar2(200);
+                    l_published_on     date;
+                
+                    l_existing_title   varchar2(1000);
+                    l_existing_url     varchar2(2000);
+                    l_existing_date    varchar2(200);
+                
+                    l_is_baseline      boolean := false;
+                    l_state            varchar2(20);
+                
+                    l_total_count      number := 0;
+                    l_baseline_count   number := 0;
+                    l_new_count        number := 0;
+                    l_updated_count    number := 0;
+                    l_unchanged_count  number := 0;
+                
+                    function parse_rss_date(
+                        p_value in varchar2
+                    ) return date
+                    is
+                        l_date_part varchar2(100);
+                    begin
+                        /*
+                         * Handles both:
+                         *   Tue, 16 June 2026 12:30:54
+                         *   Wed, 10 June 2026 18:00:00 -0700
+                         */
+                        l_date_part := regexp_substr(
+                            p_value,
+                            '[0-9]{1,2}[[:space:]]+[[:alpha:]]+[[:space:]]+[0-9]{4}'
+                        );
+                
+                        return to_date(
+                            l_date_part,
+                            'DD Month YYYY',
+                            'NLS_DATE_LANGUAGE=English'
+                        );
+                    end parse_rss_date;
+                
+                begin
+                    apex_automation.log_info('Reading Oracle Security RSS feed.');
+                
+                    select case when count(*) = 0 then 1 else 0 end
+                      into l_baseline_count
+                      from security_publications
+                     where source_code = 'ORACLE_RSS';
+                
+                    l_is_baseline := l_baseline_count = 1;
+                    l_baseline_count := 0;
+                
+                    l_response := apex_web_service.make_rest_request(
+                        p_url              => l_feed_url,
+                        p_http_method      => 'GET',
+                        p_transfer_timeout => 60
+                    );
+                
+                    if apex_web_service.g_status_code <> 200 then
+                        raise_application_error(
+                            -20001,
+                            'Oracle RSS feed returned HTTP status ' ||
+                            apex_web_service.g_status_code
+                        );
+                    end if;
+                
+                    for r in (
+                        select regexp_replace(
+                                   trim(x.guid_value),
+                                   '[[:space:]]+',
+                                   ' '
+                               ) as external_id,
+                
+                               regexp_replace(
+                                   trim(x.title_value),
+                                   '[[:space:]]+',
+                                   ' '
+                               ) as title,
+                
+                               regexp_replace(
+                                   trim(x.link_value),
+                                   '[[:space:]]+',
+                                   ''
+                               ) as advisory_url,
+                
+                               regexp_replace(
+                                   trim(x.pub_date_value),
+                                   '[[:space:]]+',
+                                   ' '
+                               ) as pub_date_raw
+                
+                          from xmltable(
+                                   '/rss/channel/item'
+                                   passing xmltype(l_response)
+                                   columns
+                                       guid_value varchar2(200)
+                                           path 'guid/text()',
+                                       title_value varchar2(1000)
+                                           path 'title/text()',
+                                       link_value varchar2(2000)
+                                           path 'link/text()',
+                                       pub_date_value varchar2(200)
+                                           path 'pubDate/text()'
+                               ) x
+                    ) loop
+                        l_total_count  := l_total_count + 1;
+                        l_title        := r.title;
+                        l_url          := r.advisory_url;
+                        l_pub_date_raw := r.pub_date_raw;
+                        l_published_on := parse_rss_date(r.pub_date_raw);
+                
+                        if upper(r.external_id) like 'CSPU%' then
+                            l_type := 'CSPU';
+                        elsif upper(r.external_id) like 'CPU%' then
+                            l_type := 'CPU';
+                        else
+                            l_type := 'SECURITY_ALERT';
+                        end if;
+                
+                        begin
+                            select publication_id,
+                                   title,
+                                   advisory_url,
+                                   source_pub_date
+                              into l_publication_id,
+                                   l_existing_title,
+                                   l_existing_url,
+                                   l_existing_date
+                              from security_publications
+                             where source_code = 'ORACLE_RSS'
+                               and external_id = r.external_id
+                             for update;
+                
+                            if l_existing_title <> l_title
+                               or l_existing_url <> l_url
+                               or nvl(l_existing_date, '#') <> nvl(l_pub_date_raw, '#')
+                            then
+                                update security_publications
+                                   set publication_type = l_type,
+                                       title            = l_title,
+                                       advisory_url     = l_url,
+                                       published_on     = l_published_on,
+                                       source_pub_date  = l_pub_date_raw,
+                                       alert_state      = 'UPDATED',
+                                       last_seen_at     = systimestamp,
+                                       last_changed_at  = systimestamp,
+                                       updated_at       = systimestamp
+                                 where publication_id = l_publication_id;
+                
+                                l_updated_count := l_updated_count + 1;
+                
+                                apex_automation.log_info(
+                                    'UPDATED: ' || r.external_id || ' — ' || l_title
+                                );
+                            else
+                                update security_publications
+                                   set last_seen_at = systimestamp,
+                                       updated_at   = systimestamp
+                                 where publication_id = l_publication_id;
+                
+                                l_unchanged_count := l_unchanged_count + 1;
+                            end if;
+                
+                        exception
+                            when no_data_found then
+                                if l_is_baseline then
+                                    l_state := 'CURRENT';
+                                    l_baseline_count := l_baseline_count + 1;
+                                else
+                                    l_state := 'NEW';
+                                    l_new_count := l_new_count + 1;
+                                end if;
+                
+                                insert into security_publications (
+                                    source_code,
+                                    external_id,
+                                    publication_type,
+                                    title,
+                                    advisory_url,
+                                    published_on,
+                                    source_pub_date,
+                                    alert_state
+                                ) values (
+                                    'ORACLE_RSS',
+                                    r.external_id,
+                                    l_type,
+                                    l_title,
+                                    l_url,
+                                    l_published_on,
+                                    l_pub_date_raw,
+                                    l_state
+                                );
+                
+                                if l_state = 'NEW' then
+                                    apex_automation.log_info(
+                                        'NEW: ' || r.external_id || ' — ' || l_title
+                                    );
+                                end if;
+                        end;
+                    end loop;
+                
+                    commit;
+                
+                    apex_automation.log_info(
+                        'Completed. Total=' || l_total_count ||
+                        ', Baseline=' || l_baseline_count ||
+                        ', New=' || l_new_count ||
+                        ', Updated=' || l_updated_count ||
+                        ', Unchanged=' || l_unchanged_count
+                    );
+                
+                exception
+                    when others then
+                        rollback;
+                
+                        apex_automation.log_error(
+                            'Oracle RSS import failed: ' || sqlerrm
+                        );
+                
+                        raise;
+                end;
+                ```
+        }
+        execution {
+            sequence: 10
+        }
+    )
+
+)
+

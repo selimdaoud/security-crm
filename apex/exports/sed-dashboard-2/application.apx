@@ -1,0 +1,72 @@
+app SED-DASHBOARD (
+    name: SED Dashboard
+    genAI {
+        service: @myopenai
+    }
+    logo {
+        type: text
+        text: SED Dashboard
+    }
+    navigation {
+        homeUrl: {
+            page: 1
+        }
+        loginUrl: {
+            page: LOGIN
+        }
+    }
+    navigationMenu {
+        listTemplate: @/side-navigation-menu
+        templateOptions: [
+            #DEFAULT#
+            t-TreeNav--styleA
+            js-navCollapsed--hidden
+        ]
+        list: @navigation-menu
+    }
+    navigationBar {
+        list: @navigation-bar
+        listTemplate: @/navigation-bar
+        templateOptions: #DEFAULT#
+    }
+    userInterface {
+        currentTheme: @universal-theme
+        globalPage: 0
+        addBuiltWithApexToFooter: false
+    }
+    appFormatMasks {
+        date: DS
+        timestamp: DS
+        timestampTimeZone: DS
+    }
+    authentication {
+        scheme: @css-sed
+    }
+    security {
+        runtimeApiUsage: modifyThisApp
+    }
+    sessionStateProtection {
+        checksumSalt: E2C3E83A754C3372FA6A9AC8C576E59312C9A6313B47116ABC207FCC2702B58E
+    }
+    globalization {
+        translationMethod: textMessages
+        autoTimeZone: true
+    }
+    progressiveWebApp {
+        installable: true
+    }
+    reportPrinting {
+        type: useInstanceSettings
+    }
+    runtime {
+        allowFeedback: true
+    }
+
+    substitution APP_NAME (
+        value {
+            staticValue: SED Dashboard
+        }
+    )
+
+)
+

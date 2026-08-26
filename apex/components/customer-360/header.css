@@ -1,0 +1,172 @@
+/* Add these rules to Page 21 -> CSS -> Inline, or use dashboard.css. */
+
+#customer360-header {
+  --ut-region-body-padding-x: 0;
+  --ut-region-body-padding-y: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#customer360-header .t-Region-header {
+  display: none;
+}
+
+#customer360-header .t-Region-body,
+#customer360-header .t-Region-bodyWrap {
+  padding: 0;
+  overflow: visible;
+  background: transparent;
+}
+
+.sed-c360-header {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 32px 40px;
+  border: 1px solid #e3e3e3;
+  border-radius: 24px;
+  color: #101010;
+  background: #fff;
+}
+
+.sed-c360-identity {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.sed-c360-avatar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 999px;
+  color: #194f93;
+  background: #cfe3fb;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.sed-c360-copy {
+  min-width: 0;
+}
+
+.sed-c360-name {
+  margin: 0 0 5px;
+  overflow-wrap: anywhere;
+  color: #101010;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -1.1px;
+}
+
+.sed-c360-meta {
+  color: #4d4d4d;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.sed-c360-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 31px;
+}
+
+.sed-c360-badge {
+  display: inline-flex;
+  min-height: 45px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 24px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.sed-c360-badge-tier {
+  color: #6f3e0d;
+  background: #fcefd9;
+}
+
+.sed-c360-badge-advisor {
+  color: #07594f;
+  background: #ddf5ef;
+}
+
+.sed-c360-badge-advisor-inactive {
+  color: #5f6368;
+  background: #edf0f2;
+}
+
+.sed-c360-advisor-name {
+  font-weight: 700;
+}
+
+.sed-c360-badge-health-good {
+  color: #2d6116;
+  background: #e7f2d9;
+}
+
+.sed-c360-badge-health-at_risk {
+  color: #83500a;
+  background: #fff0cf;
+}
+
+.sed-c360-badge-health-needs_attention {
+  color: #9b2525;
+  background: #fde5e5;
+}
+
+.sed-c360-badge-health-unknown {
+  color: #5f6368;
+  background: #edf0f2;
+}
+
+@media (max-width: 640px) {
+  .sed-c360-header {
+    padding: 24px;
+    border-radius: 18px;
+  }
+
+  .sed-c360-identity {
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .sed-c360-avatar {
+    width: 64px;
+    height: 64px;
+    font-size: 11px;
+  }
+
+  .sed-c360-name {
+    font-size: 13px;
+    letter-spacing: -0.6px;
+  }
+
+  .sed-c360-meta {
+    font-size: 8.5px;
+  }
+
+  .sed-c360-badges {
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  .sed-c360-badge {
+    min-height: 36px;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 8px;
+  }
+}

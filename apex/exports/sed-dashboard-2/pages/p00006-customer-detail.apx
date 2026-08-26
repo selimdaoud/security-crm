@@ -1,0 +1,147 @@
+page 6 (
+    name: Customer Detail
+    alias: CUSTOMER-DETAIL
+    title: Customer Detail
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 20
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region customer-detail (
+        name: Customer Detail
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select "CUSTOMER_ID",
+                       "CUSTOMER_NAME",
+                       "INDUSTRY",
+                       "REGION",
+                       "TIER_ID",
+                       ( select l1."LOOKUP_CODE" from "CUSTOMER_TIERS" l1 where l1."LOOKUP_ID" = m."TIER_ID") "TIER_ID_L$1",
+                       "STATUS_ID",
+                       ( select l2."LOOKUP_CODE" from "CUSTOMER_STATUSES" l2 where l2."LOOKUP_ID" = m."STATUS_ID") "STATUS_ID_L$2",
+                       "PRIMARY_SECURITY_ADVISOR_USER_ID",
+                       ( select l3."FULL_NAME" from "INTERNAL_USERS" l3 where l3."USER_ID" = m."PRIMARY_SECURITY_ADVISOR_USER_ID") "Y_SECURITY_ADVISOR_USER_ID_L$3",
+                       "CURRENT_SECURITY_CONTACT_ID",
+                       ( select l4."FULL_NAME" from "CUSTOMER_CONTACTS" l4 where l4."CONTACT_ID" = m."CURRENT_SECURITY_CONTACT_ID") "URRENT_SECURITY_CONTACT_ID_L$4",
+                       "CURRENT_HEALTH_STATUS_ID",
+                       ( select l5."LOOKUP_CODE" from "HEALTH_STATUSES" l5 where l5."LOOKUP_ID" = m."CURRENT_HEALTH_STATUS_ID") "CURRENT_HEALTH_STATUS_ID_L$5",
+                       "CURRENT_HEALTH_SCORE",
+                       "HEALTH_SCORE_REASON",
+                       "HEALTH_CALCULATED_AT",
+                       "MANUAL_HEALTH_OVERRIDE_FLAG",
+                       "HEALTH_OVERRIDE_REASON",
+                       "HEALTH_OVERRIDE_BY",
+                       ( select l6."FULL_NAME" from "INTERNAL_USERS" l6 where l6."USER_ID" = m."HEALTH_OVERRIDE_BY") "HEALTH_OVERRIDE_BY_L$6",
+                       "HEALTH_OVERRIDE_AT",
+                       "NOTES",
+                       "SOURCE_SYSTEM",
+                       "SOURCE_REFERENCE",
+                       "LAST_SYNCED_AT",
+                       "CREATED_BY",
+                       "CREATED_AT",
+                       "UPDATED_BY",
+                       "UPDATED_AT"
+                from "CUSTOMERS" m
+                ```
+        }
+        orderBy {
+            type: item
+            item: {
+                itemName: P6_ORDER_BY
+                orderBys: {
+                    CUSTOMER_NAME: "CUSTOMER_NAME" asc
+                    INDUSTRY: "INDUSTRY" asc
+                    PRIMARY_SECURITY_ADVISOR_USER_ID: "PRIMARY_SECURITY_ADVISOR_USER_ID" asc
+                }
+            }
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        title {
+            column: CUSTOMER_NAME
+        }
+        body {
+            column: INDUSTRY
+        }
+    )
+
+    pageItem P6_ORDER_BY (
+        type: selectList
+        label {
+            label: Order By
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Customer Name;CUSTOMER_NAME,Industry;INDUSTRY,Security Advisor;PRIMARY_SECURITY_ADVISOR_USER_ID
+            displayExtraValues: false
+            displayNullValue: false
+        }
+        layout {
+            sequence: 10
+            region: @customer-detail
+            slot: sortOrder
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            height: 1
+        }
+        validation {
+            valueRequired: true
+        }
+        advanced {
+            warnOnUnsavedChanges: ignore
+        }
+        default {
+            type: static
+            staticValue: CUSTOMER_NAME
+        }
+    )
+
+)
+

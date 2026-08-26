@@ -1,0 +1,719 @@
+page 4 (
+    name: Customers
+    alias: CUSTOMERS
+    title: Customers
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+    help {
+        helpText:
+            ```html
+            <p>To find data enter a search term into the search dialog, or click on the column headings to limit the records returned.</p>
+            
+            <p>You can perform numerous functions by clicking the <strong>Actions</strong> button. This includes selecting the columns that are displayed / hidden and their display sequence, plus numerous data and format functions.  You can also define additional views of the data using the chart, group by, and pivot options.</p>
+            
+            <p>If you want to save your customizations select report, or click download to unload the data. Enter you email address and time frame under subscription to be sent the data on a regular basis.<p>
+            
+            <p>For additional information click Help at the bottom of the Actions menu.</p> 
+            
+            <p>Click the <strong>Reset</strong> button to reset the interactive report back to the default settings.</p>
+            ```
+    }
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 20
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region customers (
+        name: Customers
+        type: interactiveReport
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select CUSTOMER_ID,
+                       CUSTOMER_NAME,
+                       INDUSTRY,
+                       REGION, COUNTRY,
+                       TIER_ID,
+                       STATUS_ID,
+                       PRIMARY_SECURITY_ADVISOR_USER_ID,
+                       CURRENT_SECURITY_CONTACT_ID,
+                       CURRENT_HEALTH_STATUS_ID,
+                       CURRENT_HEALTH_SCORE,
+                       HEALTH_SCORE_REASON,
+                       HEALTH_CALCULATED_AT,
+                       MANUAL_HEALTH_OVERRIDE_FLAG,
+                       HEALTH_OVERRIDE_REASON,
+                       HEALTH_OVERRIDE_BY,
+                       HEALTH_OVERRIDE_AT,
+                       NOTES,
+                       SOURCE_SYSTEM,
+                       SOURCE_REFERENCE,
+                       LAST_SYNCED_AT,
+                       CREATED_BY,
+                       CREATED_AT,
+                       UPDATED_BY,
+                       UPDATED_AT,
+                       ARR,
+                       REGISTRYID
+                  from CUSTOMERS
+                ```
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        link {
+            linkColumn: customTarget
+            target: {
+                page: 5
+                items: {
+                    P5_CUSTOMER_ID: \#CUSTOMER_ID#\
+                }
+                action: resetPagination
+            }
+            linkIcon: <span role="img" aria-label="Edit" class="fa fa-edit" title="Edit"></span>
+        }
+        pagination {
+            type: rowRangesXToY
+        }
+        messages {
+            whenNoDataFound: No data found.
+            whenMoreDataFound: The maximum row count for this report is #MAX_ROW_COUNT# rows.  Please apply a filter to reduce the number of records in your query.
+        }
+        advanced {
+            savedReportMappingIdentifier: 16948199371933068172
+        }
+
+        column ARR (
+            type: plainText
+            heading {
+                heading: Arr
+                alignment: end
+            }
+            layout {
+                sequence: 234
+                columnAlignment: end
+            }
+            source {
+                dataType: NUMBER
+            }
+            advanced {
+                endUserAlias: AE
+            }
+        )
+
+        column COUNTRY (
+            type: plainText
+            heading {
+                heading: Country
+            }
+            layout {
+                sequence: 14
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: AG
+            }
+        )
+
+        column CREATED_AT (
+            type: hidden
+            heading {
+                heading: Created At
+            }
+            layout {
+                sequence: 144
+            }
+            source {
+                dataType: DATE
+            }
+            advanced {
+                endUserAlias: V
+            }
+        )
+
+        column CREATED_BY (
+            type: plainText
+            heading {
+                heading: Created By
+            }
+            layout {
+                sequence: 134
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: U
+            }
+        )
+
+        column CURRENT_HEALTH_SCORE (
+            type: plainText
+            heading {
+                heading: Current Health Score
+                alignment: end
+            }
+            layout {
+                sequence: 34
+                columnAlignment: end
+            }
+            appearance {
+                formatMask: 999G999G999G999G999G999G999G999G999G990
+            }
+            source {
+                dataType: NUMBER
+            }
+            advanced {
+                endUserAlias: J
+            }
+        )
+
+        column CURRENT_HEALTH_STATUS_ID (
+            type: plainText
+            heading {
+                heading: Current Health Status Id
+                alignment: end
+            }
+            layout {
+                sequence: 214
+                columnAlignment: end
+            }
+            source {
+                dataType: NUMBER
+            }
+            advanced {
+                endUserAlias: AC
+            }
+        )
+
+        column CURRENT_SECURITY_CONTACT_ID (
+            type: plainText
+            heading {
+                heading: Current Security Contact Id
+                alignment: end
+            }
+            layout {
+                sequence: 204
+                columnAlignment: end
+            }
+            source {
+                dataType: NUMBER
+            }
+            advanced {
+                endUserAlias: AB
+            }
+        )
+
+        column CUSTOMER_ID (
+            type: hidden
+            heading {
+                heading: Customer ID
+            }
+            layout {
+                sequence: 0
+            }
+            source {
+                primaryKey: true
+                dataType: NUMBER
+            }
+            advanced {
+                endUserAlias: A
+            }
+        )
+
+        column CUSTOMER_NAME (
+            type: plainText
+            heading {
+                heading: Customer Name
+            }
+            layout {
+                sequence: 2
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: B
+            }
+        )
+
+        column HEALTH_CALCULATED_AT (
+            type: plainText
+            heading {
+                heading: Health Calculated At
+            }
+            layout {
+                sequence: 54
+            }
+            source {
+                dataType: DATE
+            }
+            advanced {
+                endUserAlias: L
+            }
+        )
+
+        column HEALTH_OVERRIDE_AT (
+            type: plainText
+            heading {
+                heading: Health Override At
+            }
+            layout {
+                sequence: 84
+            }
+            source {
+                dataType: DATE
+            }
+            advanced {
+                endUserAlias: P
+            }
+        )
+
+        column HEALTH_OVERRIDE_BY (
+            type: plainText
+            heading {
+                heading: Health Override By
+                alignment: end
+            }
+            layout {
+                sequence: 224
+                columnAlignment: end
+            }
+            source {
+                dataType: NUMBER
+            }
+            advanced {
+                endUserAlias: AD
+            }
+        )
+
+        column HEALTH_OVERRIDE_REASON (
+            type: plainText
+            heading {
+                heading: Health Override Reason
+            }
+            layout {
+                sequence: 74
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: N
+            }
+        )
+
+        column HEALTH_SCORE_REASON (
+            type: plainText
+            heading {
+                heading: Health Score Reason
+            }
+            layout {
+                sequence: 44
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: K
+            }
+        )
+
+        column INDUSTRY (
+            type: plainText
+            heading {
+                heading: Industry
+            }
+            layout {
+                sequence: 3
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: C
+            }
+        )
+
+        column LAST_SYNCED_AT (
+            type: hidden
+            heading {
+                heading: Last Synced At
+            }
+            layout {
+                sequence: 124
+            }
+            source {
+                dataType: DATE
+            }
+            advanced {
+                endUserAlias: T
+            }
+        )
+
+        column MANUAL_HEALTH_OVERRIDE_FLAG (
+            type: plainText
+            heading {
+                heading: Manual Health Override Flag
+            }
+            layout {
+                sequence: 64
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: M
+            }
+        )
+
+        column NOTES (
+            type: plainText
+            heading {
+                heading: Notes
+            }
+            layout {
+                sequence: 94
+            }
+            source {
+                dataType: CLOB
+            }
+            columnFilter {
+                type: none
+            }
+            advanced {
+                endUserAlias: Q
+            }
+            enableUsersTo {
+                hide: false
+                highlight: false
+                controlBreak: false
+                aggregate: false
+                compute: false
+                chart: false
+                groupBy: false
+            }
+        )
+
+        column PRIMARY_SECURITY_ADVISOR_USER_ID (
+            type: plainText
+            heading {
+                heading: Primary Security Advisor User Id
+                alignment: end
+            }
+            layout {
+                sequence: 194
+                columnAlignment: end
+            }
+            source {
+                dataType: NUMBER
+            }
+            advanced {
+                endUserAlias: AA
+            }
+        )
+
+        column REGION (
+            type: plainText
+            heading {
+                heading: Region
+            }
+            layout {
+                sequence: 4
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: D
+            }
+        )
+
+        column REGISTRYID (
+            type: plainText
+            heading {
+                heading: Registryid
+            }
+            layout {
+                sequence: 24
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: AF
+            }
+        )
+
+        column SOURCE_REFERENCE (
+            type: plainText
+            heading {
+                heading: Source Reference
+            }
+            layout {
+                sequence: 114
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: S
+            }
+        )
+
+        column SOURCE_SYSTEM (
+            type: plainText
+            heading {
+                heading: Source System
+            }
+            layout {
+                sequence: 104
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: R
+            }
+        )
+
+        column STATUS_ID (
+            type: plainText
+            heading {
+                heading: Status Id
+                alignment: end
+            }
+            layout {
+                sequence: 184
+                columnAlignment: end
+            }
+            source {
+                dataType: NUMBER
+            }
+            advanced {
+                endUserAlias: Z
+            }
+        )
+
+        column TIER_ID (
+            type: plainText
+            heading {
+                heading: Tier Id
+                alignment: end
+            }
+            layout {
+                sequence: 174
+                columnAlignment: end
+            }
+            source {
+                dataType: NUMBER
+            }
+            advanced {
+                endUserAlias: Y
+            }
+        )
+
+        column UPDATED_AT (
+            type: hidden
+            heading {
+                heading: Updated At
+            }
+            layout {
+                sequence: 164
+            }
+            source {
+                dataType: DATE
+            }
+            advanced {
+                endUserAlias: X
+            }
+        )
+
+        column UPDATED_BY (
+            type: plainText
+            heading {
+                heading: Updated By
+            }
+            layout {
+                sequence: 154
+            }
+            source {
+                dataType: STRING
+            }
+            advanced {
+                endUserAlias: W
+            }
+        )
+
+        page {
+            borderWidth: 0.5
+            borderColor: #666666
+        }
+
+        savedReport primary (
+            visibility: primaryDefault
+            view {
+                rowsPerPage: 50
+            }
+
+            displayColumn CREATED_AT (
+                sequence: 14
+            )
+
+            displayColumn CURRENT_HEALTH_SCORE (
+                sequence: 4
+            )
+
+            displayColumn CUSTOMER_NAME (
+                sequence: 1
+            )
+
+            displayColumn HEALTH_CALCULATED_AT (
+                sequence: 6
+            )
+
+            displayColumn HEALTH_OVERRIDE_AT (
+                sequence: 9
+            )
+
+            displayColumn HEALTH_OVERRIDE_REASON (
+                sequence: 8
+            )
+
+            displayColumn HEALTH_SCORE_REASON (
+                sequence: 5
+            )
+
+            displayColumn INDUSTRY (
+                sequence: 2
+            )
+
+            displayColumn LAST_SYNCED_AT (
+                sequence: 13
+            )
+
+            displayColumn MANUAL_HEALTH_OVERRIDE_FLAG (
+                sequence: 7
+            )
+
+            displayColumn NOTES (
+                sequence: 10
+            )
+
+            displayColumn REGION (
+                sequence: 3
+            )
+
+            displayColumn SOURCE_REFERENCE (
+                sequence: 12
+            )
+
+            displayColumn SOURCE_SYSTEM (
+                sequence: 11
+            )
+
+            displayColumn UPDATED_AT (
+                sequence: 15
+            )
+
+            sort (
+                column: CUSTOMER_NAME
+                sort {
+                    sequence: 1
+                }
+            )
+
+        )
+
+    )
+
+    button create (
+        buttonName: CREATE
+        label: Create
+        layout {
+            sequence: 10
+            region: @customers
+            slot: rightOfInteractiveReportSearchBar
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 5
+                clearCache: 5
+            }
+            warnOnUnsavedChanges: doNotCheck
+        }
+    )
+
+    dynamicAction edit-report-dialog-closed (
+        name: Edit Report - Dialog Closed
+        execution {
+            sequence: 10
+        }
+        when {
+            event: apexafterclosedialog
+            selectionType: region
+            region: @customers
+        }
+
+        action native-refresh (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @customers
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
+)
+

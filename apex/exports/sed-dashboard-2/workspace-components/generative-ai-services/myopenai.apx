@@ -1,0 +1,18 @@
+genAIService myopenai (
+    name: myopenai
+    provider: openai
+    endpointUrl {
+        url: https://api.openai.com/v1
+    }
+    authentication {
+        credentials: @credentials-for-myopenai
+    }
+    appBuilder {
+        usedByAppBuilder: true
+        defaultForNewApps: true
+    }
+    advanced {
+        modelName: gpt-5.4-nano
+    }
+)
+

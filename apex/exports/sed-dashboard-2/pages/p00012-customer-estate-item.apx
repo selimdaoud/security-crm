@@ -1,0 +1,741 @@
+page 12 (
+    name: Customer Estate Item
+    alias: CUSTOMER-ESTATE-ITEM
+    title: Customer Estate Item
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/drawer
+        templateOptions: [
+            #DEFAULT#
+            js-dialog-class-t-Drawer--pullOutEnd
+        ]
+    }
+    dialog {
+        chained: false
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region buttons (
+        name: Buttons
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region customer-estate-item (
+        name: Customer Estate Item
+        type: form
+        source {
+            location: localDatabase
+            tableName: CUSTOMER_ESTATE_ITEMS
+        }
+        layout {
+            sequence: 10
+            slot: contentBody
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+        edit {
+            enabled: true
+            allowedOperations: [
+                add
+                update
+                delete
+            ]
+        }
+    )
+
+    pageItem P12_BUSINESS_CRITICALITY (
+        type: textField
+        label {
+            label: Business Criticality
+            alignment: right
+        }
+        layout {
+            sequence: 90
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 50
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: BUSINESS_CRITICALITY
+            dataType: varchar2
+        }
+    )
+
+    pageItem P12_CREATED_AT (
+        type: datePicker
+        label {
+            label: Created At
+            alignment: right
+        }
+        layout {
+            sequence: 170
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            valueRequired: true
+            maxLength: 255
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: CREATED_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P12_CREATED_BY (
+        type: hidden
+        layout {
+            sequence: 160
+            region: @customer-estate-item
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: CREATED_BY
+            dataType: varchar2
+        }
+    )
+
+    pageItem P12_CUSTOMER_ID (
+        type: selectList
+        label {
+            label: Customer
+            alignment: right
+        }
+        lov {
+            type: sharedComponent
+            lov: @customers-customer-name
+        }
+        layout {
+            sequence: 20
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: CUSTOMER_ID
+            dataType: number
+        }
+    )
+
+    pageItem P12_DEPLOYMENT_TYPE (
+        type: textField
+        label {
+            label: Deployment Type
+            alignment: right
+        }
+        layout {
+            sequence: 60
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 100
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: DEPLOYMENT_TYPE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P12_ENVIRONMENT_NAME (
+        type: textField
+        label {
+            label: Environment Name
+            alignment: right
+        }
+        layout {
+            sequence: 70
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 200
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: ENVIRONMENT_NAME
+            dataType: varchar2
+        }
+    )
+
+    pageItem P12_ESTATE_ITEM_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @customer-estate-item
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: ESTATE_ITEM_ID
+            dataType: number
+            queryOnly: true
+            primaryKey: true
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P12_ESTATE_TYPE_ID (
+        type: selectList
+        label {
+            label: Estate Type
+            alignment: right
+        }
+        lov {
+            type: sharedComponent
+            lov: @estate-types-lookup-code
+        }
+        layout {
+            sequence: 30
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: ESTATE_TYPE_ID
+            dataType: number
+        }
+    )
+
+    pageItem P12_LAST_VERIFIED_AT (
+        type: datePicker
+        label {
+            label: Last Verified At
+            alignment: right
+        }
+        layout {
+            sequence: 150
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 255
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: LAST_VERIFIED_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P12_LIFECYCLE_STATUS_ID (
+        type: selectList
+        label {
+            label: Lifecycle Status
+            alignment: right
+        }
+        lov {
+            type: sharedComponent
+            lov: @estate-lifecycle-statuses-lookup-code
+        }
+        layout {
+            sequence: 110
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: LIFECYCLE_STATUS_ID
+            dataType: number
+        }
+    )
+
+    pageItem P12_NOTES (
+        type: textarea
+        label {
+            label: Notes
+            alignment: right
+        }
+        layout {
+            sequence: 120
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 60
+            height: 4
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: NOTES
+            dataType: clob
+        }
+        sessionState {
+            dataType: clob
+        }
+    )
+
+    pageItem P12_PRODUCT_OR_SERVICE_NAME (
+        type: textarea
+        label {
+            label: Product Or Service Name
+            alignment: right
+        }
+        layout {
+            sequence: 40
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            width: 60
+            height: 4
+        }
+        validation {
+            valueRequired: true
+            maxLength: 300
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: PRODUCT_OR_SERVICE_NAME
+            dataType: varchar2
+        }
+    )
+
+    pageItem P12_PRODUCT_VERSION (
+        type: textField
+        label {
+            label: Product Version
+            alignment: right
+        }
+        layout {
+            sequence: 50
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 100
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: PRODUCT_VERSION
+            dataType: varchar2
+        }
+    )
+
+    pageItem P12_REGION_NAME (
+        type: textField
+        label {
+            label: Region Name
+            alignment: right
+        }
+        layout {
+            sequence: 80
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 100
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: REGION_NAME
+            dataType: varchar2
+        }
+    )
+
+    pageItem P12_SECURITY_RELEVANCE (
+        type: textField
+        label {
+            label: Security Relevance
+            alignment: right
+        }
+        layout {
+            sequence: 100
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 50
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: SECURITY_RELEVANCE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P12_SOURCE_REFERENCE (
+        type: textarea
+        label {
+            label: Source Reference
+            alignment: right
+        }
+        layout {
+            sequence: 140
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 60
+            height: 4
+        }
+        validation {
+            maxLength: 500
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: SOURCE_REFERENCE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P12_SOURCE_SYSTEM (
+        type: textField
+        label {
+            label: Source System
+            alignment: right
+        }
+        layout {
+            sequence: 130
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 100
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: SOURCE_SYSTEM
+            dataType: varchar2
+        }
+    )
+
+    pageItem P12_UPDATED_AT (
+        type: datePicker
+        label {
+            label: Updated At
+            alignment: right
+        }
+        layout {
+            sequence: 190
+            region: @customer-estate-item
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 255
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: UPDATED_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P12_UPDATED_BY (
+        type: hidden
+        layout {
+            sequence: 180
+            region: @customer-estate-item
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-estate-item
+            column: UPDATED_BY
+            dataType: varchar2
+        }
+    )
+
+    button cancel (
+        buttonName: CANCEL
+        label: Cancel
+        layout {
+            sequence: 10
+            region: @buttons
+            slot: close
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: triggerAction
+        }
+
+        triggerAction native-dialog-cancel (
+            action: cancelDialog
+            execution {
+                sequence: 10
+            }
+        )
+
+    )
+
+    button create (
+        buttonName: CREATE
+        label: Create
+        layout {
+            sequence: 40
+            region: @buttons
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: insert
+        }
+        serverSideCondition {
+            type: itemIsNull
+            item: P12_ESTATE_ITEM_ID
+        }
+    )
+
+    button delete (
+        buttonName: DELETE
+        label: Delete
+        layout {
+            sequence: 20
+            region: @buttons
+            slot: delete
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: [
+                #DEFAULT#
+                t-Button--danger
+                t-Button--simple
+            ]
+        }
+        behavior {
+            executeValidations: false
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: delete
+            requiresConfirmation: true
+        }
+        confirmation {
+            message: &APP_TEXT$DELETE_MSG!RAW.
+            style: danger
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P12_ESTATE_ITEM_ID
+        }
+    )
+
+    button save (
+        buttonName: SAVE
+        label: Apply Changes
+        layout {
+            sequence: 30
+            region: @buttons
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: update
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P12_ESTATE_ITEM_ID
+        }
+    )
+
+    validation p12-created-at-must-be-timestamp (
+        name: P12_CREATED_AT must be timestamp
+        execution {
+            sequence: 160
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P12_CREATED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P12_CREATED_AT
+        }
+    )
+
+    validation p12-last-verified-at-must-be-timestamp (
+        name: P12_LAST_VERIFIED_AT must be timestamp
+        execution {
+            sequence: 140
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P12_LAST_VERIFIED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P12_LAST_VERIFIED_AT
+        }
+    )
+
+    validation p12-updated-at-must-be-timestamp (
+        name: P12_UPDATED_AT must be timestamp
+        execution {
+            sequence: 180
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P12_UPDATED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P12_UPDATED_AT
+        }
+    )
+
+    process close-dialog (
+        name: Close Dialog
+        type: closeDialog
+        execution {
+            sequence: 50
+        }
+        advanced {
+            executionMappingIdentifier: 16948297584513069618
+        }
+        serverSideCondition {
+            type: requestIsContainedInValue
+            value: CREATE,SAVE,DELETE
+        }
+    )
+
+    process initialize-form-customer-estate-item (
+        name: Initialize form Customer Estate Item
+        type: formInitialization
+        formRegion: @customer-estate-item
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 16948296748375069617
+        }
+    )
+
+    process process-form-customer-estate-item (
+        name: Process form Customer Estate Item
+        type: formAutoRowProcessing
+        formRegion: @customer-estate-item
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 16948297148234069618
+        }
+    )
+
+)
+

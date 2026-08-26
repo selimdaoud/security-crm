@@ -1,0 +1,1006 @@
+/* -------------------------------------------------------------------------
+ * Dashboard metric cards
+ * ------------------------------------------------------------------------- */
+
+.sed-metric-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 252px;
+  padding: 12px 13px;
+  border: 1px solid #d8e5ff;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(30, 64, 175, 0.06);
+}
+
+.sed-metric-icon {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  color: #315be8;
+  background: #eef4ff;
+  font-size: 17px;
+}
+
+.sed-metric-title {
+  margin-bottom: 3px;
+  color: #1f2937;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.sed-metric-value {
+  color: #111827;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.sed-metric-line {
+  width: 15px;
+  height: 2px;
+  margin: 7px 0 6px;
+  border-radius: 999px;
+  background: #2563eb;
+}
+
+.sed-tier-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: #374151;
+  font-size: 12px;
+}
+
+.tier-blue {
+  color: #2563eb;
+}
+
+.tier-green {
+  color: #15803d;
+}
+
+.tier-gray {
+  color: #374151;
+}
+
+/* -------------------------------------------------------------------------
+ * Customer portfolio classic report
+ * Add sed-portfolio-region to the region CSS Classes property.
+ * ------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------
+ * Customer 360 header
+ * Use customer360-header as the Dynamic Content region Static ID.
+ * ------------------------------------------------------------------------- */
+
+#customer360-header {
+  --ut-region-body-padding-x: 0;
+  --ut-region-body-padding-y: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#customer360-header .t-Region-header {
+  display: none;
+}
+
+#customer360-header .t-Region-body,
+#customer360-header .t-Region-bodyWrap {
+  padding: 0;
+  overflow: visible;
+  background: transparent;
+}
+
+.sed-c360-header {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 32px 40px;
+  border: 1px solid #e3e3e3;
+  border-radius: 24px;
+  color: #101010;
+  background: #fff;
+}
+
+.sed-c360-identity {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.sed-c360-avatar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 999px;
+  color: #194f93;
+  background: #cfe3fb;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.sed-c360-copy {
+  min-width: 0;
+}
+
+.sed-c360-name {
+  margin: 0 0 5px;
+  overflow-wrap: anywhere;
+  color: #101010;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -1.1px;
+}
+
+.sed-c360-meta {
+  color: #4d4d4d;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.sed-c360-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 31px;
+}
+
+.sed-c360-badge {
+  display: inline-flex;
+  min-height: 45px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 24px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.sed-c360-badge-tier {
+  color: #6f3e0d;
+  background: #fcefd9;
+}
+
+.sed-c360-badge-advisor {
+  color: #07594f;
+  background: #ddf5ef;
+}
+
+.sed-c360-badge-advisor-inactive {
+  color: #5f6368;
+  background: #edf0f2;
+}
+
+.sed-c360-advisor-name {
+  font-weight: 700;
+}
+
+.sed-c360-badge-health-good {
+  color: #2d6116;
+  background: #e7f2d9;
+}
+
+.sed-c360-badge-health-at_risk {
+  color: #83500a;
+  background: #fff0cf;
+}
+
+.sed-c360-badge-health-needs_attention {
+  color: #9b2525;
+  background: #fde5e5;
+}
+
+.sed-c360-badge-health-unknown {
+  color: #5f6368;
+  background: #edf0f2;
+}
+
+@media (max-width: 640px) {
+  .sed-c360-header {
+    padding: 24px;
+    border-radius: 18px;
+  }
+
+  .sed-c360-identity {
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .sed-c360-avatar {
+    width: 64px;
+    height: 64px;
+    font-size: 11px;
+  }
+
+  .sed-c360-name {
+    font-size: 13px;
+    letter-spacing: -0.6px;
+  }
+
+  .sed-c360-meta {
+    font-size: 8.5px;
+  }
+
+  .sed-c360-badges {
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  .sed-c360-badge {
+    min-height: 36px;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 8px;
+  }
+}
+
+.sed-portfolio-region.t-Region,
+.sed-portfolio-region .t-Region {
+  overflow: hidden;
+  border: 1px solid #e3e8f2;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+}
+
+.sed-portfolio-region .t-Region-header {
+  padding: 18px 22px 8px;
+  border-bottom: 0;
+  background: #fff;
+}
+
+.sed-portfolio-region .t-Region-title {
+  color: #111827;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.sed-portfolio-region .t-Report-report {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sed-portfolio-region .t-Report-colHead {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e8edf5;
+  color: #111827;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.sed-portfolio-region .t-Report-cell {
+  padding: 14px;
+  border-bottom: 1px solid #e8edf5;
+  color: #1f2937;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.sed-portfolio-region .t-Report-report tr:last-child .t-Report-cell {
+  border-bottom: 0;
+}
+
+.sed-portfolio-region .t-Report-cell[headers="CUSTOMER"],
+.sed-portfolio-region .t-Report-cell[headers="CUSTOMER_NAME"] {
+  width: 320px;
+  max-width: 320px;
+  color: #111827;
+  font-weight: 800;
+}
+
+.sed-portfolio-region .t-Report-colHead[id="CUSTOMER"],
+.sed-portfolio-region .t-Report-colHead[id="CUSTOMER_NAME"] {
+  width: 320px;
+  max-width: 320px;
+}
+
+.sed-portfolio-region .t-Report-cell[headers="REGION"] {
+  color: #4b5563;
+}
+
+.sed-portfolio-region .t-Report-cell[headers="TIER"],
+.sed-portfolio-region .t-Report-cell[headers="TIER_CODE"],
+.sed-portfolio-region .t-Report-cell[headers="HEALTH"],
+.sed-portfolio-region .t-Report-cell[headers="HEALTH_LABEL"] {
+  font-weight: 800;
+}
+
+.sed-portfolio-region .t-Report-cell[headers="NEXT_ACTION"] {
+  color: #2563eb;
+  font-weight: 800;
+}
+
+.sed-portfolio-region .t-Report-cell[headers="ORACLE_PRODUCTS"] {
+  font-weight: 700;
+}
+
+.sed-portfolio-region .t-Report-colHead[id="ORACLE_PRODUCTS"],
+.sed-portfolio-region .t-Report-cell[headers="ORACLE_PRODUCTS"] {
+  width: 220px;
+  min-width: 180px;
+  max-width: 220px;
+  box-sizing: border-box;
+  white-space: normal;
+}
+
+/* Keep the result-count footer compact, especially after filtering to one row. */
+
+.sed-portfolio-region .a-IRR-paginationWrap--bottom,
+.sed-portfolio-region .t-Report-pagination {
+  min-height: 24px;
+  box-sizing: border-box;
+  padding: 2px 10px;
+}
+
+.sed-portfolio-region .a-IRR-paginationWrap--bottom .a-IRR-pagination {
+  margin: 0;
+}
+
+.sed-portfolio-region .a-IRR-paginationWrap--bottom .a-IRR-pagination-label {
+  min-height: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 20px;
+}
+
+/* Customer link and identity */
+
+.sed-customer-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.sed-customer-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sed-customer-link:hover .sed-customer-name {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.sed-customer-link:focus-visible {
+  border-radius: 6px;
+  outline: 2px solid #2563eb;
+  outline-offset: 3px;
+}
+
+.sed-customer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sed-customer-name-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.sed-customer-name-row .sed-customer-link {
+  min-width: 0;
+}
+
+.sed-customer-360-button {
+  flex: 0 0 auto;
+  min-height: 13px;
+  margin: 0;
+  padding: 2px 4.5px;
+  border-radius: 3.5px;
+  font-size: 8px;
+  line-height: 8px;
+  white-space: nowrap;
+}
+
+.sed-customer-icon {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  color: #fff;
+  background: #0b5cab;
+}
+
+.sed-customer-name {
+  display: block;
+  max-width: 150px;
+  overflow: hidden;
+  color: #111827;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sed-customer-region {
+  margin-top: 2px;
+  color: #4b5563;
+}
+
+/* Customer tier */
+
+.sed-tier {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 28px;
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+.sed-tier-t0,
+.sed-tier-tier_0 {
+  border: 1px solid #7f1d1d;
+  color: #fff;
+  background: #991b1b;
+}
+
+.sed-tier-t1 {
+  border: 1px solid #fecdd3;
+  color: #ef4444;
+  background: #fff1f2;
+}
+
+.sed-tier-t2 {
+  border: 1px solid #bbf7d0;
+  color: #16a34a;
+  background: #ecfdf3;
+}
+
+.sed-tier-t3 {
+  border: 1px solid #bfdbfe;
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+.sed-tier-t4 {
+  border: 1px solid #ddd6fe;
+  color: #6d28d9;
+  background: #f5f3ff;
+}
+
+/* Customer lifecycle status */
+
+.sed-customer-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.sed-customer-status-active {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.sed-customer-status-inactive {
+  color: #4b5563;
+  background: #f3f4f6;
+}
+
+.sed-customer-status-prospect {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.sed-customer-status-dormant {
+  color: #b45309;
+  background: #fef3c7;
+}
+
+/* Relationship health */
+
+.sed-health {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+}
+
+.sed-health > span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.sed-health-green {
+  color: #16a34a;
+}
+
+.sed-health-green > span {
+  background: #16a34a;
+}
+
+.sed-health-orange {
+  color: #f59e0b;
+}
+
+.sed-health-orange > span {
+  background: #f59e0b;
+}
+
+.sed-health-red {
+  color: #ef4444;
+}
+
+.sed-health-red > span {
+  background: #ef4444;
+}
+
+.sed-health-gray {
+  color: #6b7280;
+}
+
+.sed-health-gray > span {
+  background: #9ca3af;
+}
+
+/* Next action */
+
+.sed-action {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sed-action a {
+  color: #2563eb;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.sed-action a:hover {
+  text-decoration: underline;
+}
+
+.sed-action-item + .sed-action-item {
+  padding-top: 8px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.sed-action-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sed-action-heading > a {
+  font-weight: 400;
+}
+
+.sed-action-due {
+  margin-top: 3px;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.sed-action-due strong {
+  font-weight: 700;
+}
+
+.sed-action-status {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  min-height: 18px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.sed-action-status-open {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.sed-action-status-in_progress {
+  color: #b45309;
+  background: #fef3c7;
+}
+
+.sed-action-empty {
+  gap: 0;
+}
+
+.sed-action-create {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 6px;
+}
+
+.sed-action-empty .sed-action-create {
+  padding-top: 0;
+}
+
+.sed-action-create .t-Button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: auto;
+  min-height: 24px;
+  padding: 2px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  color: #475569;
+  background: #fff;
+  box-shadow: none;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.sed-action-create .t-Button:hover,
+.sed-action-create .t-Button:focus {
+  border-color: #93c5fd;
+  color: #1d4ed8;
+  background: #f8fafc;
+  box-shadow: none;
+  text-decoration: none;
+}
+
+/* Oracle products */
+
+.sed-products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.sed-products-details {
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.sed-products-details[open] {
+  z-index: 20;
+}
+
+.sed-products-details summary {
+  width: fit-content;
+  cursor: pointer;
+  color: #475569;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.sed-products-details summary:hover {
+  color: #1d4ed8;
+}
+
+.sed-products-details summary:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+.sed-products-list {
+  display: none;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: 220px;
+  contain: inline-size;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-top: 6px;
+  padding: 10px;
+  border: 1px solid #dbe3ee;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+}
+
+.sed-products-details[open] > .sed-products-list {
+  display: flex;
+}
+
+.sed-products .sed-products-list span {
+  min-width: 0;
+  max-width: 100%;
+  height: auto;
+  min-height: 26px;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.sed-products span {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 9px;
+  border: 1px solid #d6e3f5;
+  border-radius: 8px;
+  color: #1f2937;
+  background: #eaf1fb;
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.sed-products span.sed-product-alert {
+  gap: 5px;
+  border-color: #fecaca;
+  color: #b42318;
+  background: #fef2f2;
+  font-weight: 600;
+}
+
+.sed-products span.sed-product-alert::before {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #dc2626;
+  content: "";
+}
+
+/* -------------------------------------------------------------------------
+ * Security Events classic report
+ * Prefer region Static ID security-events-card. Class and aria-label fallbacks
+ * cover APEX pages where the configured Static ID is not emitted in the HTML.
+ * ------------------------------------------------------------------------- */
+
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) {
+  --ut-region-body-padding-x: 0px;
+  --ut-region-body-padding-y: 0px;
+  --ut-report-cell-padding-x: 0px;
+  --ut-report-cell-padding-y: 0px;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid #e3e8f2 !important;
+  border-radius: 8px;
+  outline: 0 !important;
+  background: #fff;
+  box-shadow: none !important;
+}
+
+/* Remove Universal Theme report spacing, borders, shadows, and row effects. */
+
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Region-header,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Region-headerItems,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Region-bodyWrap,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Region-body,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Region-footer,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-wrap,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-tableWrap,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report thead,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report tbody,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report tr,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report th,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report td,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-cell,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-pagination {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-width: 0 !important;
+  border-color: transparent !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Region-bodyWrap,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Region-body,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-wrap,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-tableWrap {
+  display: block;
+  width: 100% !important;
+  max-width: none !important;
+  box-sizing: border-box;
+}
+
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report {
+  display: table;
+  width: 100% !important;
+  max-width: none !important;
+  table-layout: fixed;
+  border-spacing: 0 !important;
+  border-collapse: collapse !important;
+}
+
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report thead {
+  display: none;
+}
+
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report tbody tr,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report tbody tr:nth-child(odd),
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report tbody tr:nth-child(even),
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report tbody tr:hover,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report tbody td,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-report tbody tr:hover td,
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .t-Report-cell {
+  background: #fff !important;
+}
+
+/* Compact publication row */
+
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .sed-security-event {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  margin: 0 !important;
+  padding: 5px 8px !important;
+  text-align: left;
+  background: #fff;
+}
+
+:is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .sed-security-event:hover {
+  background: #f8fafc !important;
+}
+
+.sed-security-event-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #fff;
+  background: #2563eb;
+  font-size: 12px;
+}
+
+.sed-security-event--cspu .sed-security-event-icon {
+  background: #f59e0b;
+}
+
+.sed-security-event--alert .sed-security-event-icon {
+  background: #dc2626;
+}
+
+.sed-security-event-content {
+  min-width: 0;
+}
+
+.sed-security-event-title {
+  display: block;
+  overflow: hidden;
+  color: #111827;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sed-security-event-title:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.sed-security-event-date {
+  margin-top: 2px;
+  color: #6b7280;
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.sed-security-event-badges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.sed-security-event-type,
+.sed-security-event-state {
+  display: inline-flex;
+  align-items: center;
+  min-height: 16px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.sed-security-event-type {
+  color: #374151;
+  background: #e5e7eb;
+}
+
+.sed-security-event-state {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+/* State-specific security publication badges */
+.sed-security-event-state--NEW {
+  color: #fff;
+  background: #dc2626;
+}
+
+.sed-security-event-state--UPDATED {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+/* -------------------------------------------------------------------------
+ * Responsive adjustments
+ * ------------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .sed-portfolio-region .t-Report-colHead,
+  .sed-portfolio-region .t-Report-cell {
+    padding: 9px;
+  }
+
+  .sed-customer {
+    gap: 8px;
+  }
+
+  .sed-customer-icon {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  :is(#security-events-card, .security-events-card, .t-Region[aria-label="Security Events"]) .sed-security-event {
+    grid-template-columns: 26px minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 4px 6px !important;
+  }
+
+  .sed-security-event-icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .sed-security-event-title {
+    font-size: 11px;
+  }
+}

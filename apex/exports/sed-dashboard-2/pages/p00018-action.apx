@@ -1,0 +1,728 @@
+page 18 (
+    name: Action
+    alias: ACTION
+    title: Action
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/drawer
+        templateOptions: [
+            #DEFAULT#
+            js-dialog-class-t-Drawer--pullOutEnd
+        ]
+    }
+    dialog {
+        chained: false
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region action (
+        name: Action
+        type: form
+        source {
+            location: localDatabase
+            tableName: ACTIONS
+        }
+        layout {
+            sequence: 10
+            slot: contentBody
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+        edit {
+            enabled: true
+            allowedOperations: [
+                add
+                update
+                delete
+            ]
+        }
+    )
+
+    region buttons (
+        name: Buttons
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    pageItem P18_ACTION_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @action
+            slot: regionBody
+        }
+        source {
+            formRegion: @action
+            column: ACTION_ID
+            dataType: number
+            queryOnly: true
+            primaryKey: true
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P18_CAMPAIGN_RECIPIENT_ID (
+        type: numberField
+        label {
+            label: Campaign Recipient ID
+            alignment: right
+        }
+        layout {
+            sequence: 40
+            region: @action
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 255
+        }
+        source {
+            formRegion: @action
+            column: CAMPAIGN_RECIPIENT_ID
+            dataType: number
+        }
+    )
+
+    pageItem P18_COMPLETED_AT (
+        type: datePicker
+        label {
+            label: Completed At
+            alignment: right
+        }
+        layout {
+            sequence: 110
+            region: @action
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 255
+        }
+        source {
+            formRegion: @action
+            column: COMPLETED_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P18_CREATED_AT (
+        type: datePicker
+        label {
+            label: Created At
+            alignment: left
+        }
+        layout {
+            sequence: 140
+            region: @action
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            valueRequired: true
+            maxLength: 255
+        }
+        source {
+            formRegion: @action
+            column: CREATED_AT
+            dataType: timestamp
+        }
+        default {
+            type: expression
+            plsqlExpression: systimestamp
+        }
+    )
+
+    pageItem P18_CREATED_BY (
+        type: hidden
+        layout {
+            sequence: 130
+            region: @action
+            slot: regionBody
+        }
+        source {
+            formRegion: @action
+            column: CREATED_BY
+            dataType: varchar2
+        }
+        default {
+            type: expression
+            plsqlExpression: :APP_USER
+        }
+    )
+
+    pageItem P18_CUSTOMER_ID (
+        type: selectList
+        label {
+            label: Customer
+            alignment: left
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select c.customer_name as display_value,
+                       c.customer_id   as return_value
+                from customers c
+                order by c.customer_name
+                ```
+        }
+        layout {
+            sequence: 20
+            region: @action
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @action
+            column: CUSTOMER_ID
+            dataType: number
+        }
+    )
+
+    pageItem P18_DESCRIPTION (
+        type: textarea
+        label {
+            label: Description
+            alignment: right
+        }
+        layout {
+            sequence: 60
+            region: @action
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 60
+            height: 4
+        }
+        source {
+            formRegion: @action
+            column: DESCRIPTION
+            dataType: clob
+        }
+        sessionState {
+            dataType: clob
+        }
+    )
+
+    pageItem P18_DUE_DATE (
+        type: datePicker
+        label {
+            label: Due Date
+            alignment: right
+        }
+        layout {
+            sequence: 100
+            region: @action
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 255
+        }
+        source {
+            formRegion: @action
+            column: DUE_DATE
+            dataType: date
+        }
+    )
+
+    pageItem P18_OWNER_USER_ID (
+        type: selectList
+        label {
+            label: Owner User
+            alignment: left
+        }
+        lov {
+            type: sharedComponent
+            lov: @internal-users-full-name
+        }
+        layout {
+            sequence: 70
+            region: @action
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        source {
+            formRegion: @action
+            column: OWNER_USER_ID
+            dataType: number
+        }
+        default {
+            type: sqlQuerySingleValue
+            sqlQuerySingleValue:
+                ```sql
+                select primary_security_advisor_user_id
+                from customers
+                where customer_id = :P18_CUSTOMER_ID
+                ```
+        }
+    )
+
+    pageItem P18_PRIORITY_ID (
+        type: selectList
+        label {
+            label: Priority
+            alignment: left
+        }
+        lov {
+            type: sharedComponent
+            lov: @action-priorities-lookup-code
+        }
+        layout {
+            sequence: 80
+            region: @action
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @action
+            column: PRIORITY_ID
+            dataType: number
+        }
+        default {
+            type: sqlQuerySingleValue
+            sqlQuerySingleValue:
+                ```sql
+                select lookup_id
+                from action_priorities
+                where lookup_code = 'MEDIUM'
+                ```
+        }
+    )
+
+    pageItem P18_RESOLUTION_NOTES (
+        type: textarea
+        label {
+            label: Resolution Notes
+            alignment: right
+        }
+        layout {
+            sequence: 120
+            region: @action
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 60
+            height: 4
+        }
+        source {
+            formRegion: @action
+            column: RESOLUTION_NOTES
+            dataType: clob
+        }
+        sessionState {
+            dataType: clob
+        }
+    )
+
+    pageItem P18_SECURITY_CASE_ID (
+        type: numberField
+        label {
+            label: Security Case ID
+            alignment: right
+        }
+        layout {
+            sequence: 30
+            region: @action
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 255
+        }
+        source {
+            formRegion: @action
+            column: SECURITY_CASE_ID
+            dataType: number
+        }
+    )
+
+    pageItem P18_STATUS_ID (
+        type: selectList
+        label {
+            label: Status
+            alignment: left
+        }
+        lov {
+            type: sharedComponent
+            lov: @action-statuses-lookup-code
+        }
+        layout {
+            sequence: 90
+            region: @action
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @action
+            column: STATUS_ID
+            dataType: number
+        }
+        default {
+            type: sqlQuerySingleValue
+            sqlQuerySingleValue:
+                ```sql
+                select lookup_id
+                from action_statuses
+                where lookup_code = 'OPEN'
+                ```
+        }
+    )
+
+    pageItem P18_TITLE (
+        type: textarea
+        label {
+            label: Title
+            alignment: right
+        }
+        layout {
+            sequence: 50
+            region: @action
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            width: 60
+            height: 4
+        }
+        validation {
+            valueRequired: true
+            maxLength: 300
+        }
+        source {
+            formRegion: @action
+            column: TITLE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P18_UPDATED_AT (
+        type: datePicker
+        label {
+            label: Updated At
+            alignment: right
+        }
+        layout {
+            sequence: 160
+            region: @action
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 255
+        }
+        source {
+            formRegion: @action
+            column: UPDATED_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P18_UPDATED_BY (
+        type: hidden
+        layout {
+            sequence: 150
+            region: @action
+            slot: regionBody
+        }
+        source {
+            formRegion: @action
+            column: UPDATED_BY
+            dataType: varchar2
+        }
+    )
+
+    button cancel (
+        buttonName: CANCEL
+        label: Cancel
+        layout {
+            sequence: 10
+            region: @buttons
+            slot: close
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: triggerAction
+        }
+
+        triggerAction native-dialog-cancel (
+            action: cancelDialog
+            execution {
+                sequence: 10
+            }
+        )
+
+    )
+
+    button create (
+        buttonName: CREATE
+        label: Create
+        layout {
+            sequence: 40
+            region: @buttons
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: insert
+        }
+        serverSideCondition {
+            type: itemIsNull
+            item: P18_ACTION_ID
+        }
+    )
+
+    button delete (
+        buttonName: DELETE
+        label: Delete
+        layout {
+            sequence: 20
+            region: @buttons
+            slot: delete
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: [
+                #DEFAULT#
+                t-Button--danger
+                t-Button--simple
+            ]
+        }
+        behavior {
+            executeValidations: false
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: delete
+            requiresConfirmation: true
+        }
+        confirmation {
+            message: &APP_TEXT$DELETE_MSG!RAW.
+            style: danger
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P18_ACTION_ID
+        }
+    )
+
+    button save (
+        buttonName: SAVE
+        label: Apply Changes
+        layout {
+            sequence: 30
+            region: @buttons
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: update
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P18_ACTION_ID
+        }
+    )
+
+    validation p18-completed-at-must-be-timestamp (
+        name: P18_COMPLETED_AT must be timestamp
+        execution {
+            sequence: 100
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P18_COMPLETED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P18_COMPLETED_AT
+        }
+    )
+
+    validation p18-created-at-must-be-timestamp (
+        name: P18_CREATED_AT must be timestamp
+        execution {
+            sequence: 130
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P18_CREATED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P18_CREATED_AT
+        }
+    )
+
+    validation p18-updated-at-must-be-timestamp (
+        name: P18_UPDATED_AT must be timestamp
+        execution {
+            sequence: 150
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P18_UPDATED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P18_UPDATED_AT
+        }
+    )
+
+    process close-dialog (
+        name: Close Dialog
+        type: closeDialog
+        execution {
+            sequence: 30
+        }
+        advanced {
+            executionMappingIdentifier: 16948394342854071068
+        }
+        serverSideCondition {
+            type: requestIsContainedInValue
+            value: CREATE,SAVE,DELETE
+        }
+    )
+
+    process initialize-form-action (
+        name: Initialize form Action
+        type: formInitialization
+        formRegion: @action
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 16948393510739071067
+        }
+    )
+
+    process process-form-action (
+        name: Process form Action
+        type: formAutoRowProcessing
+        formRegion: @action
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 16948393902767071068
+        }
+    )
+
+    process update-form (
+        name: Update Form
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                :P18_UPDATED_BY := :APP_USER;
+                :P18_UPDATED_AT := systimestamp;
+                ```
+        }
+        execution {
+            sequence: 20
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 17982642145609903134
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
+            type: itemIsNotNull
+            item: P18_ACTION_ID
+        }
+    )
+
+)
+

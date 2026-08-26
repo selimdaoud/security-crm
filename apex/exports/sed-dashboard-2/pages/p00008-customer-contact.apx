@@ -1,0 +1,584 @@
+page 8 (
+    name: Customer Contact
+    alias: CUSTOMER-CONTACT
+    title: Customer Contact
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/drawer
+        templateOptions: [
+            #DEFAULT#
+            js-dialog-class-t-Drawer--pullOutEnd
+        ]
+    }
+    dialog {
+        chained: false
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region buttons (
+        name: Buttons
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region customer-contact (
+        name: Customer Contact
+        type: form
+        source {
+            location: localDatabase
+            tableName: CUSTOMER_CONTACTS
+        }
+        layout {
+            sequence: 10
+            slot: contentBody
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+        edit {
+            enabled: true
+            allowedOperations: [
+                add
+                update
+                delete
+            ]
+        }
+    )
+
+    pageItem P8_ACTIVE_FLAG (
+        type: textField
+        label {
+            label: Active Flag
+            alignment: left
+        }
+        layout {
+            sequence: 100
+            region: @customer-contact
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            valueRequired: true
+            maxLength: 1
+        }
+        source {
+            formRegion: @customer-contact
+            column: ACTIVE_FLAG
+            dataType: varchar2
+        }
+        default {
+            type: static
+            staticValue: Y
+        }
+    )
+
+    pageItem P8_CONTACT_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @customer-contact
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-contact
+            column: CONTACT_ID
+            dataType: number
+            queryOnly: true
+            primaryKey: true
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P8_CREATED_AT (
+        type: hidden
+        layout {
+            sequence: 120
+            region: @customer-contact
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-contact
+            column: CREATED_AT
+            dataType: timestamp
+            queryOnly: true
+        }
+    )
+
+    pageItem P8_CREATED_BY (
+        type: hidden
+        layout {
+            sequence: 110
+            region: @customer-contact
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-contact
+            column: CREATED_BY
+            dataType: varchar2
+        }
+    )
+
+    pageItem P8_CUSTOMER_ID (
+        type: selectList
+        label {
+            label: Customer
+            alignment: right
+        }
+        lov {
+            type: sharedComponent
+            lov: @customers-customer-name
+        }
+        layout {
+            sequence: 20
+            region: @customer-contact
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @customer-contact
+            column: CUSTOMER_ID
+            dataType: number
+        }
+    )
+
+    pageItem P8_EMAIL (
+        type: textarea
+        label {
+            label: Email
+            alignment: right
+        }
+        layout {
+            sequence: 60
+            region: @customer-contact
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 60
+            height: 4
+        }
+        validation {
+            maxLength: 320
+        }
+        source {
+            formRegion: @customer-contact
+            column: EMAIL
+            dataType: varchar2
+        }
+    )
+
+    pageItem P8_FULL_NAME (
+        type: textField
+        label {
+            label: Full Name
+            alignment: right
+        }
+        layout {
+            sequence: 30
+            region: @customer-contact
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            valueRequired: true
+            maxLength: 200
+        }
+        source {
+            formRegion: @customer-contact
+            column: FULL_NAME
+            dataType: varchar2
+        }
+    )
+
+    pageItem P8_IS_CURRENT_SECURITY_CONTACT (
+        type: textField
+        label {
+            label: Is Current Security Contact
+            alignment: left
+        }
+        layout {
+            sequence: 90
+            region: @customer-contact
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            valueRequired: true
+            maxLength: 1
+        }
+        source {
+            formRegion: @customer-contact
+            column: IS_CURRENT_SECURITY_CONTACT
+            dataType: varchar2
+        }
+        default {
+            type: static
+            staticValue: Y
+        }
+    )
+
+    pageItem P8_IS_PRIMARY (
+        type: textField
+        label {
+            label: Is Primary
+            alignment: right
+        }
+        layout {
+            sequence: 80
+            region: @customer-contact
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            valueRequired: true
+            maxLength: 1
+        }
+        source {
+            formRegion: @customer-contact
+            column: IS_PRIMARY
+            dataType: varchar2
+        }
+    )
+
+    pageItem P8_JOB_TITLE (
+        type: textField
+        label {
+            label: Job Title
+            alignment: right
+        }
+        layout {
+            sequence: 40
+            region: @customer-contact
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 200
+        }
+        source {
+            formRegion: @customer-contact
+            column: JOB_TITLE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P8_PHONE (
+        type: textField
+        label {
+            label: Phone
+            alignment: right
+        }
+        layout {
+            sequence: 70
+            region: @customer-contact
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 100
+        }
+        source {
+            formRegion: @customer-contact
+            column: PHONE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P8_ROLE_TYPE (
+        type: textField
+        label {
+            label: Role Type
+            alignment: right
+        }
+        layout {
+            sequence: 50
+            region: @customer-contact
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 100
+        }
+        source {
+            formRegion: @customer-contact
+            column: ROLE_TYPE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P8_UPDATED_AT (
+        type: datePicker
+        label {
+            label: Updated At
+            alignment: right
+        }
+        layout {
+            sequence: 140
+            region: @customer-contact
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 255
+        }
+        source {
+            formRegion: @customer-contact
+            column: UPDATED_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P8_UPDATED_BY (
+        type: hidden
+        layout {
+            sequence: 130
+            region: @customer-contact
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-contact
+            column: UPDATED_BY
+            dataType: varchar2
+        }
+    )
+
+    button cancel (
+        buttonName: CANCEL
+        label: Cancel
+        layout {
+            sequence: 10
+            region: @buttons
+            slot: close
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: triggerAction
+        }
+
+        triggerAction native-dialog-cancel (
+            action: cancelDialog
+            execution {
+                sequence: 10
+            }
+        )
+
+    )
+
+    button create (
+        buttonName: CREATE
+        label: Create
+        layout {
+            sequence: 40
+            region: @buttons
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: insert
+        }
+        serverSideCondition {
+            type: itemIsNull
+            item: P8_CONTACT_ID
+        }
+    )
+
+    button delete (
+        buttonName: DELETE
+        label: Delete
+        layout {
+            sequence: 20
+            region: @buttons
+            slot: delete
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: [
+                #DEFAULT#
+                t-Button--danger
+                t-Button--simple
+            ]
+        }
+        behavior {
+            executeValidations: false
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: delete
+            requiresConfirmation: true
+        }
+        confirmation {
+            message: &APP_TEXT$DELETE_MSG!RAW.
+            style: danger
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P8_CONTACT_ID
+        }
+    )
+
+    button save (
+        buttonName: SAVE
+        label: Apply Changes
+        layout {
+            sequence: 30
+            region: @buttons
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: update
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P8_CONTACT_ID
+        }
+    )
+
+    validation p8-created-at-must-be-timestamp (
+        name: P8_CREATED_AT must be timestamp
+        execution {
+            sequence: 110
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P8_CREATED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P8_CREATED_AT
+        }
+    )
+
+    validation p8-updated-at-must-be-timestamp (
+        name: P8_UPDATED_AT must be timestamp
+        execution {
+            sequence: 130
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P8_UPDATED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P8_UPDATED_AT
+        }
+    )
+
+    process close-dialog (
+        name: Close Dialog
+        type: closeDialog
+        execution {
+            sequence: 50
+        }
+        advanced {
+            executionMappingIdentifier: 16948236539992068677
+        }
+        serverSideCondition {
+            type: requestIsContainedInValue
+            value: CREATE,SAVE,DELETE
+        }
+    )
+
+    process initialize-form-customer-contact (
+        name: Initialize form Customer Contact
+        type: formInitialization
+        formRegion: @customer-contact
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 16948235735269068676
+        }
+    )
+
+    process process-form-customer-contact (
+        name: Process form Customer Contact
+        type: formAutoRowProcessing
+        formRegion: @customer-contact
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 16948236103308068676
+        }
+    )
+
+)
+

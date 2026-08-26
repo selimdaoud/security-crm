@@ -1,0 +1,606 @@
+page 16 (
+    name: Review
+    alias: REVIEW
+    title: Review
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/drawer
+        templateOptions: [
+            #DEFAULT#
+            js-dialog-class-t-Drawer--pullOutEnd
+        ]
+    }
+    dialog {
+        chained: false
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region buttons (
+        name: Buttons
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region review (
+        name: Review
+        type: form
+        source {
+            location: localDatabase
+            tableName: REVIEWS
+        }
+        layout {
+            sequence: 10
+            slot: contentBody
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+        edit {
+            enabled: true
+            allowedOperations: [
+                add
+                update
+                delete
+            ]
+        }
+    )
+
+    pageItem P16_AGENDA (
+        type: textarea
+        label {
+            label: Agenda
+            alignment: right
+        }
+        layout {
+            sequence: 70
+            region: @review
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 60
+            height: 4
+        }
+        source {
+            formRegion: @review
+            column: AGENDA
+            dataType: clob
+        }
+        sessionState {
+            dataType: clob
+        }
+    )
+
+    pageItem P16_COMPLETED_AT (
+        type: datePicker
+        label {
+            label: Completed At
+            alignment: right
+        }
+        layout {
+            sequence: 100
+            region: @review
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 255
+        }
+        source {
+            formRegion: @review
+            column: COMPLETED_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P16_CREATED_AT (
+        type: datePicker
+        label {
+            label: Created At
+            alignment: right
+        }
+        layout {
+            sequence: 120
+            region: @review
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            valueRequired: true
+            maxLength: 255
+        }
+        source {
+            formRegion: @review
+            column: CREATED_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P16_CREATED_BY (
+        type: hidden
+        layout {
+            sequence: 110
+            region: @review
+            slot: regionBody
+        }
+        source {
+            formRegion: @review
+            column: CREATED_BY
+            dataType: varchar2
+        }
+    )
+
+    pageItem P16_CUSTOMER_ID (
+        type: selectList
+        label {
+            label: Customer
+            alignment: right
+        }
+        lov {
+            type: sharedComponent
+            lov: @customers-customer-name
+        }
+        layout {
+            sequence: 20
+            region: @review
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @review
+            column: CUSTOMER_ID
+            dataType: number
+        }
+    )
+
+    pageItem P16_NOTES (
+        type: textarea
+        label {
+            label: Notes
+            alignment: right
+        }
+        layout {
+            sequence: 80
+            region: @review
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 60
+            height: 4
+        }
+        source {
+            formRegion: @review
+            column: NOTES
+            dataType: clob
+        }
+        sessionState {
+            dataType: clob
+        }
+    )
+
+    pageItem P16_OUTCOME (
+        type: textarea
+        label {
+            label: Outcome
+            alignment: right
+        }
+        layout {
+            sequence: 90
+            region: @review
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 60
+            height: 4
+        }
+        source {
+            formRegion: @review
+            column: OUTCOME
+            dataType: clob
+        }
+        sessionState {
+            dataType: clob
+        }
+    )
+
+    pageItem P16_OWNER_USER_ID (
+        type: selectList
+        label {
+            label: Owner User
+            alignment: right
+        }
+        lov {
+            type: sharedComponent
+            lov: @internal-users-full-name
+        }
+        layout {
+            sequence: 60
+            region: @review
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        source {
+            formRegion: @review
+            column: OWNER_USER_ID
+            dataType: number
+        }
+    )
+
+    pageItem P16_REVIEW_DATE (
+        type: datePicker
+        label {
+            label: Review Date
+            alignment: right
+        }
+        layout {
+            sequence: 40
+            region: @review
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            valueRequired: true
+            maxLength: 255
+        }
+        source {
+            formRegion: @review
+            column: REVIEW_DATE
+            dataType: date
+        }
+    )
+
+    pageItem P16_REVIEW_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @review
+            slot: regionBody
+        }
+        source {
+            formRegion: @review
+            column: REVIEW_ID
+            dataType: number
+            queryOnly: true
+            primaryKey: true
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P16_REVIEW_TYPE (
+        type: textField
+        label {
+            label: Review Type
+            alignment: right
+        }
+        layout {
+            sequence: 30
+            region: @review
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 100
+        }
+        source {
+            formRegion: @review
+            column: REVIEW_TYPE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P16_STATUS_ID (
+        type: selectList
+        label {
+            label: Status
+            alignment: right
+        }
+        lov {
+            type: sharedComponent
+            lov: @review-statuses-lookup-code
+        }
+        layout {
+            sequence: 50
+            region: @review
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @review
+            column: STATUS_ID
+            dataType: number
+        }
+    )
+
+    pageItem P16_UPDATED_AT (
+        type: datePicker
+        label {
+            label: Updated At
+            alignment: right
+        }
+        layout {
+            sequence: 140
+            region: @review
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 255
+        }
+        source {
+            formRegion: @review
+            column: UPDATED_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P16_UPDATED_BY (
+        type: hidden
+        layout {
+            sequence: 130
+            region: @review
+            slot: regionBody
+        }
+        source {
+            formRegion: @review
+            column: UPDATED_BY
+            dataType: varchar2
+        }
+    )
+
+    button cancel (
+        buttonName: CANCEL
+        label: Cancel
+        layout {
+            sequence: 10
+            region: @buttons
+            slot: close
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: triggerAction
+        }
+
+        triggerAction native-dialog-cancel (
+            action: cancelDialog
+            execution {
+                sequence: 10
+            }
+        )
+
+    )
+
+    button create (
+        buttonName: CREATE
+        label: Create
+        layout {
+            sequence: 40
+            region: @buttons
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: insert
+        }
+        serverSideCondition {
+            type: itemIsNull
+            item: P16_REVIEW_ID
+        }
+    )
+
+    button delete (
+        buttonName: DELETE
+        label: Delete
+        layout {
+            sequence: 20
+            region: @buttons
+            slot: delete
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: [
+                #DEFAULT#
+                t-Button--danger
+                t-Button--simple
+            ]
+        }
+        behavior {
+            executeValidations: false
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: delete
+            requiresConfirmation: true
+        }
+        confirmation {
+            message: &APP_TEXT$DELETE_MSG!RAW.
+            style: danger
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P16_REVIEW_ID
+        }
+    )
+
+    button save (
+        buttonName: SAVE
+        label: Apply Changes
+        layout {
+            sequence: 30
+            region: @buttons
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: update
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P16_REVIEW_ID
+        }
+    )
+
+    validation p16-completed-at-must-be-timestamp (
+        name: P16_COMPLETED_AT must be timestamp
+        execution {
+            sequence: 90
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P16_COMPLETED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P16_COMPLETED_AT
+        }
+    )
+
+    validation p16-created-at-must-be-timestamp (
+        name: P16_CREATED_AT must be timestamp
+        execution {
+            sequence: 110
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P16_CREATED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P16_CREATED_AT
+        }
+    )
+
+    validation p16-updated-at-must-be-timestamp (
+        name: P16_UPDATED_AT must be timestamp
+        execution {
+            sequence: 130
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P16_UPDATED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P16_UPDATED_AT
+        }
+    )
+
+    process close-dialog (
+        name: Close Dialog
+        type: closeDialog
+        execution {
+            sequence: 50
+        }
+        advanced {
+            executionMappingIdentifier: 16948361073484070573
+        }
+        serverSideCondition {
+            type: requestIsContainedInValue
+            value: CREATE,SAVE,DELETE
+        }
+    )
+
+    process initialize-form-review (
+        name: Initialize form Review
+        type: formInitialization
+        formRegion: @review
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 16948360116007070572
+        }
+    )
+
+    process process-form-review (
+        name: Process form Review
+        type: formAutoRowProcessing
+        formRegion: @review
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 16948360547489070573
+        }
+    )
+
+)
+

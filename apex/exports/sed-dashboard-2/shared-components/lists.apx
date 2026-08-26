@@ -1,0 +1,316 @@
+list navigation-bar (
+    name: Navigation Bar
+
+    entry action-a-pwa-install (
+        label: Install App
+        icon {
+            imageIconCssClasses: fa-cloud-download
+        }
+        layout {
+            sequence: 10
+        }
+        isCurrent {
+            type: never
+        }
+        link {
+            target: {
+                type: url
+                url: #action$a-pwa-install
+            }
+        }
+        userDefinedAttributes {
+            2: a-pwaInstall
+        }
+    )
+
+    entry app-user (
+        label: &APP_USER.
+        icon {
+            imageIconCssClasses: fa-user
+        }
+        layout {
+            sequence: 20
+        }
+        link {
+            target: {
+                type: url
+                url: #
+            }
+        }
+        userDefinedAttributes {
+            2: has-username
+        }
+    )
+
+    entry list_item (
+        label: ---
+        layout {
+            sequence: 30
+            parentEntry: @app-user
+        }
+        link {
+            target: {
+                type: url
+                url: separator
+            }
+        }
+        serverSideCondition {
+            type: userIsAuthenticated
+        }
+    )
+
+    entry sign-out (
+        label: Sign Out
+        icon {
+            imageIconCssClasses: fa-sign-out
+        }
+        layout {
+            sequence: 40
+            parentEntry: @app-user
+        }
+        link {
+            target: {
+                type: url
+                url: &LOGOUT_URL.
+            }
+        }
+        serverSideCondition {
+            type: userIsAuthenticated
+        }
+    )
+
+)
+
+list navigation-menu (
+    name: Navigation Menu
+
+    entry actions (
+        label: Actions
+        icon {
+            imageIconCssClasses: fa-table
+        }
+        layout {
+            sequence: 100
+        }
+        link {
+            target: {
+                page: 17
+            }
+        }
+    )
+
+    entry administration (
+        label: Administration
+        icon {
+            imageIconCssClasses: fa-user-wrench
+        }
+        layout {
+            sequence: 10000
+        }
+        link {
+            target: {
+                page: 10000
+            }
+        }
+        security {
+            authorizationScheme: @administration-rights
+        }
+    )
+
+    entry customer-contacts (
+        label: Customer Contacts
+        icon {
+            imageIconCssClasses: fa-table
+        }
+        layout {
+            sequence: 50
+        }
+        link {
+            target: {
+                page: 7
+            }
+        }
+    )
+
+    entry customer-detail (
+        label: Customer Detail
+        icon {
+            imageIconCssClasses: fa-cards
+        }
+        layout {
+            sequence: 40
+        }
+        link {
+            target: {
+                page: 6
+            }
+        }
+        security {
+            authorizationScheme: @page-temporarily-disabled
+        }
+    )
+
+    entry customer-form (
+        label: Customer Form
+        layout {
+            sequence: 10010
+        }
+        link {
+            target: {
+                page: 20
+            }
+        }
+    )
+
+    entry customers (
+        label: Customers
+        icon {
+            imageIconCssClasses: fa-table
+        }
+        layout {
+            sequence: 30
+        }
+        link {
+            target: {
+                page: 4
+            }
+        }
+    )
+
+    entry estate-items (
+        label: Estate Items
+        icon {
+            imageIconCssClasses: fa-table
+        }
+        layout {
+            sequence: 70
+        }
+        link {
+            target: {
+                page: 11
+            }
+        }
+    )
+
+    entry home-dashboard (
+        label: Home Dashboard
+        icon {
+            imageIconCssClasses: fa-home
+        }
+        layout {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 1
+            }
+        }
+    )
+
+    entry interactions (
+        label: Interactions
+        icon {
+            imageIconCssClasses: fa-table
+        }
+        layout {
+            sequence: 80
+        }
+        link {
+            target: {
+                page: 13
+            }
+        }
+    )
+
+    entry internal-users (
+        label: Internal Users
+        icon {
+            imageIconCssClasses: fa-table
+        }
+        layout {
+            sequence: 20
+        }
+        link {
+            target: {
+                page: 2
+            }
+        }
+    )
+
+    entry navigation-start (
+        label: Navigation Start
+        icon {
+            imageIconCssClasses: fa-file-o
+        }
+        layout {
+            sequence: 110
+        }
+        link {
+            target: {
+                page: 19
+            }
+        }
+    )
+
+    entry oracle-account-team (
+        label: Oracle Account Team
+        icon {
+            imageIconCssClasses: fa-table
+        }
+        layout {
+            sequence: 60
+        }
+        link {
+            target: {
+                page: 9
+            }
+        }
+    )
+
+    entry reviews (
+        label: Reviews
+        icon {
+            imageIconCssClasses: fa-table
+        }
+        layout {
+            sequence: 90
+        }
+        link {
+            target: {
+                page: 15
+            }
+        }
+    )
+
+)
+
+list user-interface (
+    name: User Interface
+    config {
+        buildOption: @feature-theme-style-selection
+    }
+
+    entry theme-style-selection (
+        label: Theme Style Selection
+        icon {
+            imageIconCssClasses: fa-paint-brush
+        }
+        layout {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 10010
+                clearCache: 10010
+            }
+        }
+        userDefinedAttributes {
+            1: Set the default application look and feel
+        }
+        config {
+            buildOption: @feature-theme-style-selection
+        }
+    )
+
+)
+

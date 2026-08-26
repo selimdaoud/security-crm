@@ -1,0 +1,270 @@
+lov action-priorities-lookup-code (
+    name: ACTION_PRIORITIES.LOOKUP_CODE
+    source {
+        tableName: ACTION_PRIORITIES
+    }
+    columnMapping {
+        return: LOOKUP_ID
+        display: LOOKUP_CODE
+        defaultSort: LOOKUP_CODE
+    }
+)
+
+lov action-statuses-lookup-code (
+    name: ACTION_STATUSES.LOOKUP_CODE
+    source {
+        tableName: ACTION_STATUSES
+    }
+    columnMapping {
+        return: LOOKUP_ID
+        display: LOOKUP_CODE
+        defaultSort: LOOKUP_CODE
+    }
+)
+
+lov boolean (
+    name: BOOLEAN
+    source {
+        location: staticValues
+    }
+
+    entry false (
+        sequence: 2
+        display: No
+        return: FALSE
+    )
+
+    entry true (
+        sequence: 1
+        display: Yes
+        return: TRUE
+    )
+
+)
+
+lov customer-contacts-full-name (
+    name: CUSTOMER_CONTACTS.FULL_NAME
+    source {
+        tableName: CUSTOMER_CONTACTS
+    }
+    columnMapping {
+        return: CONTACT_ID
+        display: FULL_NAME
+        defaultSort: FULL_NAME
+    }
+)
+
+lov customer-regions (
+    name: CUSTOMER_REGIONS
+    source {
+        location: staticValues
+    }
+
+    entry europe (
+        sequence: 2
+        display: EUROPE
+        return: EUROPE
+    )
+
+    entry japac (
+        sequence: 5
+        display: JAPAC
+        return: JAPAC
+    )
+
+    entry latam (
+        sequence: 4
+        display: LATAM
+        return: LATAM
+    )
+
+    entry mea (
+        sequence: 3
+        display: MEA
+        return: MEA
+    )
+
+    entry na (
+        sequence: 1
+        display: NA
+        return: NA
+    )
+
+)
+
+lov customer-statuses-lookup-code (
+    name: CUSTOMER_STATUSES.LOOKUP_CODE
+    source {
+        tableName: CUSTOMER_STATUSES
+    }
+    columnMapping {
+        return: LOOKUP_ID
+        display: LOOKUP_CODE
+        defaultSort: LOOKUP_CODE
+    }
+)
+
+lov customer-tiers-lookup-code (
+    name: CUSTOMER_TIERS.LOOKUP_CODE
+    source {
+        tableName: CUSTOMER_TIERS
+    }
+    columnMapping {
+        return: LOOKUP_ID
+        display: LOOKUP_CODE
+        defaultSort: LOOKUP_CODE
+    }
+)
+
+lov customers-customer-name (
+    name: CUSTOMERS.CUSTOMER_NAME
+    source {
+        tableName: CUSTOMERS
+    }
+    columnMapping {
+        return: CUSTOMER_ID
+        display: CUSTOMER_NAME
+        defaultSort: CUSTOMER_NAME
+    }
+)
+
+lov desktop-theme-styles (
+    name: DESKTOP THEME STYLES
+    source {
+        type: sqlQuery
+        sqlQuery:
+            ```sql
+            select s.name d,
+                   s.theme_style_id r
+              from apex_application_theme_styles s,
+                   apex_application_themes t
+             where s.application_id = :app_id
+               and t.application_id = s.application_id
+               and t.theme_number   = s.theme_number
+               and t.is_current     = 'Yes'
+             order by 1
+            ```
+    }
+    columnMapping {
+        return: R
+        display: D
+    }
+)
+
+lov estate-lifecycle-statuses-lookup-code (
+    name: ESTATE_LIFECYCLE_STATUSES.LOOKUP_CODE
+    source {
+        tableName: ESTATE_LIFECYCLE_STATUSES
+    }
+    columnMapping {
+        return: LOOKUP_ID
+        display: LOOKUP_CODE
+        defaultSort: LOOKUP_CODE
+    }
+)
+
+lov estate-types-lookup-code (
+    name: ESTATE_TYPES.LOOKUP_CODE
+    source {
+        tableName: ESTATE_TYPES
+    }
+    columnMapping {
+        return: LOOKUP_ID
+        display: LOOKUP_CODE
+        defaultSort: LOOKUP_CODE
+    }
+)
+
+lov health-statuses-lookup-code (
+    name: HEALTH_STATUSES.LOOKUP_CODE
+    source {
+        tableName: HEALTH_STATUSES
+    }
+    columnMapping {
+        return: LOOKUP_ID
+        display: LOOKUP_CODE
+        defaultSort: LOOKUP_CODE
+    }
+)
+
+lov interaction-types-lookup-code (
+    name: INTERACTION_TYPES.LOOKUP_CODE
+    source {
+        tableName: INTERACTION_TYPES
+    }
+    columnMapping {
+        return: LOOKUP_ID
+        display: LOOKUP_CODE
+        defaultSort: LOOKUP_CODE
+    }
+)
+
+lov internal-users-full-name (
+    name: INTERNAL_USERS.FULL_NAME
+    source {
+        tableName: INTERNAL_USERS
+    }
+    columnMapping {
+        return: USER_ID
+        display: FULL_NAME
+        defaultSort: FULL_NAME
+    }
+)
+
+lov security-advisors-full-name (
+    name: SECURITY_ADVISORS.FULL_NAME
+    source {
+        type: sqlQuery
+        sqlQuery:
+            ```sql
+            select full_name d,
+                   user_id   r
+              from internal_users
+             where active_flag = 'Y'
+               and upper(trim(role_name)) = 'SECURITY ADVISOR'
+             order by full_name
+            ```
+    }
+    columnMapping {
+        return: R
+        display: D
+    }
+)
+
+lov review-statuses-lookup-code (
+    name: REVIEW_STATUSES.LOOKUP_CODE
+    source {
+        tableName: REVIEW_STATUSES
+    }
+    columnMapping {
+        return: LOOKUP_ID
+        display: LOOKUP_CODE
+        defaultSort: LOOKUP_CODE
+    }
+)
+
+lov team-roles-lookup-code (
+    name: TEAM_ROLES.LOOKUP_CODE
+    source {
+        tableName: TEAM_ROLES
+    }
+    columnMapping {
+        return: LOOKUP_ID
+        display: LOOKUP_CODE
+        defaultSort: LOOKUP_CODE
+    }
+)
+
+lov user-theme-preference (
+    name: USER_THEME_PREFERENCE
+    source {
+        location: staticValues
+    }
+
+    entry yes (
+        sequence: 1
+        display: Allow End Users to choose Theme Style
+        return: Yes
+    )
+
+)

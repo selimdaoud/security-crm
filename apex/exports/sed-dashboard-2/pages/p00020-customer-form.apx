@@ -1,0 +1,814 @@
+page 20 (
+    name: Customer Form
+    alias: CUSTOMER-FORM
+    title: Customer Form
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/modal-dialog
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region buttons (
+        name: Buttons
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region customer-form (
+        name: Customer Form
+        type: form
+        source {
+            location: localDatabase
+            tableName: CUSTOMERS
+        }
+        layout {
+            sequence: 10
+            slot: contentBody
+            column: 1
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+        edit {
+            enabled: true
+            allowedOperations: [
+                add
+                update
+                delete
+            ]
+        }
+    )
+
+    region new (
+        name: Health
+        type: staticContent
+        layout {
+            sequence: 100
+            parentRegion: @customer-form
+            slot: regionBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--showIcon
+                t-Region--scrollBody
+                margin-top-lg
+            ]
+        }
+    )
+
+    pageItem P20_CREATED_AT (
+        type: hidden
+        layout {
+            sequence: 220
+            region: @customer-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-form
+            column: CREATED_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P20_CREATED_BY (
+        type: hidden
+        layout {
+            sequence: 210
+            region: @customer-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-form
+            column: CREATED_BY
+            dataType: varchar2
+        }
+    )
+
+    pageItem P20_CURRENT_HEALTH_SCORE (
+        type: numberField
+        label {
+            label: Current Health Score
+            alignment: left
+        }
+        layout {
+            sequence: 20
+            region: @new
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 255
+        }
+        source {
+            formRegion: @customer-form
+            column: CURRENT_HEALTH_SCORE
+            dataType: number
+        }
+    )
+
+    pageItem P20_CURRENT_HEALTH_STATUS_ID (
+        type: selectList
+        label {
+            label: Current Health Status Id
+            alignment: left
+        }
+        lov {
+            type: sharedComponent
+            lov: @health-statuses-lookup-code
+        }
+        layout {
+            sequence: 10
+            region: @new
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        source {
+            formRegion: @customer-form
+            column: CURRENT_HEALTH_STATUS_ID
+            dataType: number
+        }
+        default {
+            type: static
+            staticValue: 1
+        }
+    )
+
+    pageItem P20_CURRENT_SECURITY_CONTACT_ID (
+        type: selectList
+        label {
+            label: Current Security Contact Id
+            alignment: left
+        }
+        lov {
+            type: sharedComponent
+            lov: @customer-contacts-full-name
+        }
+        layout {
+            sequence: 90
+            region: @customer-form
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+        }
+        source {
+            formRegion: @customer-form
+            column: CURRENT_SECURITY_CONTACT_ID
+            dataType: number
+        }
+    )
+
+    pageItem P20_CUSTOMER_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @customer-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-form
+            column: CUSTOMER_ID
+            dataType: number
+            queryOnly: true
+            primaryKey: true
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P20_CUSTOMER_NAME (
+        type: textField
+        label {
+            label: Customer Name
+            alignment: left
+        }
+        layout {
+            sequence: 20
+            region: @customer-form
+            slot: regionBody
+            alignment: left
+            columnSpan: 5
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+            width: 60
+        }
+        validation {
+            valueRequired: true
+            maxLength: 300
+        }
+        source {
+            formRegion: @customer-form
+            column: CUSTOMER_NAME
+            dataType: varchar2
+        }
+    )
+
+    pageItem P20_HEALTH_CALCULATED_AT (
+        type: hidden
+        layout {
+            sequence: 120
+            region: @customer-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-form
+            column: HEALTH_CALCULATED_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P20_HEALTH_OVERRIDE_AT (
+        type: hidden
+        layout {
+            sequence: 170
+            region: @customer-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-form
+            column: HEALTH_OVERRIDE_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P20_HEALTH_OVERRIDE_BY (
+        type: hidden
+        layout {
+            sequence: 160
+            region: @customer-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-form
+            column: HEALTH_OVERRIDE_BY
+            dataType: number
+        }
+    )
+
+    pageItem P20_HEALTH_OVERRIDE_REASON (
+        type: hidden
+        layout {
+            sequence: 60
+            region: @new
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-form
+            column: HEALTH_OVERRIDE_REASON
+            dataType: varchar2
+        }
+    )
+
+    pageItem P20_HEALTH_SCORE_REASON (
+        type: textarea
+        label {
+            label: Health Score Reason
+            alignment: left
+        }
+        layout {
+            sequence: 40
+            region: @new
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 60
+            height: 4
+        }
+        validation {
+            maxLength: 1000
+        }
+        source {
+            formRegion: @customer-form
+            column: HEALTH_SCORE_REASON
+            dataType: varchar2
+        }
+    )
+
+    pageItem P20_INDUSTRY (
+        type: textField
+        label {
+            label: Industry
+            alignment: left
+        }
+        layout {
+            sequence: 70
+            region: @customer-form
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+            column: 7
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 32
+        }
+        validation {
+            maxLength: 200
+        }
+        source {
+            formRegion: @customer-form
+            column: INDUSTRY
+            dataType: varchar2
+        }
+    )
+
+    pageItem P20_LAST_SYNCED_AT (
+        type: hidden
+        layout {
+            sequence: 200
+            region: @customer-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-form
+            column: LAST_SYNCED_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P20_MANUAL_HEALTH_OVERRIDE_FLAG (
+        type: hidden
+        layout {
+            sequence: 50
+            region: @new
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-form
+            column: MANUAL_HEALTH_OVERRIDE_FLAG
+            dataType: varchar2
+        }
+        default {
+            type: static
+            staticValue: Y
+        }
+    )
+
+    pageItem P20_NOTES (
+        type: textarea
+        label {
+            label: Notes
+            alignment: left
+        }
+        layout {
+            sequence: 150
+            region: @customer-form
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+            newColumn: false
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 60
+            height: 4
+        }
+        source {
+            formRegion: @customer-form
+            column: NOTES
+            dataType: clob
+        }
+        sessionState {
+            dataType: clob
+        }
+    )
+
+    pageItem P20_PRIMARY_SECURITY_ADVISOR_USER_ID (
+        type: selectList
+        label {
+            label: Primary Security Advisor User Id
+            alignment: left
+        }
+        lov {
+            type: sharedComponent
+            lov: @security-advisors-full-name
+        }
+        layout {
+            sequence: 60
+            region: @customer-form
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+            newColumn: false
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @customer-form
+            column: PRIMARY_SECURITY_ADVISOR_USER_ID
+            dataType: number
+        }
+    )
+
+    pageItem P20_REGION (
+        type: selectList
+        label {
+            label: Region
+            alignment: left
+        }
+        lov {
+            type: sharedComponent
+            lov: @customer-regions
+        }
+        layout {
+            sequence: 50
+            region: @customer-form
+            slot: regionBody
+            alignment: left
+            columnSpan: 3
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            height: 1
+        }
+        source {
+            formRegion: @customer-form
+            column: REGION
+            dataType: varchar2
+        }
+    )
+
+    pageItem P20_SOURCE_REFERENCE (
+        type: hidden
+        layout {
+            sequence: 190
+            region: @customer-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-form
+            column: SOURCE_REFERENCE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P20_SOURCE_SYSTEM (
+        type: hidden
+        layout {
+            sequence: 180
+            region: @customer-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-form
+            column: SOURCE_SYSTEM
+            dataType: varchar2
+        }
+    )
+
+    pageItem P20_STATUS_ID (
+        type: selectList
+        label {
+            label: Status Id
+            alignment: left
+        }
+        lov {
+            type: sharedComponent
+            lov: @customer-statuses-lookup-code
+        }
+        layout {
+            sequence: 40
+            region: @customer-form
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+            column: 10
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @customer-form
+            column: STATUS_ID
+            dataType: number
+        }
+        default {
+            type: static
+            staticValue: 1
+        }
+    )
+
+    pageItem P20_TIER_ID (
+        type: selectList
+        label {
+            label: Tier Id
+            alignment: left
+        }
+        lov {
+            type: sharedComponent
+            lov: @customer-tiers-lookup-code
+        }
+        layout {
+            sequence: 30
+            region: @customer-form
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+            column: 7
+            columnSpan: 2
+        }
+        appearance {
+            template: @/required-floating
+            templateOptions: #DEFAULT#
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @customer-form
+            column: TIER_ID
+            dataType: number
+        }
+    )
+
+    pageItem P20_UPDATED_AT (
+        type: hidden
+        layout {
+            sequence: 240
+            region: @customer-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-form
+            column: UPDATED_AT
+            dataType: timestamp
+        }
+    )
+
+    pageItem P20_UPDATED_BY (
+        type: hidden
+        layout {
+            sequence: 230
+            region: @customer-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @customer-form
+            column: UPDATED_BY
+            dataType: varchar2
+        }
+    )
+
+    button cancel (
+        buttonName: CANCEL
+        label: Cancel
+        layout {
+            sequence: 10
+            region: @buttons
+            slot: close
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: triggerAction
+        }
+
+        triggerAction native-dialog-cancel (
+            action: cancelDialog
+            execution {
+                sequence: 10
+            }
+        )
+
+    )
+
+    button create (
+        buttonName: CREATE
+        label: Create
+        layout {
+            sequence: 40
+            region: @buttons
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: insert
+        }
+        serverSideCondition {
+            type: itemIsNull
+            item: P20_CUSTOMER_ID
+        }
+    )
+
+    button delete (
+        buttonName: DELETE
+        label: Delete
+        layout {
+            sequence: 20
+            region: @buttons
+            slot: delete
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            executeValidations: false
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: delete
+            requiresConfirmation: true
+        }
+        confirmation {
+            message: &APP_TEXT$DELETE_MSG!RAW.
+            style: danger
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P20_CUSTOMER_ID
+        }
+    )
+
+    button save (
+        buttonName: SAVE
+        label: Apply Changes
+        layout {
+            sequence: 30
+            region: @buttons
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: update
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P20_CUSTOMER_ID
+        }
+    )
+
+    validation p20-created-at-must-be-timestamp (
+        name: P20_CREATED_AT must be timestamp
+        execution {
+            sequence: 210
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P20_CREATED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P20_CREATED_AT
+        }
+    )
+
+    validation p20-health-calculated-at-must-be-timestamp (
+        name: P20_HEALTH_CALCULATED_AT must be timestamp
+        execution {
+            sequence: 110
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P20_HEALTH_CALCULATED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P20_HEALTH_CALCULATED_AT
+        }
+    )
+
+    validation p20-health-override-at-must-be-timestamp (
+        name: P20_HEALTH_OVERRIDE_AT must be timestamp
+        execution {
+            sequence: 150
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P20_HEALTH_OVERRIDE_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P20_HEALTH_OVERRIDE_AT
+        }
+    )
+
+    validation p20-last-synced-at-must-be-timestamp (
+        name: P20_LAST_SYNCED_AT must be timestamp
+        execution {
+            sequence: 190
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P20_LAST_SYNCED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P20_LAST_SYNCED_AT
+        }
+    )
+
+    validation p20-updated-at-must-be-timestamp (
+        name: P20_UPDATED_AT must be timestamp
+        execution {
+            sequence: 230
+        }
+        validation {
+            type: itemIsAValidTimestamp
+            item: P20_UPDATED_AT
+        }
+        error {
+            errorMessage: #LABEL# must be a valid timestamp.
+            associatedItem: @P20_UPDATED_AT
+        }
+    )
+
+    process close-dialog (
+        name: Close Dialog
+        type: closeDialog
+        execution {
+            sequence: 50
+        }
+        advanced {
+            executionMappingIdentifier: 20071870894787110078
+        }
+        serverSideCondition {
+            type: requestIsContainedInValue
+            value: CREATE,SAVE,DELETE
+        }
+    )
+
+    process initialize-form-customer-form (
+        name: Initialize form Customer Form
+        type: formInitialization
+        formRegion: @customer-form
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 20071870093388110078
+        }
+    )
+
+    process process-form-customer-form (
+        name: Process form Customer Form
+        type: formAutoRowProcessing
+        formRegion: @customer-form
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 20071870449626110078
+        }
+    )
+
+)

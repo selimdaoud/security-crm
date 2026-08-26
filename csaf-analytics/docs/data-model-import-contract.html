@@ -1,0 +1,628 @@
+<h1 id="csaf-analytics-data-model-and-import-contract">CSAF Analytics
+Data Model and Import Contract</h1>
+<table>
+<tbody>
+<tr>
+<td><strong>Status</strong></td>
+<td>Proposed baseline for review</td>
+</tr>
+<tr>
+<td><strong>Version</strong></td>
+<td>0.1</td>
+</tr>
+<tr>
+<td><strong>Date</strong></td>
+<td>2026-08-11</td>
+</tr>
+<tr>
+<td><strong>Scope</strong></td>
+<td>Target persistence model and ZIP import contract</td>
+</tr>
+</tbody>
+</table>
+<h2 id="purpose">1. Purpose</h2>
+<p>This document defines the first concrete technical baseline for CSAF
+Analytics before database DDL, PL/SQL import services or APEX pages are
+implemented. It freezes:</p>
+<ul>
+<li>the uploaded bundle contents;</li>
+<li>the grain and identity of the target tables;</li>
+<li>the mapping from every imported artifact to permanent storage;</li>
+<li>idempotency, conflict and transaction rules;</li>
+<li>the intended disposition of the undeployed Phase 0 database
+prototypes.</li>
+</ul>
+<p>The current APEX application has no CSAF database objects or imported
+CSAF data. The target model can therefore be installed cleanly. The
+Phase 0 scripts are reference material only.</p>
+<h2 id="decisions">2. Decisions</h2>
+<ol type="1">
+<li>One Python execution produces one immutable report run.</li>
+<li>The APEX operator uploads one ZIP containing exactly six root-level
+files.</li>
+<li>The original CSAF JSON is retained under its published filename, for
+example <code>cpujul2026csaf.json</code>, for audit, reprocessing and
+parser regression testing.</li>
+<li>The original ZIP is retained byte-for-byte.</li>
+<li>Advisory facts are immutable per formal revision and source
+hash.</li>
+<li>A CSAF product identifier is scoped to its advisory document.</li>
+<li>Enrichment observations belong to the exact report run, not only to
+a date.</li>
+<li>Frequently displayed metrics are extracted during import, while JSON
+and CSV artifacts remain the evidence behind them.</li>
+<li>Validation cannot modify canonical facts.</li>
+<li>Confirmed promotion is one atomic transaction.</li>
+</ol>
+<h2 id="zip-bundle-contract">3. ZIP bundle contract</h2>
+<h3 id="required-archive-layout">3.1 Required archive layout</h3>
+<pre class="text"><code>&lt;batch-id&gt;.zip
+├── manifest.json
+├── cpujul2026csaf.json
+├── report-data.json
+├── report.html
+├── findings.csv
+└── enrichment.csv</code></pre>
+<p>All entries must be regular files at the archive root. Directories,
+nested paths, absolute paths, duplicate normalized names,
+symbolic-link-like entries and additional files are rejected.</p>
+<p>The source entry keeps the original published basename recorded in
+<code>manifest.source_filename</code>. For example, a source downloaded
+from
+<code>https://www.oracle.com/docs/tech/security-alerts/cpujul2026csaf.json</code>
+remains <code>cpujul2026csaf.json</code> in the output directory and
+ZIP. Its content is the exact byte sequence parsed by the Python
+generator. Its SHA-256 must equal both
+<code>manifest.csaf_source_hash</code> and the corresponding entry in
+<code>manifest.file_hashes</code>.</p>
+<p>The source name must be a plain root-level basename ending in
+<code>.json</code>. Path separators, <code>.</code> or <code>..</code>,
+control characters and names colliding with the five generated artifact
+names are rejected. The importer requires
+<code>manifest.files.source_csaf</code> and
+<code>manifest.source_filename</code> to be identical.</p>
+<h3 id="manifest-change">3.2 Manifest change</h3>
+<p>The generator currently produces format version <code>2</code>
+without the source file in <code>files</code>. Adding the original
+source changes the bundle contract, so the target format version is
+incremented to <code>3</code>.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;format_version&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;files&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;source_csaf&quot;</span><span class="fu">:</span> <span class="st">&quot;cpujul2026csaf.json&quot;</span><span class="fu">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;findings&quot;</span><span class="fu">:</span> <span class="st">&quot;findings.csv&quot;</span><span class="fu">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;enrichment&quot;</span><span class="fu">:</span> <span class="st">&quot;enrichment.csv&quot;</span><span class="fu">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;report_data&quot;</span><span class="fu">:</span> <span class="st">&quot;report-data.json&quot;</span><span class="fu">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;report_html&quot;</span><span class="fu">:</span> <span class="st">&quot;report.html&quot;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;file_hashes&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;source_csaf&quot;</span><span class="fu">:</span> <span class="st">&quot;&lt;sha-256&gt;&quot;</span><span class="fu">,</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;findings&quot;</span><span class="fu">:</span> <span class="st">&quot;&lt;sha-256&gt;&quot;</span><span class="fu">,</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;enrichment&quot;</span><span class="fu">:</span> <span class="st">&quot;&lt;sha-256&gt;&quot;</span><span class="fu">,</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;report_data&quot;</span><span class="fu">:</span> <span class="st">&quot;&lt;sha-256&gt;&quot;</span><span class="fu">,</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;report_html&quot;</span><span class="fu">:</span> <span class="st">&quot;&lt;sha-256&gt;&quot;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>The manifest does not hash itself. The server calculates the SHA-256
+of the complete uploaded ZIP and stores it as
+<code>bundle_hash</code>.</p>
+<h3 id="initially-supported-versions">3.3 Initially supported
+versions</h3>
+<p>The first importer accepts only an explicitly configured
+combination:</p>
+<ul>
+<li>bundle format version <code>3</code>;</li>
+<li>report schema version <code>7</code>;</li>
+<li>CSAF source version <code>2.0</code>.</li>
+</ul>
+<p>Unsupported versions fail validation before canonical promotion.
+Supporting a new version requires an explicit mapping change and
+regression tests.</p>
+<h2 id="target-data-model">4. Target data model</h2>
+<h3 id="relationship-overview">4.1 Relationship overview</h3>
+<pre class="mermaid"><code>erDiagram
+    CSAF_ADVISORY ||--o{ CSAF_REPORT_RUN : &quot;executed as&quot;
+    CSAF_ADVISORY ||--o{ CSAF_PRODUCT_RELEASE : contains
+    CSAF_ADVISORY ||--o{ CSAF_ADVISORY_CVE : describes
+    CSAF_VULNERABILITY ||--o{ CSAF_ADVISORY_CVE : &quot;appears in&quot;
+    CSAF_ADVISORY_CVE ||--o{ CSAF_FINDING : applies_to
+    CSAF_PRODUCT_RELEASE ||--o{ CSAF_FINDING : has
+    CSAF_FINDING ||--o{ CSAF_FINDING_REMEDIATION : offers
+    CSAF_REPORT_RUN ||--o{ CSAF_ENRICHMENT_OBSERVATION : captures
+    CSAF_VULNERABILITY ||--o{ CSAF_ENRICHMENT_OBSERVATION : observed_for
+    CSAF_REPORT_RUN ||--o{ CSAF_REPORT_METRIC : extracts
+    CSAF_REPORT_RUN ||--o{ CSAF_REPORT_FAMILY_METRIC : extracts
+    CSAF_REPORT_RUN ||--o{ CSAF_IMPORT_EVENT : records</code></pre>
+<h3 id="csaf_report_run">4.2 <code>CSAF_REPORT_RUN</code></h3>
+<p><strong>Grain:</strong> one row per Python execution/uploaded
+bundle.</p>
+<p>Core fields:</p>
+<ul>
+<li><code>report_run_id</code> — surrogate primary key;</li>
+<li><code>batch_id</code> — unique Python execution identity;</li>
+<li><code>advisory_id</code> — nullable during validation, required
+after promotion;</li>
+<li>bundle format and report schema versions;</li>
+<li>execution start time and enrichment observation date;</li>
+<li>advisory reference, revision and source hash copied for
+validation/audit;</li>
+<li>findings, enrichment, CVE and product counts;</li>
+<li>EPSS, KEV and NVD source-health statuses;</li>
+<li>import status and bundle hash;</li>
+<li>original upload filename and size;</li>
+<li>uploaded ZIP BLOB, source CSAF BLOB, manifest CLOB, report JSON CLOB
+and report HTML BLOB;</li>
+<li>uploader, lifecycle timestamps and sanitized error summary.</li>
+</ul>
+<p><code>batch_id</code> is unique. Initial status values are:</p>
+<pre class="text"><code>RECEIVED  VALIDATING  VALIDATED  IMPORTING  SUCCESS  PARTIAL
+FAILED    CONFLICT    CANCELLED  EXPIRED</code></pre>
+<p>Only <code>SUCCESS</code> and <code>PARTIAL</code> runs are visible
+as imported packages.</p>
+<h3 id="csaf_advisory">4.3 <code>CSAF_ADVISORY</code></h3>
+<p><strong>Grain:</strong> one row per vendor advisory and formal
+revision.</p>
+<p>It stores a surrogate key, vendor, reference, revision, title,
+advisory URL, publication and revision dates, TLP, source
+filename/URL/hash and first-loaded timestamp.</p>
+<p>Business uniqueness:</p>
+<pre class="text"><code>(vendor, advisory_reference, advisory_revision)</code></pre>
+<p>The identity with the same source hash is reused. The same identity
+with a different source hash is a conflict requiring explicit
+review.</p>
+<h3 id="csaf_product_release">4.4 <code>CSAF_PRODUCT_RELEASE</code></h3>
+<p><strong>Grain:</strong> one CSAF product identifier within one
+advisory revision.</p>
+<p>It stores <code>product_release_id</code>, <code>advisory_id</code>,
+<code>csaf_product_id</code>, family, product name, version and CPE.</p>
+<p>Business uniqueness:</p>
+<pre class="text"><code>(advisory_id, csaf_product_id)</code></pre>
+<p>A future cross-advisory product dimension may be added through a
+separate curated mapping, preferably using CPE and explicit analyst
+review.</p>
+<h3 id="csaf_vulnerability">4.5 <code>CSAF_VULNERABILITY</code></h3>
+<p><strong>Grain:</strong> one global CVE identity.</p>
+<p>It stores the CVE, CVE year, first-seen advisory and timestamps.
+Advisory-specific descriptions are not stored here because vendor
+wording may change between advisories or revisions.</p>
+<h3 id="csaf_advisory_cve">4.6 <code>CSAF_ADVISORY_CVE</code></h3>
+<p><strong>Grain:</strong> one CVE as described by one advisory
+revision.</p>
+<p>It stores a surrogate key, <code>advisory_id</code>, <code>cve</code>
+and the advisory-specific description, with uniqueness on
+<code>(advisory_id, cve)</code>.</p>
+<h3 id="csaf_finding">4.7 <code>CSAF_FINDING</code></h3>
+<p><strong>Grain:</strong> one advisory-CVE/product-release
+relationship.</p>
+<p>It stores a surrogate key, advisory CVE, product release, status, VEX
+justification, component and third-party component, CVSS
+score/vector/source, decomposed CVSS fields, decision flags and vendor
+bug ID.</p>
+<p>Business uniqueness:</p>
+<pre class="text"><code>(advisory_cve_id, product_release_id)</code></pre>
+<h3 id="csaf_finding_remediation">4.8
+<code>CSAF_FINDING_REMEDIATION</code></h3>
+<p><strong>Grain:</strong> one remediation associated with one
+finding.</p>
+<p>It stores a surrogate key, finding key, remediation category, URL,
+note/reference and optional display order. The flattened remediation
+currently emitted by <code>findings.csv</code> maps to one child row
+when any remediation field is present.</p>
+<h3 id="csaf_enrichment_observation">4.9
+<code>CSAF_ENRICHMENT_OBSERVATION</code></h3>
+<p><strong>Grain:</strong> one CVE observation in one report run.</p>
+<p>It stores <code>report_run_id</code>, CVE, observation date, EPSS and
+percentile, KEV fields, public exploit-reference fields, and individual
+source statuses.</p>
+<p>Business uniqueness:</p>
+<pre class="text"><code>(report_run_id, cve)</code></pre>
+<p>Multiple runs on the same day remain independent. A current-state
+view selects the latest successful observation by execution timestamp
+and import time.</p>
+<h3 id="reporting-metrics">4.10 Reporting metrics</h3>
+<p><code>CSAF_REPORT_METRIC</code> has one row per
+<code>(report_run_id, metric_name)</code> and stores report-level
+numeric values extracted from <code>report-data.json</code>.</p>
+<p><code>CSAF_REPORT_FAMILY_METRIC</code> has one row per report run and
+product family and stores affected findings, pre-auth findings, affected
+products, affected versions and affected CVEs.</p>
+<p>The JSON remains authoritative for reproducing the generated report.
+Extracted metrics are query-optimized projections and must reconcile to
+it.</p>
+<h3 id="csaf_import_event">4.11 <code>CSAF_IMPORT_EVENT</code></h3>
+<p><strong>Grain:</strong> one lifecycle or diagnostic event for one
+report run.</p>
+<p>It stores an event ID, report-run ID, event type, severity,
+timestamp, actor, sanitized operator message and restricted technical
+diagnostic.</p>
+<h3 id="staging">4.12 Staging</h3>
+<p>Run-keyed staging structures mirror the complete CSV contracts as
+text where conversion is required. Every row is tied to
+<code>report_run_id</code> and carries the validated
+<code>batch_id</code>.</p>
+<p>Staging is never the analytical source. It may be purged after
+successful promotion. Failed staging may be retained temporarily for
+authorized diagnosis and then expired automatically.</p>
+<h2 id="artifact-to-storage-mapping">5. Artifact-to-storage mapping</h2>
+<h3 id="manifest.json">5.1 <code>manifest.json</code></h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Manifest field</th>
+<th>Permanent destination</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>format_version</code></td>
+<td><code>CSAF_REPORT_RUN.bundle_format_version</code></td>
+</tr>
+<tr>
+<td><code>batch_id</code></td>
+<td><code>CSAF_REPORT_RUN.batch_id</code></td>
+</tr>
+<tr>
+<td><code>execution_started_at</code></td>
+<td><code>CSAF_REPORT_RUN.execution_started_at</code></td>
+</tr>
+<tr>
+<td>Advisory reference/revision</td>
+<td>Run validation fields and <code>CSAF_ADVISORY</code></td>
+</tr>
+<tr>
+<td><code>csaf_source_hash</code></td>
+<td>Run validation field and <code>CSAF_ADVISORY.source_hash</code></td>
+</tr>
+<tr>
+<td>Source filename/URL</td>
+<td>Run and advisory provenance</td>
+</tr>
+<tr>
+<td><code>observation_date</code></td>
+<td><code>CSAF_REPORT_RUN.observation_date</code></td>
+</tr>
+<tr>
+<td>Finding/enrichment/report counts</td>
+<td>Dedicated report-run count columns</td>
+</tr>
+<tr>
+<td><code>source_statuses</code></td>
+<td>Run source-health fields and retained manifest</td>
+</tr>
+<tr>
+<td><code>files</code> and <code>file_hashes</code></td>
+<td>Contract validation and retained manifest</td>
+</tr>
+<tr>
+<td>Complete document</td>
+<td><code>CSAF_REPORT_RUN.manifest_json</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="original-csaf-json">5.2 Original CSAF JSON</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Content</th>
+<th>Permanent destination</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exact source bytes</td>
+<td><code>CSAF_REPORT_RUN.source_csaf</code></td>
+</tr>
+<tr>
+<td>SHA-256</td>
+<td>Run source hash and advisory source hash</td>
+</tr>
+<tr>
+<td>Parsed tracking metadata</td>
+<td>Reconciled with manifest, CSV and advisory</td>
+</tr>
+</tbody>
+</table>
+<p>APEX does not reimplement the complete Python CSAF parser during
+normal import. It validates identity and preserves the source for audit
+and reprocessing.</p>
+<h3 id="findings.csv">5.3 <code>findings.csv</code></h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>CSV fields</th>
+<th>Canonical destination</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>batch_id</code></td>
+<td>Validation against report-run batch ID</td>
+</tr>
+<tr>
+<td>Vendor, reference, revision, title and advisory URL</td>
+<td><code>CSAF_ADVISORY</code></td>
+</tr>
+<tr>
+<td>Source provenance, dates and TLP</td>
+<td><code>CSAF_ADVISORY</code> and run validation</td>
+</tr>
+<tr>
+<td><code>cve</code></td>
+<td><code>CSAF_VULNERABILITY</code> and
+<code>CSAF_ADVISORY_CVE</code></td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>CSAF_ADVISORY_CVE.description</code></td>
+</tr>
+<tr>
+<td>Product ID, family, name, version and CPE</td>
+<td><code>CSAF_PRODUCT_RELEASE</code></td>
+</tr>
+<tr>
+<td>Status, VEX and component fields</td>
+<td><code>CSAF_FINDING</code></td>
+</tr>
+<tr>
+<td>CVSS fields and derived decision flags</td>
+<td><code>CSAF_FINDING</code></td>
+</tr>
+<tr>
+<td>Vendor bug ID</td>
+<td><code>CSAF_FINDING</code></td>
+</tr>
+<tr>
+<td>Fix URL, note and category</td>
+<td><code>CSAF_FINDING_REMEDIATION</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="enrichment.csv">5.4 <code>enrichment.csv</code></h3>
+<p>All fields other than <code>batch_id</code> map to
+<code>CSAF_ENRICHMENT_OBSERVATION</code>. <code>batch_id</code> must
+match the report run. Each CVE must exist in the package findings. The
+initial contract does not support enrichment-only ZIPs.</p>
+<h3 id="report-data.json">5.5 <code>report-data.json</code></h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>JSON section</th>
+<th>Destination</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Complete document</td>
+<td><code>CSAF_REPORT_RUN.report_json</code></td>
+</tr>
+<tr>
+<td>Schema/prioritization versions</td>
+<td>Report-run fields</td>
+</tr>
+<tr>
+<td>Batch, advisory and observation identity</td>
+<td>Reconciled with other artifacts</td>
+</tr>
+<tr>
+<td><code>kpis</code></td>
+<td><code>CSAF_REPORT_METRIC</code></td>
+</tr>
+<tr>
+<td><code>aggregates.product_families</code></td>
+<td><code>CSAF_REPORT_FAMILY_METRIC</code></td>
+</tr>
+<tr>
+<td>Other aggregates and read models</td>
+<td>Retained in JSON initially</td>
+</tr>
+<tr>
+<td>Source status and data quality</td>
+<td>Reconciled and retained; selected values may be extracted later</td>
+</tr>
+</tbody>
+</table>
+<p>New extracted metrics require a versioned mapping change, not a
+rewrite of historical JSON.</p>
+<h3 id="report.html">5.6 <code>report.html</code></h3>
+<p>The exact bytes are stored in
+<code>CSAF_REPORT_RUN.report_html</code>. They are never inserted into
+the import page DOM. Historical display uses a controlled endpoint and
+sandboxed iframe under the application authorization policy.</p>
+<h3 id="original-zip">5.7 Original ZIP</h3>
+<p>The complete uploaded bytes are stored in
+<code>CSAF_REPORT_RUN.uploaded_bundle</code>. The server-calculated
+SHA-256 is stored as <code>bundle_hash</code>. This is the immutable
+audit artifact from which every extracted file can be recovered.</p>
+<h2 id="identity-idempotency-and-conflicts">6. Identity, idempotency and
+conflicts</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Required result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Same batch ID and bundle hash</td>
+<td>Return the existing run; promote nothing</td>
+</tr>
+<tr>
+<td>Same batch ID, different bundle hash</td>
+<td><code>CONFLICT</code></td>
+</tr>
+<tr>
+<td>Same advisory identity and source hash, later batch</td>
+<td>Reuse facts; insert new run, enrichment and metrics</td>
+</tr>
+<tr>
+<td>Same advisory identity, different source hash</td>
+<td><code>CONFLICT</code>; no overwrite</td>
+</tr>
+<tr>
+<td>New formal advisory revision</td>
+<td>Insert new advisory revision and facts</td>
+</tr>
+<tr>
+<td>Same-day repeat execution</td>
+<td>Retain distinct run and observations</td>
+</tr>
+<tr>
+<td>Degraded enrichment source</td>
+<td>Import as <code>PARTIAL</code> with explicit statuses</td>
+</tr>
+</tbody>
+</table>
+<p>Canonical findings are reused only after their stored counts and
+identity have been reconciled. A failed or incomplete import is never a
+reusable fact set.</p>
+<h2 id="validation-and-transaction-boundary">7. Validation and
+transaction boundary</h2>
+<p>Validation is read-only for canonical tables. It may create or update
+the pending report run, staging rows and import events.</p>
+<p>Confirmation performs one promotion transaction:</p>
+<pre class="text"><code>claim validated run
+  -&gt; create/reuse advisory facts
+  -&gt; insert run enrichment
+  -&gt; extract metrics
+  -&gt; persist final artifacts and status
+  -&gt; commit once</code></pre>
+<p>An unexpected failure rolls back all canonical changes. A restricted
+logging mechanism may record the failure without committing partial
+facts.</p>
+<h2 id="phase-0-artifact-disposition">8. Phase 0 artifact
+disposition</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Phase 0 element</th>
+<th>Disposition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Advisory revision/hash checks</td>
+<td>Retain as import rules</td>
+</tr>
+<tr>
+<td>Separation of findings and enrichment</td>
+<td>Retain</td>
+</tr>
+<tr>
+<td>Text staging and conversion helpers</td>
+<td>Adapt to run-keyed full contracts</td>
+</tr>
+<tr>
+<td>Duplicate and expected-count checks</td>
+<td>Retain and expand</td>
+</tr>
+<tr>
+<td>Partial source status</td>
+<td>Retain</td>
+</tr>
+<tr>
+<td>Global product-ID key</td>
+<td>Replace</td>
+</tr>
+<tr>
+<td>CVE/date enrichment key</td>
+<td>Replace</td>
+</tr>
+<tr>
+<td>Flattened remediation columns</td>
+<td>Promote into child records</td>
+</tr>
+<tr>
+<td>Independently committing promotion procedures</td>
+<td>Replace with one transaction</td>
+</tr>
+<tr>
+<td>Manual Data Workshop workflow</td>
+<td>Retire for the target page</td>
+</tr>
+<tr>
+<td>Phase 0 DDL/package scripts</td>
+<td>Keep as undeployed historical reference</td>
+</tr>
+</tbody>
+</table>
+<h2 id="initial-implementation-worklist">9. Initial implementation
+worklist</h2>
+<ol type="1">
+<li>Review and approve this model, especially table grains and business
+keys.</li>
+<li>Approve manifest format version <code>3</code> and the
+original-filename preservation rule for the CSAF source.</li>
+<li>Update the Python generator to copy the exact source bytes under
+their original published basename, hash them, add them to the manifest
+and create the ZIP.</li>
+<li>Add offline tests for source-byte preservation, hashes, ZIP contents
+and deterministic contract validation.</li>
+<li>Produce an ordered Oracle target-schema installation script.</li>
+<li>Produce the permanent ZIP validation and import package.</li>
+<li>Add database-level positive, negative, conflict and rollback
+tests.</li>
+<li>Build the first APEX <strong>Import CSAF Package</strong> section
+against the approved package API.</li>
+<li>Validate with a representative large Oracle advisory and a later
+repeat run.</li>
+<li>Reconcile database counts and metrics with the manifest and report
+JSON before enabling the dashboard link.</li>
+</ol>
+<h2 id="open-decisions-before-ddl">10. Open decisions before DDL</h2>
+<ul>
+<li>Oracle database version and available native JSON features;</li>
+<li>maximum ZIP, entry, JSON, HTML and CSV sizes;</li>
+<li>retention periods for successful bundles and failed/pending
+uploads;</li>
+<li>whether technical diagnostics require a separate restricted
+table;</li>
+<li>whether remediation identity needs more CSAF fields in the first
+release;</li>
+<li>whether derived flags are stored and validated or implemented as
+virtual columns;</li>
+<li>whether source URLs require sanitization for credentials or
+sensitive query parameters.</li>
+</ul>
+<h2 id="acceptance-criteria-for-the-model-baseline">11. Acceptance
+criteria for the model baseline</h2>
+<p>The baseline is ready for DDL when:</p>
+<ul>
+<li>every imported field has an explicit destination or exclusion
+decision;</li>
+<li>grains and uniqueness rules handle repeated and same-day
+executions;</li>
+<li>the original CSAF source and all generated artifacts are
+retained;</li>
+<li>no document-scoped identifier is treated as globally unique;</li>
+<li>validation and promotion transaction boundaries are agreed;</li>
+<li>duplicate, reuse, partial and conflict outcomes are
+unambiguous;</li>
+<li>the model supports both the initial import page and the future
+package-history page without changing primary identities.</li>
+</ul>

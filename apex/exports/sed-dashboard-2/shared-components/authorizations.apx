@@ -1,0 +1,22 @@
+authorization administration-rights (
+    name: Administration Rights
+    type: plSqlFunctionBody
+    settings {
+        plsqlFunctionBody: return true;
+    }
+    error {
+        errorMessage: Insufficient privileges, user is not an Administrator
+    }
+)
+
+authorization page-temporarily-disabled (
+    name: Page Temporarily Disabled
+    type: plSqlFunctionBody
+    settings {
+        plsqlFunctionBody: return false;
+    }
+    advanced {
+        evaluationType: perSession
+    }
+)
+

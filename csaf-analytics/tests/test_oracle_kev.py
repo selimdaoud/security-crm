@@ -170,9 +170,11 @@ class OracleKevTests(unittest.TestCase):
             oracle_file.write_bytes(ORACLE_MAP)
             kev_file.write_text(json.dumps(kev_catalog()), encoding="utf-8")
             nvd_file.write_text(json.dumps(nvd_catalog()), encoding="utf-8")
+            publish_dir = root / "published" / "kev-reports"
 
             output = oracle_kev.generate_oracle_kev_report(
                 root / "output",
+                publish_dir=publish_dir,
                 oracle_map_file=oracle_file,
                 kev_file=kev_file,
                 nvd_file=nvd_file,
@@ -227,6 +229,35 @@ class OracleKevTests(unittest.TestCase):
             self.assertIn('<meta name="new90D" content="1">', rendered)
             self.assertNotIn("</script><script>alert(1)</script>", rendered)
             self.assertIn("<\\/script><script>alert(1)<\\/script>", rendered)
+            self.assertEqual(
+                (publish_dir / "report-oracle-kev.html").read_text(),
+                rendered,
+            )
+
+    def test_publish_dir_overwrites_existing_html(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source = root / "source.html"
+            publish_dir = root / "published"
+            publish_dir.mkdir()
+            destination = publish_dir / "report-oracle-kev.html"
+            source.write_text("new report", encoding="utf-8")
+            destination.write_text("old report", encoding="utf-8")
+
+            published = oracle_kev._publish_html_report(
+                source,
+                publish_dir,
+                None,
+            )
+
+            self.assertEqual(published, destination)
+            self.assertEqual(destination.read_text(encoding="utf-8"), "new report")
+            self.assertEqual(list(publish_dir.iterdir()), [destination])
+
+    def test_parser_accepts_short_publish_directory_flag(self):
+        args = oracle_kev._parser().parse_args(["-d", "published"])
+
+        self.assertEqual(args.publish_dir, Path("published"))
 
 
 if __name__ == "__main__":

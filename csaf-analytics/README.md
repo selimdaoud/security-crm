@@ -78,6 +78,19 @@ Exploited Vulnerabilities catalog and includes entries added during the last
 python3 oracle_kev_report.py --output-dir var/output
 ```
 
+Use `-d DIR` (or `--publish-dir DIR`) to additionally publish the generated
+HTML under a stable filename. The directory is created when necessary and an
+existing file with the same name is replaced:
+
+```bash
+python3 oracle_kev_report.py \
+  --output-dir var/output \
+  -d /path/to/kev-reports
+```
+
+This writes `/path/to/kev-reports/report-oracle-kev.html` without changing the
+timestamped bundle.
+
 An installed source tree also provides:
 
 ```bash

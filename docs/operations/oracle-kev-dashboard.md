@@ -46,6 +46,16 @@ cd csaf-analytics
 python3 oracle_kev_report.py --output-dir var/output
 ```
 
+To also copy the HTML to a stable publication directory, use `-d`. The command
+creates the directory when necessary and atomically replaces an existing
+`report-oracle-kev.html`:
+
+```bash
+python3 oracle_kev_report.py \
+  --output-dir var/output \
+  -d /path/to/kev-reports
+```
+
 Each execution creates a new timestamped bundle:
 
 ```text

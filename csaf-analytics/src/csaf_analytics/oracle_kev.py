@@ -33,6 +33,7 @@ NVD_CVE_API_URL = "https://services.nvd.nist.gov/rest/json/cves/2.0"
 NVD_BATCH_SIZE = 100
 REPORT_SCHEMA_VERSION = 1
 USER_AGENT = "oracle-kev-report/1.0"
+HTML_REPORT_FILENAME = "report-oracle-kev.html"
 _CVE_PATTERN = re.compile(r"CVE-\d{4}-\d{4,}", re.IGNORECASE)
 _PRODUCT_ID_PATTERN = re.compile(r"\s*\[(\d+)]\s*$")
 
@@ -459,6 +460,7 @@ def _read_bytes(
 def generate_oracle_kev_report(
     output_root: Path,
     *,
+    publish_dir: Path | None = None,
     days: int = 365,
     as_of: date | None = None,
     oracle_map_file: Path | None = None,
@@ -543,7 +545,7 @@ def generate_oracle_kev_report(
     temporary.mkdir()
     try:
         data_name = "oracle-kev-report-data.json"
-        html_name = "report-oracle-kev.html"
+        html_name = HTML_REPORT_FILENAME
         manifest_name = "manifest.json"
         data_text = json.dumps(report, indent=2, ensure_ascii=False) + "\n"
         html_text = render_report_html(report)
@@ -579,7 +581,33 @@ def generate_oracle_kev_report(
         shutil.rmtree(temporary, ignore_errors=True)
         raise
     _emit(progress, "INFO", f"Oracle KEV report created: {target}")
+    if publish_dir is not None:
+        _publish_html_report(target / HTML_REPORT_FILENAME, publish_dir, progress)
     return target
+
+
+def _publish_html_report(
+    source: Path,
+    publish_dir: Path,
+    progress: ProgressCallback | None,
+) -> Path:
+    """Atomically publish the generated HTML under a stable filename."""
+    destination_dir = publish_dir.expanduser()
+    destination_dir.mkdir(parents=True, exist_ok=True)
+    destination = destination_dir / HTML_REPORT_FILENAME
+    if source.resolve() == destination.resolve():
+        _emit(progress, "INFO", f"Oracle KEV HTML already published: {destination}")
+        return destination
+
+    temporary = destination_dir / f".{HTML_REPORT_FILENAME}.tmp-{uuid.uuid4().hex}"
+    try:
+        shutil.copyfile(source, temporary)
+        os.replace(temporary, destination)
+    except Exception:
+        temporary.unlink(missing_ok=True)
+        raise
+    _emit(progress, "INFO", f"Oracle KEV HTML published: {destination}")
+    return destination
 
 
 def _console_progress(level: str, message: str) -> None:
@@ -605,6 +633,15 @@ def _parser() -> argparse.ArgumentParser:
         help="Parent directory for reports (default: var/output)",
     )
     parser.add_argument(
+        "-d",
+        "--publish-dir",
+        type=Path,
+        help=(
+            "Copy report-oracle-kev.html to this directory, overwriting "
+            "an existing copy"
+        ),
+    )
+    parser.add_argument(
         "--days", type=int, default=365, help="Rolling window in days (default: 365)"
     )
     parser.add_argument(
@@ -624,6 +661,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         output = generate_oracle_kev_report(
             args.output_dir,
+            publish_dir=args.publish_dir,
             days=args.days,
             as_of=args.as_of,
             oracle_map_file=args.oracle_map_file,

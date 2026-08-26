@@ -108,12 +108,16 @@ For lightweight automation, the standalone HTML contains a server-rendered
 90-day count that does not require JavaScript execution:
 
 ```html
-<meta name="new90D" content="4">
+<meta name="new90D" content="6">
 ```
 
 The `content` value is regenerated from the report's `added_last_90_days` KPI
 on every run and is intended as a stable integration contract for APEX or
 PL/SQL consumers.
+
+The current APEX iframe and dashboard-button integration, together with the
+proposed automated CLOB delivery design, is documented in
+[`../docs/operations/oracle-kev-dashboard.md`](../docs/operations/oracle-kev-dashboard.md).
 
 Set `NVD_API_KEY` in the environment to enable NVD exploit-reference
 enrichment. The key is sent only in the HTTP header and is never logged.

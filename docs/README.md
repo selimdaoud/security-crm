@@ -16,6 +16,7 @@
 - [`operations/minimal-apex-app.md`](operations/minimal-apex-app.md) — minimal application setup.
 - [`operations/deployment-next-steps.md`](operations/deployment-next-steps.md) — deployment and implementation backlog.
 - [`operations/oracle-security-publications.md`](operations/oracle-security-publications.md) — APEX automation that imports Oracle security publications.
+- [`operations/oracle-kev-dashboard.md`](operations/oracle-kev-dashboard.md) — Oracle KEV report generation, APEX iframe delivery, and 90-day button metadata.
 
 ## Historical handoff
 
@@ -23,4 +24,3 @@ The original detailed project handoff is preserved in French under
 [`handoff/project-handoff-fr.md`](handoff/project-handoff-fr.md). It remains useful
 as implementation history, but the root README and the documents above are the
 preferred entry points for English-speaking contributors.
-

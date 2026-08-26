@@ -4,6 +4,12 @@
 
 This document is a practical deployment guide for building the `sed-dashboard` MVP in an OCI Oracle APEX workspace.
 
+The Oracle KEV report, page-25 iframe, and metadata-driven P1 button added after
+this original deployment plan are documented separately in
+[`oracle-kev-dashboard.md`](oracle-kev-dashboard.md). The checked-in split APEX
+export still needs to be refreshed from the deployed application to include the
+latest iframe and Dynamic Action changes.
+
 It assumes:
 - You have admin access to the APEX workspace.
 - You are technically literate but not APEX-trained.

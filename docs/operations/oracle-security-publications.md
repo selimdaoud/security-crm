@@ -4,6 +4,11 @@
 
 `Monitor Oracle Security Publications` is an active Oracle APEX automation that imports Oracle security publication metadata from Oracle's public security RSS feed into the local `SECURITY_PUBLICATIONS` table.
 
+This automation is independent of the Oracle KEV report described in
+[`oracle-kev-dashboard.md`](oracle-kev-dashboard.md). Its `Execute Code` action
+is server-side PL/SQL; it does not run browser JavaScript or manage the KEV
+report's Static Application File.
+
 It handles three local publication categories:
 
 - `CPU` — Critical Patch Update

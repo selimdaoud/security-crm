@@ -1,9 +1,9 @@
 # Security CRM
 
-Security CRM is an Oracle APEX application for customer relationship, portfolio,
-and security-advisory management. The repository also contains an independent
-Python component that converts Oracle CSAF advisories into analysis datasets and
-standalone HTML reports.
+Security CRM is an Oracle APEX application for managing a security customer
+base, portfolio, and security advisories. The repository also contains an
+independent Python component that converts Oracle CSAF advisories into analysis
+datasets and standalone HTML reports.
 
 ## Repository layout
 
@@ -32,4 +32,3 @@ standalone HTML reports.
 - `apex/exports/legacy/` contains older exports kept only for comparison.
 - Generated CSAF inputs and outputs live under `csaf-analytics/var/` and are not
   source code.
-

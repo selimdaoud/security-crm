@@ -10,6 +10,7 @@
 
 - [`architecture/sql-implementation-plan.md`](architecture/sql-implementation-plan.md) — database design and implementation plan.
 - [`architecture/ai-security-analysis.md`](architecture/ai-security-analysis.md) — future AI-assisted security analysis.
+- [`architecture/kev-cve-mapping.md`](architecture/kev-cve-mapping.md) — future APEX process for correlating Oracle CVEs with CISA KEV and customer product awareness.
 
 ## Operations
 

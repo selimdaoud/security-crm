@@ -162,6 +162,33 @@ class OracleKevTests(unittest.TestCase):
             ["2026-08-24", "2026-06-15", "2026-01-10"],
         )
 
+    def test_report_data_counts_90_day_and_one_year_views(self):
+        rows = [
+            {
+                "days_since_added": age,
+                "oracle_products": ["Oracle Product"],
+                "publication_to_kev_days": None,
+                "ransomware": "Unknown",
+            }
+            for age in (1, 90, 91, 365, 366)
+        ]
+
+        report = oracle_kev.build_report_data(
+            rows,
+            {"vulnerabilities": []},
+            as_of=date(2026, 8, 25),
+            days=400,
+            generated_at=datetime(2026, 8, 25, 12, 0, tzinfo=timezone.utc),
+            mapping_count=1,
+            mapping_source_note="Test mapping",
+            nvd_status="disabled",
+            nvd_detail="Test",
+        )
+
+        self.assertEqual(report["kpis"]["oracle_kevs"], 5)
+        self.assertEqual(report["kpis"]["added_last_90_days"], 2)
+        self.assertEqual(report["kpis"]["added_last_365_days"], 4)
+
     def test_offline_generator_creates_separate_safe_html_bundle(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -199,8 +226,10 @@ class OracleKevTests(unittest.TestCase):
             report = json.loads(
                 (output / "oracle-kev-report-data.json").read_text()
             )
+            self.assertEqual(report["schema_version"], 2)
             self.assertEqual(report["kpis"]["oracle_kevs"], 1)
             self.assertEqual(report["kpis"]["added_last_90_days"], 1)
+            self.assertEqual(report["kpis"]["added_last_365_days"], 1)
             self.assertNotIn("added_last_60_days", report["kpis"])
             self.assertNotIn("added_last_30_days", report["kpis"])
             self.assertNotIn("past_cisa_due_date", report["kpis"])
@@ -224,9 +253,15 @@ class OracleKevTests(unittest.TestCase):
             self.assertIn("KEV added ↓", rendered)
             self.assertIn("Publish → KEV", rendered)
             self.assertIn("Added in 90 days", rendered)
+            self.assertIn("Added in 1 year", rendered)
+            self.assertIn("Added in last 1 year", rendered)
             self.assertNotIn("Added in 60 days", rendered)
             self.assertNotIn("Added in 30 days", rendered)
-            self.assertIn("data-recent checked", rendered)
+            self.assertIn(
+                'name="kev-age-window" value="90" checked', rendered
+            )
+            self.assertIn('name="kev-age-window" value="365"', rendered)
+            self.assertIn('data-age="${r.days_since_added}"', rendered)
             self.assertIn('<meta name="new90D" content="1">', rendered)
             self.assertNotIn("</script><script>alert(1)</script>", rendered)
             self.assertIn("<\\/script><script>alert(1)<\\/script>", rendered)

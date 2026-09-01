@@ -1,0 +1,261 @@
+automation monitor-oracle-kev-report (
+    name: Monitor Oracle KEV Report
+    execution {
+        scheduleExpression: FREQ=DAILY;INTERVAL=1;BYHOUR=0,6,12,18;BYMINUTE=15
+        scheduleStatus: active
+        actionsInitiatedOn: always
+    }
+    actionExecution {
+        actionErrorHandling: terminate
+    }
+
+    action monitor_oracle_kev_report (
+        name: Refresh Oracle KEV Report
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                declare
+                    l_report_code constant varchar2(30) := 'ORACLE_KEV';
+                    l_report_url constant varchar2(2000) :=
+                        'https://itx0.com/security-crm/kev-reports/report-oracle-kev.html';
+                    l_checksum_url constant varchar2(2000) :=
+                        'https://itx0.com/security-crm/kev-reports/report-oracle-kev.html.cksum';
+                    l_max_report_bytes constant pls_integer := 20 * 1024 * 1024;
+
+                    l_checksum_response clob;
+                    l_checksum_line varchar2(1000);
+                    l_remote_checksum varchar2(64);
+                    l_stored_checksum varchar2(64);
+                    l_actual_checksum varchar2(64);
+                    l_report_blob blob;
+                    l_report_length number;
+
+                    procedure free_temporary_lobs is
+                    begin
+                        if l_checksum_response is not null
+                           and dbms_lob.istemporary(l_checksum_response) = 1
+                        then
+                            dbms_lob.freetemporary(l_checksum_response);
+                        end if;
+
+                        if l_report_blob is not null
+                           and dbms_lob.istemporary(l_report_blob) = 1
+                        then
+                            dbms_lob.freetemporary(l_report_blob);
+                        end if;
+                    end free_temporary_lobs;
+
+                begin
+                    apex_automation.log_info(
+                        'Checking Oracle KEV report checksum.'
+                    );
+
+                    apex_web_service.set_request_headers(
+                        p_name_01  => 'Accept',
+                        p_value_01 => 'text/plain',
+                        p_name_02  => 'Cache-Control',
+                        p_value_02 => 'no-cache',
+                        p_name_03  => 'User-Agent',
+                        p_value_03 => 'security-crm-apex/1.0',
+                        p_reset    => true
+                    );
+
+                    l_checksum_response := apex_web_service.make_rest_request(
+                        p_url              => l_checksum_url,
+                        p_http_method      => 'GET',
+                        p_transfer_timeout => 30
+                    );
+
+                    if apex_web_service.g_status_code <> 200 then
+                        raise_application_error(
+                            -20001,
+                            'Oracle KEV checksum returned HTTP ' ||
+                            apex_web_service.g_status_code
+                        );
+                    end if;
+
+                    if l_checksum_response is null
+                       or dbms_lob.getlength(l_checksum_response) = 0
+                       or dbms_lob.getlength(l_checksum_response) > 1000
+                    then
+                        raise_application_error(
+                            -20002,
+                            'Oracle KEV checksum response has an invalid length'
+                        );
+                    end if;
+
+                    l_checksum_line := trim(
+                        replace(
+                            replace(
+                                dbms_lob.substr(l_checksum_response, 1000, 1),
+                                chr(13),
+                                ''
+                            ),
+                            chr(10),
+                            ''
+                        )
+                    );
+
+                    if not regexp_like(
+                        l_checksum_line,
+                        '^[0-9A-Fa-f]{64}[[:space:]]+report-oracle-kev[.]html$',
+                        'c'
+                    ) then
+                        raise_application_error(
+                            -20003,
+                            'Oracle KEV checksum response has an invalid format'
+                        );
+                    end if;
+
+                    l_remote_checksum := lower(substr(l_checksum_line, 1, 64));
+
+                    begin
+                        select checksum_sha256
+                          into l_stored_checksum
+                          from security_report_files
+                         where report_code = l_report_code;
+                    exception
+                        when no_data_found then
+                            l_stored_checksum := null;
+                    end;
+
+                    if l_stored_checksum = l_remote_checksum then
+                        update security_report_files
+                           set last_checked_at = systimestamp,
+                               updated_at      = systimestamp
+                         where report_code = l_report_code;
+
+                        commit;
+                        apex_automation.log_info(
+                            'Oracle KEV report unchanged; HTML download skipped. ' ||
+                            'SHA-256=' || l_remote_checksum
+                        );
+                    else
+                        apex_web_service.set_request_headers(
+                            p_name_01  => 'Accept',
+                            p_value_01 => 'text/html',
+                            p_name_02  => 'Cache-Control',
+                            p_value_02 => 'no-cache',
+                            p_name_03  => 'User-Agent',
+                            p_value_03 => 'security-crm-apex/1.0',
+                            p_reset    => true
+                        );
+
+                        l_report_blob := apex_web_service.make_rest_request_b(
+                            p_url              => l_report_url,
+                            p_http_method      => 'GET',
+                            p_transfer_timeout => 60
+                        );
+
+                        if apex_web_service.g_status_code <> 200 then
+                            raise_application_error(
+                                -20004,
+                                'Oracle KEV report returned HTTP ' ||
+                                apex_web_service.g_status_code
+                            );
+                        end if;
+
+                        l_report_length := case
+                            when l_report_blob is null then 0
+                            else dbms_lob.getlength(l_report_blob)
+                        end;
+
+                        if l_report_length = 0
+                           or l_report_length > l_max_report_bytes
+                        then
+                            raise_application_error(
+                                -20005,
+                                'Oracle KEV report has an invalid length: ' ||
+                                l_report_length
+                            );
+                        end if;
+
+                        if dbms_lob.instr(
+                            l_report_blob,
+                            utl_raw.cast_to_raw('<meta name="new90D"'),
+                            1,
+                            1
+                        ) = 0 then
+                            raise_application_error(
+                                -20006,
+                                'Oracle KEV report metadata marker was not found'
+                            );
+                        end if;
+
+                        l_actual_checksum := lower(
+                            rawtohex(
+                                dbms_crypto.hash(
+                                    l_report_blob,
+                                    dbms_crypto.hash_sh256
+                                )
+                            )
+                        );
+
+                        if l_actual_checksum <> l_remote_checksum then
+                            raise_application_error(
+                                -20007,
+                                'Oracle KEV report SHA-256 mismatch; expected ' ||
+                                l_remote_checksum || ', received ' ||
+                                l_actual_checksum
+                            );
+                        end if;
+
+                        merge into security_report_files target
+                        using (
+                            select l_report_code as report_code
+                              from dual
+                        ) source
+                           on (target.report_code = source.report_code)
+                         when matched then update set
+                              target.checksum_sha256      = l_remote_checksum,
+                              target.content_blob         = l_report_blob,
+                              target.mime_type            = 'text/html; charset=UTF-8',
+                              target.content_length       = l_report_length,
+                              target.last_checked_at      = systimestamp,
+                              target.last_changed_at      = systimestamp,
+                              target.updated_at           = systimestamp
+                         when not matched then insert (
+                              report_code,
+                              checksum_sha256,
+                              content_blob,
+                              mime_type,
+                              content_length,
+                              last_checked_at,
+                              last_changed_at
+                         ) values (
+                              l_report_code,
+                              l_remote_checksum,
+                              l_report_blob,
+                              'text/html; charset=UTF-8',
+                              l_report_length,
+                              systimestamp,
+                              systimestamp
+                         );
+
+                        commit;
+                        apex_automation.log_info(
+                            'Oracle KEV report stored. Bytes=' ||
+                            l_report_length || ', SHA-256=' ||
+                            l_remote_checksum
+                        );
+                    end if;
+
+                    free_temporary_lobs;
+
+                exception
+                    when others then
+                        rollback;
+                        free_temporary_lobs;
+                        apex_automation.log_error(
+                            'Oracle KEV report refresh failed: ' || sqlerrm
+                        );
+                        raise;
+                end;
+                ```
+        }
+        execution {
+            sequence: 10
+        }
+    )
+)

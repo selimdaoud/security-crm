@@ -28,8 +28,8 @@ version applicability must be confirmed in the linked Oracle advisory.
 | APEX Static Application File | Deployed manually in the application |
 | Page 25 iframe display | Deployed in the application |
 | P1 metadata-driven button label | Deployed in the application |
-| APEX automation that downloads and stores the report | Proposed, not implemented |
-| Database CLOB endpoint for the iframe | Proposed, not implemented |
+| APEX automation that downloads and stores the report | Implemented in the repository; deployment pending |
+| Database BLOB endpoint for the iframe | Proposed, not implemented |
 
 The deployed APEX changes for page 25 and the P1 page-load Dynamic Action are
 newer than the checked-in split APEX export. Re-export the application before
@@ -83,10 +83,13 @@ The generator uses:
 - NVD publication dates for the publication-to-KEV lag metric.
 
 The default report order is newest to oldest by CISA KEV addition date. The
-interactive `Added in last 90 days` filter is selected by default. The report
-does not display CISA due date, past-due status, or required action because
-those fields describe US federal remediation requirements and are not useful
-for this dashboard's cataloguing view.
+decision list has mutually exclusive `Added in last 90 days` and `Added in last
+1 year` views. The 90-day view is selected by default; the one-year view shows
+the complete default 365-day report window. Product, text, and ransomware
+filters work with either view. The report does not display CISA due date,
+past-due status, or required action because those fields describe US federal
+remediation requirements and are not useful for this dashboard's cataloguing
+view.
 
 The `Ransomware` signal comes from CISA's `knownRansomwareCampaignUse` value. It
 means CISA has associated the vulnerability with known ransomware campaign
@@ -153,24 +156,77 @@ is accessible to the current browser session.
 For future cleanup, prefer a standards-based custom data attribute such as
 `data-kev-button="90d"` or a genuine APEX Static ID beginning with a letter.
 
-## Proposed automated delivery
+## Checksum-driven APEX automation
+
+The repository includes the split APEX automation definition at
+`apex/exports/sed-dashboard-2/shared-components/automations/monitor-oracle-kev-report.apx`.
+It runs at 00:15, 06:15, 12:15, and 18:15 in the database server's scheduling
+timezone. Imported automations must be reviewed and enabled in the target APEX
+environment.
+
+Install `database/sed-dashboard/14_security_report_files.sql` before enabling
+the automation. The parsing schema also needs permission to execute
+`DBMS_CRYPTO` and outbound HTTPS access to `itx0.com`.
+
+For a manually configured APEX environment:
+
+1. run `14_security_report_files.sql` in the application parsing schema;
+2. create an automation named `Monitor Oracle KEV Report` under Shared
+   Components;
+3. set Actions Initiated On to `Always` and use the schedule from the checked-in
+   automation, or choose another appropriate interval;
+4. create an Execute Code action and copy the PL/SQL block from the checked-in
+   automation definition;
+5. save, enable, and run the automation once manually.
+
+After the first successful run, verify the stored report without selecting the
+BLOB itself:
+
+```sql
+select report_code,
+       checksum_sha256,
+       content_length,
+       last_checked_at,
+       last_changed_at
+  from security_report_files
+ where report_code = 'ORACLE_KEV';
+```
+
+On each run, the automation:
+
+1. downloads `report-oracle-kev.html.cksum` and requires HTTP 200;
+2. validates the exact SHA-256 checksum-file contract;
+3. compares the remote checksum with the `ORACLE_KEV` row in
+   `SECURITY_REPORT_FILES`;
+4. updates only `LAST_CHECKED_AT` when the checksum is unchanged;
+5. downloads the HTML as a BLOB only when the checksum is new;
+6. checks the response size and required `new90D` metadata marker;
+7. independently calculates the BLOB's SHA-256 with `DBMS_CRYPTO`;
+8. replaces or inserts the stored report only when both checksums match.
+
+Any HTTP, format, size, metadata, or checksum failure rolls back the run and
+preserves the previous validated BLOB. The failure is written to the APEX
+automation execution log. The checksum provides change detection and verifies
+that the two downloaded files agree; because both are hosted on the same
+origin, it is not a digital signature against compromise of that origin.
+The source and checksum URLs remain fixed constants in the automation; they are
+not duplicated in `SECURITY_REPORT_FILES` and cannot be changed through table
+data.
+
+## Proposed BLOB delivery
 
 Static Application Files are deployment artifacts. An APEX automation should
 not update APEX internal repository tables or call undocumented `WWV_FLOW_*`
 APIs to replace one at runtime.
 
-If automatic refresh is required, use this design:
+The checksum-driven retrieval and BLOB storage portions of this design are now
+implemented. To complete automatic iframe delivery:
 
-1. A scheduled APEX automation retrieves the published HTML with
-   `APEX_WEB_SERVICE.MAKE_REST_REQUEST`.
-2. It accepts only HTTP 200, validates the expected report metadata, and stores
-   the last valid HTML in an application-owned CLOB table.
-3. It preserves the last successful copy when retrieval or validation fails and
-   records the source URL, retrieval time, HTTP status, and error detail.
-4. A dedicated authorized APEX endpoint page selects the CLOB and serves it
-   inline with `APEX_HTTP.DOWNLOAD`, content type
+1. Create a dedicated authorized APEX endpoint page that selects
+   `CONTENT_BLOB` for `REPORT_CODE = 'ORACLE_KEV'`.
+2. Serve it inline with `APEX_HTTP.DOWNLOAD`, content type
    `text/html; charset=UTF-8`, and `p_is_inline => true`.
-5. Page 25 points its iframe to that endpoint instead of `#APP_FILES#`.
+3. Point the page 25 iframe to that endpoint instead of `#APP_FILES#`.
 
 The endpoint gives the iframe a stable URL and supports reports larger than the
 PL/SQL `VARCHAR2` limit. The iframe should remain sandboxed because downloaded

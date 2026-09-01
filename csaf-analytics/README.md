@@ -126,6 +126,11 @@ var/output/oracle-kev/<UTC timestamp>_ORACLE_KEV/
 The report treats KEV membership as evidence that exploitation has occurred in
 the wild, not as proof that exploitation is continuing at report time. Product
 and version applicability must be confirmed in the linked Oracle advisory.
+The decision list provides two explicit rolling-window views: KEVs added in the
+last 90 days and KEVs added in the last year. The 90-day view is selected by
+default; selecting the one-year view displays the complete default 365-day
+report window. Both views retain the newest-to-oldest KEV addition order and
+can be combined with the product, text, and ransomware filters.
 
 For lightweight automation, the standalone HTML contains a server-rendered
 90-day count that does not require JavaScript execution:

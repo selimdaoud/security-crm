@@ -19,3 +19,9 @@ python3 oracle_kev_report.py \
   --oracle-map-file "$LEDGER_DIR/oracle-cve-advisory-map.html" \
   --output-dir var/output \
   -d "$PUBLISH_DIR"
+
+# Generate the published OSINT product-risk report.  Keep its SQLite state
+# alongside the other runtime data rather than in the source checkout.
+python3 osint/product_watch.py \
+  --db "$LEDGER_DIR/product_watch.db" \
+  --out "$PUBLISH_DIR"

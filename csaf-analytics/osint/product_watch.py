@@ -140,6 +140,22 @@ def short_hash(s):
     return hashlib.sha1(s.encode("utf-8")).hexdigest()[:12]
 
 
+def configured_cves(values):
+    """Validate and normalize the CVE watch list from products.json."""
+    if not isinstance(values, list):
+        raise ValueError("cve_watch must be a JSON list of CVE identifiers")
+    cves = []
+    for raw in values:
+        if not isinstance(raw, str):
+            raise ValueError(f"invalid CVE identifier: {raw!r}")
+        cve = raw.strip().upper()
+        if not CVE_RX.fullmatch(cve):
+            raise ValueError(f"invalid CVE identifier: {raw!r}")
+        if cve not in cves:
+            cves.append(cve)
+    return cves
+
+
 WARNINGS = []   # shown as source-health badges in the HTML report
 
 
@@ -159,7 +175,7 @@ def kev_items(kev, product, rules):
     # No date cutoff: an old exploited CVE is still a risk if unpatched, and the
     # seen-table means each one is only reported once.
     for v in kev.values():
-        if not matches(rules, v["vendorProject"], v["product"], v["vulnerabilityName"], v["shortDescription"]):
+        if not matches(rules, v["cveID"], v["vendorProject"], v["product"], v["vulnerabilityName"], v["shortDescription"]):
             continue
         yield {
             "id": f"kev:{v['cveID']}",
@@ -365,7 +381,7 @@ def oracle_advisories(feed_url, db, since_days):
 def advisory_items(advisories, product):
     rules = product["_rules"]
     for adv in advisories:
-        cves = sorted(c for c, ctx in adv["cves"].items() if matches(rules, ctx))
+        cves = sorted(c for c, ctx in adv["cves"].items() if matches(rules, c, ctx))
         if adv["type"] == "alert" and not cves and matches(rules, adv["desc"]):
             cves = sorted(set(CVE_RX.findall(adv["desc"])))
         if not cves:
@@ -678,6 +694,40 @@ def render_markdown(sec, max_cves, max_stories):
     return lines
 
 
+def product_report_data(sections, advisories, generated, since, sources):
+    """Return the small, stable data model consumed by the case-desk prototype."""
+    news_coverage = []
+    for sec in sections:
+        for story in sec["stories"]:
+            articles = [{key: article.get(key, "") for key in ("id", "title", "date", "outlet", "url", "summary")}
+                        for article in story["articles"]]
+            cves = sorted({c.upper() for article in articles
+                           for c in CVE_RX.findall(f"{article['title']} {article['summary']}")})
+            news_coverage.append({
+                "event_id": story["id"],
+                "matched_product": sec["name"],
+                "title": story["title"],
+                "first_seen": story["first_date"],
+                "last_seen": story["last_date"],
+                "status": LEVELS[story["level"]],
+                "status_note": story["note"],
+                "status_link": story["link"],
+                "extracted_cves": cves,
+                "articles": articles,
+                "case_candidate": True,
+            })
+    return {
+        "schema_version": 1,
+        "generated_at": generated,
+        "since_days": since,
+        "sources": sources,
+        "warnings": WARNINGS,
+        "products": [{"name": sec["name"]} for sec in sections],
+        "news_coverage": news_coverage,
+        "oracle_advisories": advisories,
+    }
+
+
 # ---------- main ----------
 
 def main():
@@ -695,7 +745,17 @@ def main():
     args = p.parse_args()
 
     cfg = json.loads(args.config.read_text(encoding="utf-8"))
-    products = cfg["products"]
+    products = list(cfg["products"])
+    # Model each requested CVE as its own watch entry. This preserves its article
+    # history and keeps unrelated CVE coverage from being clustered together.
+    watch_cves = configured_cves(cfg.get("cve_watch", []))
+    products.extend({
+        "name": f"CVE watch: {cve}",
+        "terms": [cve],
+        "nvd_keywords": [cve],
+        "news_query": cve,
+        "watched_cve": cve,
+    } for cve in watch_cves)
     for prod in products:
         prod["_rules"] = compile_terms(prod["terms"])
     now = datetime.now(timezone.utc)
@@ -761,6 +821,16 @@ def main():
             articles += news_articles(feed, products, cutoff)
         except Exception as e:
             warn(f"feed {feed['name']} failed: {e}")
+    # These higher-signal research, CERT, exploit and vendor feeds are queried
+    # only for explicit CVE watches. They are intentionally not added to the
+    # broad product watch, where their volume would create noise.
+    cve_products = [prod for prod in products if prod.get("watched_cve")]
+    if cve_products:
+        for feed in cfg.get("cve_feeds", []):
+            try:
+                articles += news_articles(feed, cve_products, cutoff)
+            except Exception as e:
+                warn(f"CVE feed {feed['name']} failed: {e}")
 
     # --- dedupe non-news items ---
     new_items, ids = defaultdict(list), set()
@@ -808,7 +878,8 @@ def main():
         prod_cves = (
             set(prod_kev)
             | {i["cve"] for i in nvd if i["product"] == prod["name"]}
-            | {c for a in advisories for c, ctx in a["cves"].items() if matches(prod["_rules"], ctx)}
+            | {c for a in advisories for c, ctx in a["cves"].items() if matches(prod["_rules"], c, ctx)}
+            | ({prod["watched_cve"]} if prod.get("watched_cve") else set())
         )
         for group in cluster(by_product.get(prod["name"], []), prod["_rules"], idf):
             existing = Counter(a["_story"] for a in group if a["_story"])
@@ -874,7 +945,16 @@ def main():
                              "articles": len(articles), "warnings": WARNINGS}),
         encoding="utf-8",
     )
+    report_json_path = args.out / "product_report.json"
+    report_json_path.write_text(
+        json.dumps(product_report_data(sections, advisories, now_s, args.since, {
+            "kev_records": len(kev), "oracle_advisories": len(advisories), "nvd_records": len(nvd),
+            "news_articles": len(articles),
+        }), indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
     print(f"HTML report: {html_path}", file=sys.stderr)
+    print(f"Case data: {report_json_path}", file=sys.stderr)
 
     if args.webhook and (status_changes or not body[0].startswith("Nothing new")):
         payload = json.dumps({"text": digest[:39000]}).encode("utf-8")

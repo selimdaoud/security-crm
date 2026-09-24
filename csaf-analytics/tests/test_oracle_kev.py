@@ -87,6 +87,19 @@ def nvd_catalog():
     }
 
 
+def epss_catalog():
+    return {
+        "status": "OK",
+        "data": [
+            {
+                "cve": "CVE-2026-21962",
+                "epss": "0.123400000",
+                "percentile": "0.987600000",
+            }
+        ],
+    }
+
+
 class OracleKevTests(unittest.TestCase):
     def test_oracle_map_parser_handles_rowspan_products(self):
         mappings, source_note = oracle_kev.parse_oracle_cve_map(ORACLE_MAP)
@@ -183,6 +196,8 @@ class OracleKevTests(unittest.TestCase):
             mapping_source_note="Test mapping",
             nvd_status="disabled",
             nvd_detail="Test",
+            epss_status="disabled",
+            epss_detail="Test",
         )
 
         self.assertEqual(report["kpis"]["oracle_kevs"], 5)
@@ -195,9 +210,11 @@ class OracleKevTests(unittest.TestCase):
             oracle_file = root / "oracle-map.html"
             kev_file = root / "kev.json"
             nvd_file = root / "nvd.json"
+            epss_file = root / "epss.json"
             oracle_file.write_bytes(ORACLE_MAP)
             kev_file.write_text(json.dumps(kev_catalog()), encoding="utf-8")
             nvd_file.write_text(json.dumps(nvd_catalog()), encoding="utf-8")
+            epss_file.write_text(json.dumps(epss_catalog()), encoding="utf-8")
             publish_dir = root / "published" / "kev-reports"
 
             output = oracle_kev.generate_oracle_kev_report(
@@ -206,6 +223,7 @@ class OracleKevTests(unittest.TestCase):
                 oracle_map_file=oracle_file,
                 kev_file=kev_file,
                 nvd_file=nvd_file,
+                epss_file=epss_file,
                 as_of=date(2026, 8, 25),
                 now=datetime(2026, 8, 25, 12, 0, tzinfo=timezone.utc),
             )
@@ -226,7 +244,7 @@ class OracleKevTests(unittest.TestCase):
             report = json.loads(
                 (output / "oracle-kev-report-data.json").read_text()
             )
-            self.assertEqual(report["schema_version"], 2)
+            self.assertEqual(report["schema_version"], 3)
             self.assertEqual(report["kpis"]["oracle_kevs"], 1)
             self.assertEqual(report["kpis"]["added_last_90_days"], 1)
             self.assertEqual(report["kpis"]["added_last_365_days"], 1)
@@ -244,6 +262,9 @@ class OracleKevTests(unittest.TestCase):
                 report["kpis"]["median_publication_to_kev_days"],
                 (date(2026, 8, 24) - date(2026, 1, 20)).days,
             )
+            self.assertEqual(report["kevs"][0]["epss"], 0.1234)
+            self.assertEqual(report["kevs"][0]["epss_percentile"], 0.9876)
+            self.assertEqual(report["sources"]["epss"]["scores"], 1)
             rendered = (output / "report-oracle-kev.html").read_text()
             self.assertIn("Oracle Known Exploited Vulnerabilities", rendered)
             self.assertIn("CVE-2026-21962", rendered)
@@ -252,6 +273,8 @@ class OracleKevTests(unittest.TestCase):
             self.assertNotIn("Required action", rendered)
             self.assertIn("KEV added ↓", rendered)
             self.assertIn("Publish → KEV", rendered)
+            self.assertIn("EPSS", rendered)
+            self.assertIn('"epss":0.1234', rendered)
             self.assertIn("Added in 90 days", rendered)
             self.assertIn("Added in 1 year", rendered)
             self.assertIn("Added in last 1 year", rendered)

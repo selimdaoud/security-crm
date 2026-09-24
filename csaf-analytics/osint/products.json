@@ -1,5 +1,9 @@
 {
-  "_help": "Each product: 'terms' match KEV entries, Oracle advisory rows and news (case-insensitive; prefix 're:' for a regex). 'nvd_keywords' are NVD CVE searches. 'news_query' is a Google News search. 'feeds' are news/research RSS feeds, kept only when an item matches a product's terms. 'oracle_feed' is Oracle's security-alert RSS; each advisory page is parsed for per-product CVEs.",
+  "_help": "Each product: 'terms' match KEV entries, Oracle advisory rows and news (case-insensitive; prefix 're:' for a regex). 'nvd_keywords' are NVD CVE searches. 'news_query' is a Google News search. 'feeds' are news/research RSS feeds, kept only when an item matches a product's terms. 'cve_watch' is the dedicated list of CVEs to track. 'cve_feeds' are higher-signal sources used only for this list. 'oracle_feed' is Oracle's security-alert RSS; each advisory page is parsed for per-product CVEs.",
+  "cve_watch": [
+    "CVE-2026-35273",
+    "CVE-2026-71084"
+  ],
   "products": [
     {
       "name": "PeopleSoft",
@@ -32,6 +36,16 @@
         "WebLogic"
       ],
       "news_query": "WebLogic (vulnerability OR zero-day OR exploited OR breach OR hacked OR ransomware)"
+    },
+    {
+      "name": "Oracle WebCenter",
+      "terms": [
+        "webcenter"
+      ],
+      "nvd_keywords": [
+        "Oracle WebCenter"
+      ],
+      "news_query": "Oracle WebCenter (vulnerability OR zero-day OR exploited OR breach OR hacked OR ransomware)"
     }
   ],
   "oracle_feed": "https://www.oracle.com/ocom/groups/public/@otn/documents/webcontent/rss-otn-sec.xml",
@@ -59,6 +73,28 @@
     {
       "name": "The Hunter's Ledger",
       "url": "https://the-hunters-ledger.com/feed.xml"
+    }
+  ],
+  "cve_feeds": [
+    {
+      "name": "Project Zero",
+      "url": "https://googleprojectzero.blogspot.com/feeds/posts/default"
+    },
+    {
+      "name": "CERT-FR",
+      "url": "https://www.cert.ssi.gouv.fr/feed/"
+    },
+    {
+      "name": "Exploit Database",
+      "url": "https://www.exploit-db.com/rss.xml"
+    },
+    {
+      "name": "Unit 42",
+      "url": "https://unit42.paloaltonetworks.com/feed/"
+    },
+    {
+      "name": "Security Affairs",
+      "url": "https://securityaffairs.com/feed"
     }
   ]
 }

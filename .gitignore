@@ -7,3 +7,8 @@ __pycache__/
 
 # Generated OSINT product watch state
 csaf-analytics/osint/data/product_watch.db
+
+# Generated case-management runtime state and published reports
+csaf-analytics/case-management/state/
+csaf-analytics/case-management/output/
+csaf-analytics/case-management/published/

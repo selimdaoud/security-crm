@@ -30,8 +30,10 @@ CISA_KEV_URL = (
     "known_exploited_vulnerabilities.json"
 )
 NVD_CVE_API_URL = "https://services.nvd.nist.gov/rest/json/cves/2.0"
+EPSS_API_URL = "https://api.first.org/data/v1/epss"
 NVD_BATCH_SIZE = 100
-REPORT_SCHEMA_VERSION = 2
+EPSS_BATCH_SIZE = 100
+REPORT_SCHEMA_VERSION = 3
 RECENT_WINDOW_DAYS = 90
 YEAR_WINDOW_DAYS = 365
 USER_AGENT = "oracle-kev-report/1.0"
@@ -255,6 +257,83 @@ def _nvd_publication_dates(
         return {}, "error", str(exc)
 
 
+def _parse_epss_scores(
+    payloads: list[Any], requested_cves: set[str]
+) -> dict[str, dict[str, float]]:
+    """Extract EPSS probability and percentile values for requested CVEs."""
+    values: dict[str, dict[str, float]] = {}
+    for payload in payloads:
+        if not isinstance(payload, dict) or not isinstance(payload.get("data"), list):
+            raise Phase0Error("EPSS response has an unexpected structure")
+        for item in payload["data"]:
+            if not isinstance(item, dict):
+                continue
+            cve = str(item.get("cve") or "").upper()
+            if cve not in requested_cves:
+                continue
+            try:
+                epss = float(item["epss"])
+            except (KeyError, TypeError, ValueError):
+                continue
+            score: dict[str, float] = {"epss": epss}
+            try:
+                score["percentile"] = float(item["percentile"])
+            except (KeyError, TypeError, ValueError):
+                pass
+            values[cve] = score
+    return values
+
+
+def _epss_scores(
+    cves: list[str],
+    *,
+    timeout: float,
+    retries: int,
+    local_file: Path | None,
+    progress: ProgressCallback | None,
+) -> tuple[dict[str, dict[str, float]], str, str]:
+    """Return EPSS scores without making the KEV report depend on FIRST."""
+    if not cves:
+        return {}, "success", "no matched CVEs required EPSS enrichment"
+    try:
+        payloads: list[Any] = []
+        if local_file is not None:
+            if not local_file.is_file():
+                raise Phase0Error(f"EPSS file does not exist: {local_file}")
+            try:
+                payloads.append(
+                    json.loads(_decode_source(local_file.read_bytes(), "EPSS file"))
+                )
+            except json.JSONDecodeError as exc:
+                raise Phase0Error(f"Invalid EPSS JSON: {exc}") from exc
+            source_name = "local EPSS file"
+        else:
+            batches = [
+                cves[index : index + EPSS_BATCH_SIZE]
+                for index in range(0, len(cves), EPSS_BATCH_SIZE)
+            ]
+            for batch_number, batch in enumerate(batches, start=1):
+                query = urllib.parse.urlencode({"cve": ",".join(batch)})
+                payloads.append(
+                    _http_json(
+                        f"{EPSS_API_URL}?{query}",
+                        timeout,
+                        retries,
+                        progress,
+                        f"EPSS scores {batch_number}/{len(batches)}",
+                    )
+                )
+            source_name = f"FIRST EPSS API ({len(batches)} batch(es))"
+        values = _parse_epss_scores(payloads, set(cves))
+        return (
+            values,
+            "success",
+            f"loaded EPSS scores for {len(values)}/{len(cves)} CVEs from {source_name}",
+        )
+    except Exception as exc:
+        return {}, "error", str(exc)
+
+
 def add_publication_lag(
     rows: list[dict[str, Any]], publication_dates: Mapping[str, str]
 ) -> None:
@@ -271,6 +350,16 @@ def add_publication_lag(
         except ValueError:
             continue
         row["publication_to_kev_days"] = (kev_added - published).days
+
+
+def add_epss_scores(
+    rows: list[dict[str, Any]], scores: Mapping[str, Mapping[str, float]]
+) -> None:
+    """Add FIRST EPSS probability and percentile fields to KEV rows in place."""
+    for row in rows:
+        score = scores.get(str(row["cve"])) or {}
+        row["epss"] = score.get("epss")
+        row["epss_percentile"] = score.get("percentile")
 
 
 def correlate_oracle_kevs(
@@ -338,6 +427,8 @@ def build_report_data(
     mapping_source_note: str,
     nvd_status: str,
     nvd_detail: str,
+    epss_status: str,
+    epss_detail: str,
 ) -> dict[str, Any]:
     products = sorted(
         {product for row in rows for product in row["oracle_products"]}
@@ -348,6 +439,7 @@ def build_report_data(
         if row.get("publication_to_kev_days") is not None
     ]
     median_lag = statistics.median(publication_lags) if publication_lags else None
+    epss_scores = sum(row.get("epss") is not None for row in rows)
     return {
         "schema_version": REPORT_SCHEMA_VERSION,
         "title": "Oracle Known Exploited Vulnerabilities",
@@ -372,6 +464,12 @@ def build_report_data(
                 "status": nvd_status,
                 "detail": nvd_detail,
                 "publication_dates": len(publication_lags),
+            },
+            "epss": {
+                "url": EPSS_API_URL,
+                "status": epss_status,
+                "detail": epss_detail,
+                "scores": epss_scores,
             },
         },
         "kpis": {
@@ -429,9 +527,10 @@ const link=(url,label)=>{{const u=safeUrl(url);return u?`<a href="${{esc(u)}}" t
 const kpi=(label,value,sub,kind="")=>`<div class="cr-kpi ${{kind}}"><div class="l">${{esc(label)}}</div><div class="v">${{value==null?"n/a":n(value)}}</div><div class="s">${{esc(sub)}}</div></div>`;
 const mappings=r=>`<details class="mapping"><summary>${{n(r.oracle_products.length)}} Oracle product${{r.oracle_products.length!==1?"s":""}}</summary><div class="mapping-list">${{r.oracle_mappings.map(m=>`<div><b>${{esc(m.product)}}</b>${{m.product_id?` <span class="mono">[${{esc(m.product_id)}}]</span>`:""}}<span>${{link(m.advisory_url,m.advisory)}}</span></div>`).join("")}}</div></details>`;
 const status=r=>[r.days_since_added<={RECENT_WINDOW_DAYS}?'<span class="tag red">NEW 90D</span>':'<span class="tag blue">KEV</span>',r.ransomware.toLowerCase()==="known"?'<span class="tag red">Ransomware</span>':""].filter(Boolean).join(" ");
-const rows=d.kevs.map(r=>`<tr data-product="${{esc(r.oracle_products.join(" | "))}}" data-ransomware="${{r.ransomware.toLowerCase()==="known"?1:0}}" data-age="${{r.days_since_added}}"><td class="mono">${{link(`https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=${{encodeURIComponent(r.cve)}}`,r.cve)}}</td><td data-sort="${{esc(r.date_added)}}">${{esc(r.date_added)}}<br><small>${{n(r.days_since_added)}} days ago</small></td><td data-sort="${{r.publication_to_kev_days??-1}}">${{r.publication_to_kev_days==null?"n/a":n(r.publication_to_kev_days)+" days"}}${{r.cve_published?`<br><small>Published ${{esc(r.cve_published)}}</small>`:""}}</td><td><b>${{esc(r.vulnerability_name)}}</b><div class="description">${{esc(r.description)}}</div></td><td>${{mappings(r)}}</td><td>${{r.oracle_advisories.map(a=>link(a[1],a[0])).join("<br>")}}</td><td>${{status(r)}}</td></tr>`).join("");
+const epss=r=>r.epss==null?"n/a":`${{(Number(r.epss)*100).toFixed(2)}}%${{r.epss_percentile==null?"":`<br><small>${{(Number(r.epss_percentile)*100).toFixed(1)}}th percentile</small>`}}`;
+const rows=d.kevs.map(r=>`<tr data-product="${{esc(r.oracle_products.join(" | "))}}" data-ransomware="${{r.ransomware.toLowerCase()==="known"?1:0}}" data-age="${{r.days_since_added}}"><td class="mono">${{link(`https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=${{encodeURIComponent(r.cve)}}`,r.cve)}}</td><td data-sort="${{esc(r.date_added)}}">${{esc(r.date_added)}}<br><small>${{n(r.days_since_added)}} days ago</small></td><td data-sort="${{r.publication_to_kev_days??-1}}">${{r.publication_to_kev_days==null?"n/a":n(r.publication_to_kev_days)+" days"}}${{r.cve_published?`<br><small>Published ${{esc(r.cve_published)}}</small>`:""}}</td><td class="num" data-sort="${{r.epss??-1}}">${{epss(r)}}</td><td><b>${{esc(r.vulnerability_name)}}</b><div class="description">${{esc(r.description)}}</div></td><td>${{mappings(r)}}</td><td>${{r.oracle_advisories.map(a=>link(a[1],a[0])).join("<br>")}}</td><td>${{status(r)}}</td></tr>`).join("");
 const productOptions=d.products.map(p=>`<option value="${{esc(p)}}">${{esc(p)}}</option>`).join("");
-root.innerHTML=`<header class="cr-head"><h1>${{esc(d.title)}}</h1><div class="cr-meta"><span><b>As of</b> ${{esc(d.as_of)}}</span><span><b>Window</b> ${{esc(d.window_start)}} to ${{esc(d.as_of)}}</span><span><b>Generated</b> ${{esc(d.generated_at)}}</span></div></header><div class="cr-note"><b>Interpretation.</b> CISA KEV confirms that exploitation has occurred in the wild; it does not assert that exploitation is continuing today. <b>Publication → KEV lag</b> measures elapsed time from NVD publication to CISA catalog addition, not time to first exploitation. Oracle product relevance comes from Oracle's CVE-to-advisory mapping. Verify affected versions in the linked advisory.</div><div class="cr-health"><span class="badge ok">CISA KEV ${{esc(d.sources.cisa_kev.catalog_version)}}</span><span class="badge ok">${{n(d.sources.oracle.mapped_cves)}} Oracle-mapped CVEs</span><span class="badge ${{d.sources.nvd.status==="success"?"ok":"warn"}}">NVD publication dates: ${{esc(d.sources.nvd.status)}} (${{n(d.sources.nvd.publication_dates)}}/${{n(d.kevs.length)}})</span>${{d.sources.oracle.coverage_note?`<span class="badge">Oracle coverage: ${{esc(d.sources.oracle.coverage_note)}}</span>`:""}}</div><div class="cr-kpis">${{kpi("Oracle KEVs",d.kpis.oracle_kevs,"added in the report window","danger")}}${{kpi("Added in 90 days",d.kpis.added_last_90_days,"newest exploitation evidence","danger")}}${{kpi("Added in 1 year",d.kpis.added_last_365_days,"rolling 365-day view","danger")}}${{kpi("Median publish → KEV",d.kpis.median_publication_to_kev_days,"days from NVD publication","warning")}}${{kpi("Oracle products",d.kpis.oracle_products,"distinct mapped products")}}${{kpi("Ransomware known",d.kpis.ransomware_known,"CISA campaign flag","warning")}}</div><details class="section" open><summary><b>Oracle KEV decision list</b><small>newest CISA additions first</small><span class="count">${{n(d.kevs.length)}}</span></summary><div class="body" data-filter><div class="tools"><input type="search" placeholder="Search CVE, product, advisory…"><select data-product><option value="">All Oracle products</option>${{productOptions}}</select><label><input type="radio" name="kev-age-window" value="{RECENT_WINDOW_DAYS}" checked> Added in last 90 days</label><label><input type="radio" name="kev-age-window" value="{YEAR_WINDOW_DAYS}"> Added in last 1 year</label><label><input type="checkbox" data-ransomware> Known ransomware use</label><span data-count></span></div><table><thead><tr><th>CVE</th><th data-asc="0" title="Default order: newest to oldest">KEV added ↓</th><th title="Elapsed days from NVD publication to CISA KEV addition">Publish → KEV</th><th>Vulnerability</th><th>Oracle products</th><th>Oracle advisory</th><th>Signals</th></tr></thead><tbody>${{rows}}</tbody></table></div></details><footer class="foot">Sources: ${{link(d.sources.oracle.url,"Oracle CVE-to-Advisory mapping")}} · ${{link(d.sources.cisa_kev.url,"CISA Known Exploited Vulnerabilities catalog")}} · ${{link(d.sources.nvd.url,"NVD CVE API")}}. This product uses data from the NVD API but is not endorsed or certified by the NVD. This report describes vendor-published applicability, not confirmed exposure in your environment.<br>Report schema v${{esc(d.schema_version)}}</footer>`;
+root.innerHTML=`<header class="cr-head"><h1>${{esc(d.title)}}</h1><div class="cr-meta"><span><b>As of</b> ${{esc(d.as_of)}}</span><span><b>Window</b> ${{esc(d.window_start)}} to ${{esc(d.as_of)}}</span><span><b>Generated</b> ${{esc(d.generated_at)}}</span></div></header><div class="cr-note"><b>Interpretation.</b> CISA KEV confirms that exploitation has occurred in the wild; it does not assert that exploitation is continuing today. <b>Publication → KEV lag</b> measures elapsed time from NVD publication to CISA catalog addition, not time to first exploitation. <b>EPSS</b> is FIRST's estimated probability of exploitation in the next 30 days, not confirmation of exploitation. Oracle product relevance comes from Oracle's CVE-to-advisory mapping. Verify affected versions in the linked advisory.</div><div class="cr-health"><span class="badge ok">CISA KEV ${{esc(d.sources.cisa_kev.catalog_version)}}</span><span class="badge ok">${{n(d.sources.oracle.mapped_cves)}} Oracle-mapped CVEs</span><span class="badge ${{d.sources.nvd.status==="success"?"ok":"warn"}}">NVD publication dates: ${{esc(d.sources.nvd.status)}} (${{n(d.sources.nvd.publication_dates)}}/${{n(d.kevs.length)}})</span><span class="badge ${{d.sources.epss.status==="success"?"ok":"warn"}}">EPSS: ${{esc(d.sources.epss.status)}} (${{n(d.sources.epss.scores)}}/${{n(d.kevs.length)}})</span>${{d.sources.oracle.coverage_note?`<span class="badge">Oracle coverage: ${{esc(d.sources.oracle.coverage_note)}}</span>`:""}}</div><div class="cr-kpis">${{kpi("Oracle KEVs",d.kpis.oracle_kevs,"added in the report window","danger")}}${{kpi("Added in 90 days",d.kpis.added_last_90_days,"newest exploitation evidence","danger")}}${{kpi("Added in 1 year",d.kpis.added_last_365_days,"rolling 365-day view","danger")}}${{kpi("Median publish → KEV",d.kpis.median_publication_to_kev_days,"days from NVD publication","warning")}}${{kpi("Oracle products",d.kpis.oracle_products,"distinct mapped products")}}${{kpi("Ransomware known",d.kpis.ransomware_known,"CISA campaign flag","warning")}}</div><details class="section" open><summary><b>Oracle KEV decision list</b><small>newest CISA additions first</small><span class="count">${{n(d.kevs.length)}}</span></summary><div class="body" data-filter><div class="tools"><input type="search" placeholder="Search CVE, product, advisory…"><select data-product><option value="">All Oracle products</option>${{productOptions}}</select><label><input type="radio" name="kev-age-window" value="{RECENT_WINDOW_DAYS}" checked> Added in last 90 days</label><label><input type="radio" name="kev-age-window" value="{YEAR_WINDOW_DAYS}"> Added in last 1 year</label><input type="checkbox" data-ransomware> Known ransomware use</label><span data-count></span></div><table><thead><tr><th>CVE</th><th data-asc="0" title="Default order: newest to oldest">KEV added ↓</th><th title="Elapsed days from NVD publication to CISA KEV addition">Publish → KEV</th><th title="FIRST estimated probability of exploitation in the next 30 days">EPSS</th><th>Vulnerability</th><th>Oracle products</th><th>Oracle advisory</th><th>Signals</th></tr></thead><tbody>${{rows}}</tbody></table></div></details><footer class="foot">Sources: ${{link(d.sources.oracle.url,"Oracle CVE-to-Advisory mapping")}} · ${{link(d.sources.cisa_kev.url,"CISA Known Exploited Vulnerabilities catalog")}} · ${{link(d.sources.nvd.url,"NVD CVE API")}} · ${{link(d.sources.epss.url,"FIRST EPSS API")}}. This product uses data from the NVD API but is not endorsed or certified by the NVD. This report describes vendor-published applicability, not confirmed exposure in your environment.<br>Report schema v${{esc(d.schema_version)}}</footer>`;
 root.querySelectorAll("th").forEach((th,i)=>th.addEventListener("click",()=>{{const body=th.closest("table")?.tBodies[0];if(!body)return;const asc=th.dataset.asc!=="1";th.closest("table").querySelectorAll("th").forEach(x=>delete x.dataset.asc);th.dataset.asc=asc?"1":"0";[...body.rows].sort((x,y)=>{{const av=x.cells[i]?.dataset.sort??x.cells[i]?.textContent.trim()??"",bv=y.cells[i]?.dataset.sort??y.cells[i]?.textContent.trim()??"";return (asc?1:-1)*String(av).localeCompare(String(bv),undefined,{{numeric:true}})}}).forEach(row=>body.appendChild(row))}}));
 const scope=root.querySelector("[data-filter]"),apply=()=>{{const q=scope.querySelector('input[type="search"]').value.toLowerCase(),product=scope.querySelector("[data-product]").value,age=Number(scope.querySelector('input[name="kev-age-window"]:checked')?.value||{RECENT_WINDOW_DAYS}),ransomware=scope.querySelector("[data-ransomware]").checked;let count=0;[...scope.querySelector("tbody").rows].forEach(row=>{{const show=(!q||row.textContent.toLowerCase().includes(q))&&(!product||row.dataset.product.split(" | ").includes(product))&&Number(row.dataset.age)<=age&&(!ransomware||row.dataset.ransomware==="1");row.hidden=!show;if(show)count++}});scope.querySelector("[data-count]").textContent=n(count)+" rows"}};scope.querySelectorAll("input,select").forEach(control=>control.addEventListener("input",apply));apply();
 }})();
@@ -474,6 +573,7 @@ def generate_oracle_kev_report(
     oracle_map_file: Path | None = None,
     kev_file: Path | None = None,
     nvd_file: Path | None = None,
+    epss_file: Path | None = None,
     timeout: float = 15,
     retries: int = 1,
     now: datetime | None = None,
@@ -530,6 +630,15 @@ def generate_oracle_kev_report(
     )
     add_publication_lag(rows, publication_dates)
     _emit(progress, "INFO" if nvd_status == "success" else "WARN", nvd_detail)
+    epss_scores, epss_status, epss_detail = _epss_scores(
+        [str(row["cve"]) for row in rows],
+        timeout=timeout,
+        retries=retries,
+        local_file=epss_file,
+        progress=progress,
+    )
+    add_epss_scores(rows, epss_scores)
+    _emit(progress, "INFO" if epss_status == "success" else "WARN", epss_detail)
     report = build_report_data(
         rows,
         catalog,
@@ -540,6 +649,8 @@ def generate_oracle_kev_report(
         mapping_source_note=source_note,
         nvd_status=nvd_status,
         nvd_detail=nvd_detail,
+        epss_status=epss_status,
+        epss_detail=epss_detail,
     )
 
     output_root = output_root.expanduser()
@@ -574,6 +685,7 @@ def generate_oracle_kev_report(
                 "oracle_cve_mapping": ORACLE_CVE_MAP_URL,
                 "cisa_kev": CISA_KEV_URL,
                 "nvd_cve_api": NVD_CVE_API_URL,
+                "epss_api": EPSS_API_URL,
             },
             "source_hashes": {
                 "oracle_cve_mapping": hashlib.sha256(oracle_raw).hexdigest(),
@@ -678,6 +790,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--oracle-map-file", type=Path, help="Local Oracle mapping HTML")
     parser.add_argument("--kev-file", type=Path, help="Local CISA KEV JSON")
     parser.add_argument("--nvd-file", type=Path, help="Local NVD CVE API JSON")
+    parser.add_argument("--epss-file", type=Path, help="Local FIRST EPSS API JSON")
     parser.add_argument("--timeout", type=float, default=15, help="HTTP timeout seconds")
     parser.add_argument("--retries", type=int, default=1)
     parser.add_argument("--quiet", action="store_true")
@@ -695,6 +808,7 @@ def main(argv: list[str] | None = None) -> int:
             oracle_map_file=args.oracle_map_file,
             kev_file=args.kev_file,
             nvd_file=args.nvd_file,
+            epss_file=args.epss_file,
             timeout=args.timeout,
             retries=args.retries,
             progress=None if args.quiet else _console_progress,

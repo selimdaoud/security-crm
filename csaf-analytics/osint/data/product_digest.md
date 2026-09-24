@@ -1,14 +1,14 @@
-# Product risk digest - 2026-09-24T12:39:00+00:00
+# Product risk digest - 2026-09-24T17:45:37+00:00
 
 
 ## PeopleSoft
 
 ### Oracle advisories
 - Critical Security Patch Update Advisory - September 2026 (2026-09-15): 19 PeopleSoft CVEs, 0 with CVSS >= 9 [16 patches for Oracle PeopleSoft]
-    top: CVE-2023-48795 (EPSS 93.3%); CVE-2026-25639 (EPSS 2.8%); CVE-2023-6918 (EPSS 1.4%)
+    top: CVE-2023-48795 (EPSS 93.3%); CVE-2026-25639 (EPSS 1.8%); CVE-2023-6918 (EPSS 1.4%)
     https://www.oracle.com/security-alerts/cspusep2026.html
 - Critical Security Patch Update Advisory - August 2026 (2026-08-18): 16 PeopleSoft CVEs, 1 with CVSS >= 9 [15 patches for Oracle PeopleSoft]
-    top: CVE-2026-60821 (CVSS 9.8, EPSS 0.5%); CVE-2026-60883 (CVSS 7.2, EPSS 0.5%); CVE-2026-0968 (EPSS 0.4%)
+    top: CVE-2026-60821 (CVSS 9.8, EPSS 0.5%); CVE-2026-60883 (CVSS 7.2, EPSS 0.5%); CVE-2026-70861 (CVSS 7.2, EPSS 0.5%)
     https://www.oracle.com/security-alerts/cspuaug2026.html
 - Critical Patch Update Advisory - July 2026 (2026-07-21): 98 PeopleSoft CVEs, 19 with CVSS >= 9 [84 patches for Oracle PeopleSoft]
     top: CVE-2026-21710 (EPSS 25.0%); CVE-2025-59465 (EPSS 4.0%); CVE-2025-55131 (EPSS 3.5%)
@@ -16,7 +16,7 @@
 
 ### Stories
 - **[VICTIM DISCLOSED]** ShinyHunters claims FBI hack, data theft in PeopleSoft zero-day breach
-    first report 2026-09-22 (bleepingcomputer.com) · last 2026-09-24 · 45 articles / 43 outlets
+    first report 2026-09-22 (bleepingcomputer.com) · last 2026-09-24 · 46 articles / 44 outlets
     status: "FBI Investigating ShinyHunters Claims of Employee Data Theft" (Security Boulevard, 2026-09-22)
     oracle: no Oracle alert or patch for PeopleSoft since first report (2 days)
     · bleepingcomputer.com: https://news.google.com/rss/articles/CBMiuAFBVV95cUxNVE5pek9IQ1VTbnJ4ZDBYZ0NKTXB0YkQ5Q1IyX2Q0azVGZXNDVkV4ZnFva21HMW1VTnB0MDhrNG9RV2RmeHFsMlg5UC1fR0ZVZFRfOGdnX1p6LVUtVmtmQmEtbk9jZUhDWTVPSG5zd05SVE9CWUFCYUZ3Zi0wdmdiUFJTNmVpWS1jX3h6enVZSmhVaGJTaEJLMmkxVFhtUzZ0cTBVa2pmN0VLMjVrX0JtX2ZTLUF2b2VM0gG-AUFVX3lxTFAwcHFId01laGhvQ2ZPb1liZ19nSHM5bEdLal9qbllWNEFhdnRPMkFvcWRsQkJTVi1xY2VwTzZkQ2JJZWJSU1ZlVV9nS2NmN3lhbXRqRzBWSFh5SHZzZEpBRUl6VTNwZTBheE83QU1QcTRadzI1Q2ZQMjRtcjJYZHg4OG1YMEpaYmZTeTBDV0ZlSkdISkpDVkdJYWRKUVVDbzZIRjZfSW54dmUwUzVDQzFzTmVkOXVMTF9oNW1kWkE?oc=5
@@ -33,18 +33,12 @@
     first report 2026-07-13 (Security Boulevard) · last 2026-07-13 · 1 article / 1 outlet
     status: Oracle Security Alert CVE-2026-35273 on 2026-06-10 (33 days before first report); not linked by CVE in the coverage - verify
     · Security Boulevard: https://news.google.com/rss/articles/CBMi4AFBVV95cUxQTEZCWV91SFlWZTZydnVWUDhqeExWTnN6dXdVQWVLVWRQRUxZOFctSUp0X0FGRDlkVmJUd1hoZjQ4YTU5bTZoU1hYQUg3clBnX2ZyTWE2T0lPRmNZWXpIOVpobzBSbDEzVHZuV1VZWVFQODEzVzJLb0RYOEFvYkU5RDFrTW9qV1JmenQtdzVvTENOcVBod0RFcUg5TjVwNFRKUnd0X0dITm8wSkxRenk1VkFQM3J1b1NyTEx3dFZueVg3c0FWdEJkdEh4Vk5pcjVtYk9ZcXlCRTBlRXJKU0M2Ug?oc=5
-- **[VENDOR FIX (probable)]** Insurance body confirms hackers posted Oracle PeopleSoft breach data
-    first report 2026-06-29 (Cybersecurity Dive) · last 2026-07-06 · 20 articles / 20 outlets
-    status: Oracle Security Alert CVE-2026-35273 on 2026-06-10 (19 days before first report); not linked by CVE in the coverage - verify
-    · Cybersecurity Dive: https://news.google.com/rss/articles/CBMioAFBVV95cUxPaXRkZ3N4Rm41OV9hTFBTMzRPVi01SmpxWVBVZFVaeThwYmpOd18tOTBraUNQbnJZOFQzQXRyUjBVbEl6ZUtXZ095SS10bEZSSTBKU2V4WEhtWnR2dERmYVpRSzQzS2ZXVVhBQWZ1VmhZcWMtMGlOa0ZXS2hpODBRal8zdmxoeTRwM3VLQUJRMFgzMktIRHI1RHh2Vk5mQnV2?oc=5
-    · bleepingcomputer.com: https://news.google.com/rss/articles/CBMiuwFBVV95cUxOVHZnZlVBTDNZU25Id3p1TUhKNV9rTkRVZnFIU2EyZGp0Q2pfNlB4R1V2dWJXWXQ4NnM4S2NOcURIcnU5LTBLSE5uRkVla24tcHJ3VWlZQnpOSm11dXJqQ3M4V0ZoZ2dlOW9YMzZDZHkxMlhzR2swX0dzQlFXa0FKYnFkZmFDY3Q3N05LZjlkSy0weTRjOFJqQUtDb29XSXJvYXBGQzN0Q1JpTVc2SzlMSTNfWEhwSkRsYkZJ0gHAAUFVX3lxTFBrSE9Hemt6cXY4aHB2ZnNRSmp0VnR1bEJiSG9VVFkyXzhsanJOS3o0REl6OTlPUkl1am15Y3pTWkNSVE9CZTd4Q0V1dUtmc2I0RkxHMTAxQngzREdTSmNadDlWV0ZGU0NrQm1IbmQ5dWo0UkRxT0g1WEZJbERDa3ZEbjZBT2tha2xhUjJtMl9mOF9aMThrdkxKbkl1Vlh3bHAwNEV3d1JaQWU4VTl4WUZUV0ZLS2FLM2lsUmNZQXA1WQ?oc=5
-    · Gadget Review: https://news.google.com/rss/articles/CBMioAFBVV95cUxQS3NzcDBYOHlFOElfSFlVTU96eUdzZ2lKNGZKbVZkZmpvMVdHZXFxMTVuSTI2eWFpS2g0XzN6TlpQd3lacy1ISkl1TF9qMWxoVHZTX2pOQ3VGYzNKNTdpUjdDRExmc1RKVnUtTnJ6QlN2bHIwYkdtSjlJYmxVdEhETHB6M0s3cTlkQnNzTmVicjBNTnRHNUtIUjNraUJlLWNY?oc=5
 - **[VENDOR FIX (probable)]** Insurance industry faces data breach as NAIC discloses PeopleSoft hack
-    first report 2026-06-28 (Insurance Business) · last 2026-06-30 · 6 articles / 5 outlets
+    first report 2026-06-28 (Insurance Business) · last 2026-07-06 · 26 articles / 23 outlets
     status: Oracle Security Alert CVE-2026-35273 on 2026-06-10 (18 days before first report); not linked by CVE in the coverage - verify
     · Insurance Business: https://news.google.com/rss/articles/CBMiqwFBVV95cUxPVktuTEo4bWJnVXNZbTZ6cGczUTBMRnhJZ2tQamJBWVlMSWRXTDVmLW1IajBSX1BFQWVMbktkSDBsbFEwWmlJUFBaRlJGTS1UYlJPNWtYOW5TVkdYZmRhT0k4eHRiU0RTd05YNzZHa3RHOV83aHUzOVMtT19NOHp6MXQxb2tmNWozTldYd0NlX3Q3Y1FXTUxodllRYk9fTDdzbEYzXzFkNGxhSUE?oc=5
     · eciks.org: https://news.google.com/rss/articles/CBMidkFVX3lxTE13eVJUM3FQMUt1TDktYTFKbWF0Sy1UcHBuQm1sSFFVcmI2ZVlrTjVJTEM3SmFzUjY1RVFFeENRNm1tZjBZVkhCZHV5MEhWMDNaYmxYc3NGcTRUMTBmRzB2VU9mallWZndqWGxEeEV0SzlFYlpKZ1E?oc=5
-    · SecurityWeek: https://news.google.com/rss/articles/CBMilgFBVV95cUxNVVlsWm5ZRUVoUDhjTzVrTFRtZ3ZUc0pjZmZOWmtBVFRjTFRBNWlaYjZfemlncTdveVRXeHU1LTlvQmw3RHd3NmliQ1F1NFNGcTZocDJDTUxzSjJSRlVTeWxsUFdQOEZzd0Q2NmlhVi1Mak5oMVJEQ2trWnk5RHhyUG90TXhCbmdJd3hDX1EyTGhVeUVBbHfSAZsBQVVfeXFMTnFhXy1QWTkzLUJYSUVoN20zeEh0WFhvNTItb0JRR2t3SkhBY2w0cTVSUnk2Nk92a29WdXYzN09CdjdNZWZreUFJWE9lakxxTEF4NkVWRTVkaWt0T1R5d1BmajlaRW5VMjg3UDZ4M0Mtbzdkdmxxc1dPZFpOOHJIcktNM1h4N1Y4V1lCcDR4V1pYb3BjUWRuNTN5a28?oc=5
+    · Cybersecurity Dive: https://news.google.com/rss/articles/CBMioAFBVV95cUxPaXRkZ3N4Rm41OV9hTFBTMzRPVi01SmpxWVBVZFVaeThwYmpOd18tOTBraUNQbnJZOFQzQXRyUjBVbEl6ZUtXZ095SS10bEZSSTBKU2V4WEhtWnR2dERmYVpRSzQzS2ZXVVhBQWZ1VmhZcWMtMGlOa0ZXS2hpODBRal8zdmxoeTRwM3VLQUJRMFgzMktIRHI1RHh2Vk5mQnV2?oc=5
 
 ### Also mentioned (product not in headline)
 - 2026-09-07  Mathspace discloses data breach affecting over 1 million people (bleepingcomputer.com)
@@ -63,17 +57,17 @@
 
 ### Oracle advisories
 - Critical Security Patch Update Advisory - September 2026 (2026-09-15): 161 Oracle E-Business Suite CVEs, 3 with CVSS >= 9 [159 patches for Oracle E-Business Suite]
-    top: CVE-2026-83327 (CVSS 9.8, EPSS 0.5%); CVE-2026-83452 (CVSS 9.8, EPSS 0.5%); CVE-2026-83462 (CVSS 9.8, EPSS 0.5%)
+    top: CVE-2026-83440 (CVSS 7.2, EPSS 0.5%); CVE-2026-83442 (CVSS 7.2, EPSS 0.5%); CVE-2026-83327 (CVSS 9.8, EPSS 0.5%)
     https://www.oracle.com/security-alerts/cspusep2026.html
 - Critical Security Patch Update Advisory - August 2026 (2026-08-18): 121 Oracle E-Business Suite CVEs, 2 with CVSS >= 9 [120 patches for Oracle E-Business Suite]
-    top: CVE-2026-70926 (CVSS 9.8, EPSS 0.5%); CVE-2026-70820 (CVSS 7.2, EPSS 0.5%); CVE-2026-60782 (CVSS 9.8, EPSS 0.5%)
+    top: CVE-2026-60782 (CVSS 9.8, EPSS 0.5%); CVE-2026-70926 (CVSS 9.8, EPSS 0.5%); CVE-2026-70781 (CVSS 7.2, EPSS 0.5%)
     https://www.oracle.com/security-alerts/cspuaug2026.html
 - Critical Patch Update Advisory - July 2026 (2026-07-21): 414 Oracle E-Business Suite CVEs, 4 with CVSS >= 9 [410 patches for Oracle E-Business Suite]
-    top: CVE-2026-34481 (EPSS 0.7%); CVE-2026-24281 (EPSS 0.6%); CVE-2026-62546 (CVSS 9.1, EPSS 0.5%)
+    top: CVE-2026-34481 (EPSS 0.9%); CVE-2026-24281 (EPSS 0.6%); CVE-2026-60880 (CVSS 9.8, EPSS 0.5%)
     https://www.oracle.com/security-alerts/cpujul2026.html
 
 ### Newly exploited (CISA KEV)
-- 2026-07-15  CVE-2026-46817: Oracle E-Business Suite Improper Privilege Management Vulnerability  (EPSS 13.0% | CISA due 2026-07-18)
+- 2026-07-15  CVE-2026-46817: Oracle E-Business Suite Improper Privilege Management Vulnerability  (EPSS 0.8% | CISA due 2026-07-18)
 
 ### Stories
 - **[CLAIMED / UNCONFIRMED]** ShinyHunters hacks Clop leak site, threatens to extort ransomware gang
@@ -115,17 +109,17 @@
 
 ### Oracle advisories
 - Critical Security Patch Update Advisory - September 2026 (2026-09-15): 5 Oracle WebLogic Server CVEs, 5 with CVSS >= 9
-    top: CVE-2026-83021 (CVSS 10.0, EPSS 0.4%); CVE-2026-70756 (CVSS 9.8, EPSS 0.4%); CVE-2026-70748 (CVSS 9.8, EPSS 0.3%)
+    top: CVE-2026-83021 (CVSS 10.0, EPSS 0.5%); CVE-2026-70748 (CVSS 9.8, EPSS 0.5%); CVE-2026-70756 (CVSS 9.8, EPSS 0.5%)
     https://www.oracle.com/security-alerts/cspusep2026.html
 - Critical Security Patch Update Advisory - August 2026 (2026-08-18): 9 Oracle WebLogic Server CVEs, 5 with CVSS >= 9
     top: CVE-2026-60672 (CVSS 9.8, EPSS 0.5%); CVE-2026-60696 (CVSS 9.8, EPSS 0.5%); CVE-2026-60698 (CVSS 9.8, EPSS 0.5%)
     https://www.oracle.com/security-alerts/cspuaug2026.html
 - Critical Patch Update Advisory - July 2026 (2026-07-21): 27 Oracle WebLogic Server CVEs, 13 with CVSS >= 9
-    top: CVE-2026-5598 (EPSS 0.9%); CVE-2026-34481 (EPSS 0.7%); CVE-2026-60206 (CVSS 9.9, EPSS 0.5%)
+    top: CVE-2026-5598 (EPSS 1.0%); CVE-2026-34481 (EPSS 0.9%); CVE-2026-60198 (CVSS 9.8, EPSS 0.5%)
     https://www.oracle.com/security-alerts/cpujul2026.html
 
 ### Newly exploited (CISA KEV)
-- 2026-08-24  CVE-2026-21962: Oracle HTTP Server and Oracle Weblogic Server Proxy Plug-in Improper Access Control Vulnerability  (EPSS 42.5% | CISA due 2026-08-27)
+- 2026-08-24  CVE-2026-21962: Oracle HTTP Server and Oracle Weblogic Server Proxy Plug-in Improper Access Control Vulnerability  (EPSS 70.9% | CISA due 2026-08-27)
 
 ### Stories
 - **[EXPLOITED (KEV)]** Actively Exploited Oracle WebLogic Flaw Lets Unauthenticated Attackers Access Critical Data
@@ -149,4 +143,36 @@
 ### Baseline (first time seen, older than window)
 - Oracle Security Alerts: CVE-2020-14750 (2020-11-01), CVE-2019-2729 (2019-06-18), CVE-2019-2725 (2019-04-26), CVE-2015-4852 (2015-11-10), CVE-2011-5035 (2012-01-31), CVE-2010-0073 (2010-02-04)
 - Exploited per CISA KEV: CVE-2024-21182, CVE-2020-2883, CVE-2020-14644, CVE-2017-3506, CVE-2020-2551, CVE-2023-21839, CVE-2018-2628, CVE-2017-10271*, CVE-2019-2725*, CVE-2015-4852, CVE-2020-14750, CVE-2020-14882, CVE-2020-14883  (* = used by ransomware)
+
+
+## CVE watch: CVE-2026-35273
+
+### Stories
+- **[VENDOR FIX (probable)]** Hackers now exploit critical Oracle E-Business flaw in attacks
+    first report 2026-06-29 (BleepingComputer) · last 2026-06-30 · 4 articles / 4 outlets
+    status: Oracle Security Alert ? on 2026-06-10 (19 days before first report); not linked by CVE in the coverage - verify
+    · BleepingComputer: https://news.google.com/rss/articles/CBMiqAFBVV95cUxNczRfbzQwUnM1YmhCeVNoRGhYNTlVcXRTbkpIcWhSdjFwTHFZN0U4YlhURVdOMXZjUUhiQmYwUVlJT2FGSkFValZ6dDFvdlNYYkdXdDNuMFF2ZDNkeDNycXhPN1VEQ1VMNkVZYUlmNHAwOTFrUlY1TGRqd1huUnQxbXJRcU9Eam43VEh6ZHZxUUdfZ3N2T0swQXVUQTY1OGVxbjlLazZfQm7SAa4BQVVfeXFMT2RxQ1JpeFVyVkVjcGJnQXNORjNydnR1dDVyUU1UTFJsbHN3RHhBTkl6VjA0Z3htSVBGOXEyejJmY1lQU20yREhVcVowVFphSXBmLWM1bmhOSlN6a21vQ3Z5VVNOX0VjYy1UTWpyLWtlT0xQbktwOXVuNWVSb2NOdDNlTk43eGtjOHR5MGtVM2ZkQk9UV3BFTnpwdE9CMWY3VVRudEtTOHl1OThLZ2Vn?oc=5
+    · LinkedIn: https://news.google.com/rss/articles/CBMimAFBVV95cUxPRzBjSkt5YVo1ZjAtQ2RBcFpGdl9hVndfZ2pDV005cV9UcDRkdWZpa3ZnM25TdW1kMy1seVNPaXE4MkVmWDAtV1U5RUdmU2pmNEZjdzAwOVE2RERRYzVFQWRTZGZNZWl5MVFZQzU0cG1OUGFkemZIU2RKNXZDYjZJam1zc1JxWXBaa2d3ejdXbHIySmF5azEwLQ?oc=5
+    · The Hacker News: https://news.google.com/rss/articles/CBMiggFBVV95cUxPZmxxZ0FBYmRvbG9mUHBxZDZoYmJYcHdaeUY2MDdfZGg3MU9IRWFwN2VjaGpHTnlrQTFFX28yWkRVdUV6RG1EN2R2eUx4MTN1TG5CZ05lNTQ4TGtic0ZselVDWFdhX2NtTlF6OThkY3R2WS0zYnhObUZlUVBHZmJCUkNR?oc=5
+- **[VENDOR FIX (probable)]** Nissan discloses employee data breach linked to Oracle zero-day attacks
+    first report 2026-06-29 (BleepingComputer) · last 2026-06-30 · 3 articles / 3 outlets
+    status: Oracle Security Alert ? on 2026-06-10 (19 days before first report); not linked by CVE in the coverage - verify
+    · BleepingComputer: https://news.google.com/rss/articles/CBMiuwFBVV95cUxOVHZnZlVBTDNZU25Id3p1TUhKNV9rTkRVZnFIU2EyZGp0Q2pfNlB4R1V2dWJXWXQ4NnM4S2NOcURIcnU5LTBLSE5uRkVla24tcHJ3VWlZQnpOSm11dXJqQ3M4V0ZoZ2dlOW9YMzZDZHkxMlhzR2swX0dzQlFXa0FKYnFkZmFDY3Q3N05LZjlkSy0weTRjOFJqQUtDb29XSXJvYXBGQzN0Q1JpTVc2SzlMSTNfWEhwSkRsYkZJ0gHAAUFVX3lxTFBrSE9Hemt6cXY4aHB2ZnNRSmp0VnR1bEJiSG9VVFkyXzhsanJOS3o0REl6OTlPUkl1am15Y3pTWkNSVE9CZTd4Q0V1dUtmc2I0RkxHMTAxQngzREdTSmNadDlWV0ZGU0NrQm1IbmQ5dWo0UkRxT0g1WEZJbERDa3ZEbjZBT2tha2xhUjJtMl9mOF9aMThrdkxKbkl1Vlh3bHAwNEV3d1JaQWU4VTl4WUZUV0ZLS2FLM2lsUmNZQXA1WQ?oc=5
+    · SecurityWeek: https://news.google.com/rss/articles/CBMijgFBVV95cUxOQzhjMXdPMHNzNmNIUlFESHJiTlVsb2pZOFI4TnplLTBFblU1d21wS0JNcl9fYmN3RW1nbkhwV3o5OThSUHR4VVdsdjNYRGp0V2ZuTjRhNkFsbGhCSmNjeHZSVE03eVVRbnl5aG1La2JVMUJtaDlGNGJtdmFHdU1jMF9UMlZJUEJ1aU9CUFpR0gGTAUFVX3lxTE1MTTRRd1loOThkRXdUWGVQNkFkNGlublBDWlZTUzNyUkgyc0Jlc1g5a3B1eHE1SXMzQzhJbjBvSjNGU0dBZ3NUaGVFV1R6Q0ttWHN5MTJYYzBhOVJJdkVRQzFBWmVuOW9hRXV1WHNTdHRacWxzb0Nxc28wcmJVa29sRnN5UUhxZ0hXNUQtZFk2VGxtbw?oc=5
+    · CyberSecurityNews: https://news.google.com/rss/articles/CBMiakFVX3lxTE5DM2dob2VDeGt1YzlJbVpaZGJkSjdpOHd3Q2U4TEhfalY3dnh6Vk9zQzQ4QjN3d0pSSU10UmNCNTEwdG9vOTFrcDhPZlFJc0VmUFRkci1QRXQwOU5RQ1d2VnRoZEZ5RVhrNGfSAW9BVV95cUxOdkQzM0UzcmNWaE96eVJGXzh1YkhURDhReGY2QkVaeF9GQ1p6R2ZwM0tzU3RIODBSR2JVbC1Pdks4TDZWQzRzLU5XX1BsaHgwWkVNR0FfYlMxYXVlN2VoTWlNUjQ0UUR1TzJFTXBaSWM?oc=5
+
+### Also mentioned (product not in headline)
+- 2026-09-23  ShinyHunters Claims FBI Breach, Says It Stole Data on Agents and Job Applicants (The Hacker News)
+- 2026-07-21  PeopleSoft Exploit Behind 100+ Breaches Gets Patched in Oracle’s Record July CPU (techtimes.com)
+
+### Baseline (first time seen, older than window)
+- Oracle Security Alerts: CVE-2026-35273 (2026-06-10), CVE-2026-35273 (2011-09-15)
+
+
+## CVE watch: CVE-2026-71084
+
+### Oracle advisories
+- Critical Security Patch Update Advisory - August 2026 (2026-08-18): 1 CVE watch: CVE-2026-71084 CVEs, 0 with CVSS >= 9
+    top: CVE-2026-71084 (CVSS 6.8, EPSS 0.2%)
+    https://www.oracle.com/security-alerts/cspuaug2026.html
 

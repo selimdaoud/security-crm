@@ -5,3 +5,5 @@ __pycache__/
 .pytest_cache/
 .coverage
 
+# Generated OSINT product watch state
+csaf-analytics/osint/data/product_watch.db

@@ -41,6 +41,53 @@ changes.
 The entry point is `csaf-analytics/oracle_kev_report.py`. By default it reports
 Oracle-mapped KEVs added during the rolling year ending on the execution date:
 
+### Local Oracle CVE ledger
+
+The report is fed by a local, rolling five-year CVE-to-advisory ledger rather
+than Oracle's public CVE-to-advisory mapping page. The ledger builder reads
+Oracle's security RSS feed, downloads CPU, CSPU, and Security Alert advisories,
+and writes both an SQLite database and a parser-compatible HTML mapping file.
+`oracle_kev_report.py` remains unchanged and reads that HTML file through its
+existing `--oracle-map-file` option.
+
+Build the ledger before generating the report:
+
+```bash
+cd csaf-analytics
+
+python3 oracle_cve_ledger.py rebuild \
+  --database /var/lib/oracle-kev/oracle-cve-ledger.sqlite \
+  --map-html /var/lib/oracle-kev/oracle-cve-advisory-map.html
+
+python3 oracle_kev_report.py \
+  --oracle-map-file /var/lib/oracle-kev/oracle-cve-advisory-map.html \
+  --output-dir /var/lib/oracle-kev/output \
+  -d /path/to/kev-reports
+```
+
+`rebuild` creates a fresh staging database, validates it, retains a timestamped
+backup of the prior active database, and atomically replaces the active ledger
+and mapping HTML only after success. At the current source volume it completes
+in about 20 seconds, so it is the normal scheduled operation. `sync` is
+available for incremental updates but is not required for the daily job.
+
+Successful ledger runs are silent by default. Add `--verbose` to print RSS
+discovery, each advisory download and parser path, retention pruning, and HTML
+publication progress. Errors are written to standard error and return exit code
+`2`.
+
+Use one cron job to rebuild the ledger, then generate and publish the report:
+
+```cron
+CRON_TZ=UTC
+15 02 * * * /usr/bin/python3 /path/to/csaf-analytics/oracle_cve_ledger.py rebuild --database /var/lib/oracle-kev/oracle-cve-ledger.sqlite --map-html /var/lib/oracle-kev/oracle-cve-advisory-map.html && /usr/bin/python3 /path/to/csaf-analytics/oracle_kev_report.py --oracle-map-file /var/lib/oracle-kev/oracle-cve-advisory-map.html --output-dir /var/lib/oracle-kev/output -d /path/to/kev-reports >> /var/log/oracle-kev/oracle-kev-cron.log 2>&1
+```
+
+Create the log directory first and replace `/path/to/csaf-analytics` and
+`/path/to/kev-reports` with the server's actual locations. The cron schedule is
+independent of the APEX automation, which only retrieves an already-published
+report.
+
 ```bash
 cd csaf-analytics
 python3 oracle_kev_report.py --output-dir var/output
@@ -76,9 +123,11 @@ var/output/oracle-kev/<UTC timestamp>_ORACLE_KEV/
 └── report-oracle-kev.html
 ```
 
-The generator uses:
+When the local ledger workflow is used, the generator uses:
 
-- Oracle's public CVE-to-advisory mapping for Oracle product association;
+- the local Oracle CVE ledger, built from CPU, CSPU, and Security Alert
+  advisories discovered through Oracle's RSS feed, for Oracle product
+  association;
 - the CISA KEV catalog for KEV dates and ransomware-campaign flags; and
 - NVD publication dates for the publication-to-KEV lag metric.
 

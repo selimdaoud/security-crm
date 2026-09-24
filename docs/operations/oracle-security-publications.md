@@ -6,8 +6,8 @@
 
 This automation is independent of the Oracle KEV report described in
 [`oracle-kev-dashboard.md`](oracle-kev-dashboard.md). Its `Execute Code` action
-is server-side PL/SQL; it does not run browser JavaScript or manage the KEV
-report's Static Application File.
+is server-side PL/SQL; it does not run browser JavaScript, populate the KEV
+report BLOB, or participate in the page 26 report endpoint.
 
 It handles three local publication categories:
 

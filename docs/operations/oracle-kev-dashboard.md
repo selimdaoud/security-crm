@@ -25,16 +25,16 @@ version applicability must be confirmed in the linked Oracle advisory.
 | Python report generator | Implemented and committed |
 | Self-contained HTML and JSON report bundle | Implemented and committed |
 | `new90D` HTML metadata | Implemented and tested |
-| APEX Static Application File | Deployed manually in the application |
-| Page 25 iframe display | Deployed in the application |
-| P1 metadata-driven button label | Deployed in the application |
-| APEX automation that downloads and stores the report | Implemented in the repository; deployment pending |
-| Database BLOB endpoint for the iframe | Proposed, not implemented |
+| APEX Static Application File | Legacy delivery path; no longer used at runtime |
+| APEX automation that downloads and stores the report | Implemented and deployed |
+| Page 26 authenticated BLOB endpoint | Implemented and deployed |
+| Page 25 iframe display through page 26 | Implemented and deployed |
+| P1 metadata-driven button label through page 26 | Implemented and deployed |
 
-The deployed APEX changes for page 25 and the P1 page-load Dynamic Action are
-newer than the checked-in split APEX export. Re-export the application before
-treating `apex/exports/sed-dashboard-2/` as the source of truth for those two
-changes.
+The deployed APEX changes for pages 1, 25, and 26, together with the
+application-level frame setting, are newer than the checked-in split APEX
+export. Re-export the application before treating
+`apex/exports/sed-dashboard-2/` as the source of truth for those components.
 
 ## Report generation
 
@@ -161,49 +161,126 @@ the report's JavaScript to read it.
 
 ## Current APEX delivery
 
-The latest generated HTML is currently uploaded as this Static Application
-File:
+The report is delivered from the validated BLOB in
+`SECURITY_REPORT_FILES`. A manually uploaded Static Application File is no
+longer part of the runtime path.
+
+The authenticated page 26 endpoint has the friendly page alias
+`kev-report-endpoint`. Its application-relative URL is:
 
 ```text
-#APP_FILES#kev-reports/report-oracle-kev.html
+/pls/apex/r/css-ciso/sed-dashboard/kev-report-endpoint?session=&APP_SESSION.
 ```
 
-Page 25 displays that resource in an iframe. The `90D_KEV` button on P1 opens
-page 25.
+The session ID must not be hard-coded. APEX replaces `&APP_SESSION.` when it
+renders the containing page. The endpoint selects `CONTENT_BLOB` and
+`MIME_TYPE` for `REPORT_CODE = 'ORACLE_KEV'` and returns the BLOB inline from a
+Before Header process. The deployed process uses the Oracle Web Toolkit BLOB
+download mechanism:
 
-On P1, a Page Load Dynamic Action fetches the static HTML and reads
+```plsql
+declare
+    l_content_blob security_report_files.content_blob%type;
+    l_mime_type    security_report_files.mime_type%type;
+begin
+    select content_blob,
+           mime_type
+      into l_content_blob,
+           l_mime_type
+      from security_report_files
+     where report_code = 'ORACLE_KEV';
+
+    sys.htp.init;
+
+    owa_util.mime_header(
+        ccontent_type => l_mime_type,
+        bclose_header => false
+    );
+
+    htp.p(
+        'Content-Length: ' ||
+        to_char(dbms_lob.getlength(l_content_blob))
+    );
+
+    htp.p(
+        'Content-Disposition: inline; ' ||
+        'filename="report-oracle-kev.html"'
+    );
+
+    owa_util.http_header_close;
+    wpg_docload.download_file(l_content_blob);
+    apex_application.stop_apex_engine;
+
+exception
+    when no_data_found then
+        raise_application_error(
+            -20001,
+            'No ORACLE_KEV report exists in SECURITY_REPORT_FILES'
+        );
+    when apex_application.e_stop_apex_engine then
+        raise;
+end;
+```
+
+The process is enabled, has no server-side condition, and executes at
+Pre-Rendering / Before Header. Page 26 uses the same authentication and
+authorization policy as page 25.
+
+### Page 25 iframe
+
+Page 25 displays the endpoint in a sandboxed iframe. The `90D_KEV` button on P1
+opens page 25.
+
+```html
+<iframe
+    src="/pls/apex/r/css-ciso/sed-dashboard/kev-report-endpoint?session=&APP_SESSION."
+    title="Oracle KEV Report"
+    sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
+    referrerpolicy="no-referrer"
+    style="width:100%; height:85vh; border:0;">
+</iframe>
+```
+
+Do not add `allow-same-origin` to the iframe unless the report develops a
+specific requirement for it. The downloaded document contains executable
+JavaScript and is served from an application URL.
+
+APEX initially returned `X-Frame-Options: DENY`, which prevented page 26 from
+being displayed in page 25. Under Shared Components / Security Attributes /
+Browser Security, `Embed in Frames` is set to `Allow from same origin`. This
+produces same-origin frame protection: pages in this application can embed the
+endpoint, while pages on another origin cannot.
+
+### P1 90-day button
+
+On P1, a Page Load Dynamic Action fetches the same page 26 endpoint and reads
 `meta[name="new90D"]`. It then changes the button label to, for example:
 
 ```text
 6 KEVs in last 90 days
 ```
 
-The implementation uses the JavaScript substitution form of the application
-file URL:
+The endpoint URL is expanded with `apex.util.applyTemplate`:
 
 ```javascript
 const reportUrl = apex.util.applyTemplate(
-    "&APP_FILES.kev-reports/report-oracle-kev.html",
+    "/pls/apex/r/css-ciso/sed-dashboard/kev-report-endpoint?session=&APP_SESSION.",
     { defaultEscapeFilter: "RAW" }
 );
 ```
 
-The button does not currently have a user-defined HTML ID. APEX renders a
-generated ID such as `B22177920406530709244`, which must not be used as a stable
-selector. The deployed button has the custom attribute `mykev`, so the Dynamic
-Action locates it with:
+The button is selected through its standards-based custom data attribute. APEX
+generated IDs such as `B22177920406530709244` must not be used as stable
+selectors:
 
 ```javascript
-const button = document.querySelector("button[mykev]");
+const button = document.querySelector('[data-kev-button="90d"]');
 ```
 
 The code updates the `.t-Button-label` child and retains the original label if
-the file request, metadata lookup, integer validation, or button lookup fails.
-The static file is fetched successfully only when its resolved application URL
-is accessible to the current browser session.
-
-For future cleanup, prefer a standards-based custom data attribute such as
-`data-kev-button="90d"` or a genuine APEX Static ID beginning with a letter.
+the endpoint request, metadata lookup, integer validation, or button lookup
+fails. The request uses `credentials: "same-origin"` and therefore runs inside
+the user's existing authenticated APEX session.
 
 ## Checksum-driven APEX automation
 
@@ -262,42 +339,37 @@ The source and checksum URLs remain fixed constants in the automation; they are
 not duplicated in `SECURITY_REPORT_FILES` and cannot be changed through table
 data.
 
-## Proposed BLOB delivery
+## BLOB delivery rationale
 
 Static Application Files are deployment artifacts. An APEX automation should
 not update APEX internal repository tables or call undocumented `WWV_FLOW_*`
 APIs to replace one at runtime.
 
-The checksum-driven retrieval and BLOB storage portions of this design are now
-implemented. To complete automatic iframe delivery:
-
-1. Create a dedicated authorized APEX endpoint page that selects
-   `CONTENT_BLOB` for `REPORT_CODE = 'ORACLE_KEV'`.
-2. Serve it inline with `APEX_HTTP.DOWNLOAD`, content type
-   `text/html; charset=UTF-8`, and `p_is_inline => true`.
-3. Point the page 25 iframe to that endpoint instead of `#APP_FILES#`.
-
-The endpoint gives the iframe a stable URL and supports reports larger than the
-PL/SQL `VARCHAR2` limit. The iframe should remain sandboxed because downloaded
-HTML served from an application URL is active content. The current generated
+The implemented endpoint gives the iframe a stable URL and supports reports
+larger than the PL/SQL `VARCHAR2` limit. It also removes the need to mutate an
+application definition whenever the report changes. The current generated
 report is self-contained; a future externally generated report must use
 absolute asset URLs or an appropriate `base` URL.
 
 For the P1 label alone, storing the validated 90-day count in a small metrics
 table is cheaper than retrieving and parsing the complete HTML on every page
-load. The current browser-side approach remains appropriate while the report is
-a manually maintained Static Application File.
+load. The current browser-side approach is acceptable at the present report
+size and update frequency.
 
 ## Verification checklist
 
 1. Generate a report and confirm `report-oracle-kev.html` contains one valid
    `meta[name="new90D"]` element.
-2. Upload it under `kev-reports/report-oracle-kev.html` in Static Application
-   Files.
-3. Open page 25 and confirm that the iframe renders the report.
-4. Load P1 and confirm the report request returns HTTP 200.
-5. Confirm the `mykev` button label matches the metadata count.
-6. Test counts of zero, one, and more than one for sensible label text.
-7. Test a missing file and malformed metadata; the original button label must
-   remain usable.
-8. Re-export the APEX application and commit the updated page definitions.
+2. Publish the report and checksum to the configured web server location.
+3. Run the APEX automation and verify that the `ORACLE_KEV` row contains a
+   non-empty BLOB with the expected checksum and content length.
+4. Run page 26 directly and confirm that the browser renders the HTML report.
+5. Open page 25 and confirm that its sandboxed iframe renders page 26 without
+   an `X-Frame-Options` or `frame-ancestors` error.
+6. Load P1 and confirm that the endpoint request returns HTTP 200.
+7. Confirm the `[data-kev-button="90d"]` label matches the metadata count.
+8. Test counts of zero, one, and more than one for sensible label text.
+9. Test a missing BLOB and malformed metadata; the original button label must
+   remain usable and the previous validated report must not be overwritten.
+10. Re-export the APEX application and commit the updated page definitions and
+    security attributes.

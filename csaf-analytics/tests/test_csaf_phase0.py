@@ -405,6 +405,10 @@ class Phase0Tests(unittest.TestCase):
             self.assertIn('data-section="${esc(title)}"', report_html)
             self.assertIn("root.insertBefore(productSection,cveSection)", report_html)
             self.assertIn("root.insertBefore(familySection,productSection)", report_html)
+            self.assertIn("data-epss-trend-cve", report_html)
+            self.assertIn('id="epss-trend-dialog"', report_html)
+            self.assertIn("scope=time-series", report_html)
+            self.assertIn("epssHistoryPoints", report_html)
 
     def test_complete_vex_cve_is_available_to_the_decision_queue_filter(self):
         with tempfile.TemporaryDirectory() as temp:

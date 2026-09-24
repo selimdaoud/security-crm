@@ -1,0 +1,64 @@
+{
+  "_help": "Each product: 'terms' match KEV entries, Oracle advisory rows and news (case-insensitive; prefix 're:' for a regex). 'nvd_keywords' are NVD CVE searches. 'news_query' is a Google News search. 'feeds' are news/research RSS feeds, kept only when an item matches a product's terms. 'oracle_feed' is Oracle's security-alert RSS; each advisory page is parsed for per-product CVEs.",
+  "products": [
+    {
+      "name": "PeopleSoft",
+      "terms": [
+        "peoplesoft",
+        "peopletools"
+      ],
+      "nvd_keywords": [
+        "PeopleSoft"
+      ],
+      "news_query": "PeopleSoft (vulnerability OR zero-day OR exploited OR breach OR hacked OR ransomware)"
+    },
+    {
+      "name": "Oracle E-Business Suite",
+      "terms": [
+        "e-business suite",
+        "re:\\bEBS\\b"
+      ],
+      "nvd_keywords": [
+        "Oracle E-Business Suite"
+      ],
+      "news_query": "\"E-Business Suite\" (vulnerability OR zero-day OR exploited OR breach OR hacked OR ransomware)"
+    },
+    {
+      "name": "Oracle WebLogic Server",
+      "terms": [
+        "weblogic"
+      ],
+      "nvd_keywords": [
+        "WebLogic"
+      ],
+      "news_query": "WebLogic (vulnerability OR zero-day OR exploited OR breach OR hacked OR ransomware)"
+    }
+  ],
+  "oracle_feed": "https://www.oracle.com/ocom/groups/public/@otn/documents/webcontent/rss-otn-sec.xml",
+  "feeds": [
+    {
+      "name": "BleepingComputer",
+      "url": "https://www.bleepingcomputer.com/feed/"
+    },
+    {
+      "name": "SecurityWeek",
+      "url": "https://www.securityweek.com/feed/"
+    },
+    {
+      "name": "The Record",
+      "url": "https://therecord.media/feed/"
+    },
+    {
+      "name": "The Hacker News",
+      "url": "https://feeds.feedburner.com/TheHackersNews"
+    },
+    {
+      "name": "DataBreaches.net",
+      "url": "https://databreaches.net/feed/"
+    },
+    {
+      "name": "The Hunter's Ledger",
+      "url": "https://the-hunters-ledger.com/feed.xml"
+    }
+  ]
+}

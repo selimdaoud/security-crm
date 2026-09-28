@@ -442,7 +442,7 @@ def build_report_data(
     epss_scores = sum(row.get("epss") is not None for row in rows)
     return {
         "schema_version": REPORT_SCHEMA_VERSION,
-        "title": "Oracle Known Exploited Vulnerabilities",
+        "title": "CISA KEV for Oracle Products",
         "generated_at": generated_at.isoformat().replace("+00:00", "Z"),
         "as_of": as_of.isoformat(),
         "window_days": days,
@@ -493,7 +493,7 @@ def build_report_data(
 
 def render_report_html(report: Mapping[str, Any]) -> str:
     """Render a self-contained report in the Phase 0 dashboard visual style."""
-    title = html.escape(str(report.get("title") or "Oracle KEV Report"))
+    title = html.escape(str(report.get("title") or "CISA KEV for Oracle Products"))
     new_90d = int((report.get("kpis") or {}).get("added_last_90_days") or 0)
     embedded_json = json.dumps(
         report, ensure_ascii=False, separators=(",", ":")

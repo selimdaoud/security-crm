@@ -266,7 +266,7 @@ class OracleKevTests(unittest.TestCase):
             self.assertEqual(report["kevs"][0]["epss_percentile"], 0.9876)
             self.assertEqual(report["sources"]["epss"]["scores"], 1)
             rendered = (output / "report-oracle-kev.html").read_text()
-            self.assertIn("Oracle Known Exploited Vulnerabilities", rendered)
+            self.assertIn("CISA KEV for Oracle Products", rendered)
             self.assertIn("CVE-2026-21962", rendered)
             self.assertNotIn("CISA due", rendered)
             self.assertNotIn("Past CISA due date", rendered)

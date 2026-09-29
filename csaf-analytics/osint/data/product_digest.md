@@ -1,4 +1,4 @@
-# Product risk digest - 2026-09-28T07:01:46+00:00
+# Product risk digest - 2026-09-28T07:11:20+00:00
 
 ## Status changes
 - **PeopleSoft**: ShinyHunters claims FBI hack, data theft in PeopleSoft zero-day breach
@@ -92,7 +92,7 @@
     · Technology Org: https://news.google.com/rss/articles/CBMigwFBVV95cUxNVjVRY3VNamZDTDFzQkFaYWlfN2xybnQwSktWVldNcXd5eGwtUk9vMXplRHZKdGpERjl3TlBsajZGZmJ1MEdINGgzYmRNX3RRVWdFNTAxU2ZoTEpRVnpEaC04dzRDTVdQMHp1WDRRdTcyc1lvUjM0VnBBd2hjQUV6bFhJcw?oc=5
     · The Record from Recorded Future News: https://news.google.com/rss/articles/CBMibkFVX3lxTE5ZZDk3VWc1czhFUHl4eWtHaWV1bWY1LXRQMGpnWkN1T1N0WGF2M3EyZjB0VGd5MDkteFpQOUZBTG5wUkhHTFdRbGh1eF9YSGNwdVpRU0YtQ3JxVG00OHRSNmhMNFNxY1NmZzl2a1NB?oc=5
 - **[EXPLOITED (KEV)]** Estée Lauder discloses data breach tied to Oracle E-Business Suite attacks
-    first report 2026-07-13 (ClassAction.org) · last 2026-08-02 · 19 articles / 18 outlets
+    first report 2026-07-13 (ClassAction.org) · last 2026-08-02 · 19 articles / 17 outlets
     status: CISA KEV CVE-2025-61882 (added 2025-10-06)
     · ClassAction.org: https://news.google.com/rss/articles/CBMijgFBVV95cUxNUk1ISTd1SHp4cUNDX0RoLW01YWpHZEdSSng3OTUxRnBfdmtsTmxYOTdXZzUyS2NyQjQ5Ukk5MGhzLWFmd0JJQkpheW1SdG05WlRuNDBES3dLWUdlYlNrd0hCdkVlSWlLdVozUjlKQTlLclJZUHdyb1h1ZVRFV0xyb1VDN0lUR2hzaHR2dEd3?oc=5
     · bleepingcomputer.com: https://news.google.com/rss/articles/CBMirgFBVV95cUxORDNoUVl0bkp0M3F1RXlGZnB3RndTZFFYXzk1Y0N1bGM0X25sTEJ6N1Q4Z0xNMXF0T2dWUS1NWnF1LWdHLXBpUzV6TkNGTVNRMmJfeUlEdzRtTTY0RlpfMFlmdmxnNm9mdDlSU0d2MV9kTnNTQVV4MnVzb1BveWZrS01SSURwdzBwaFNZQXp1VGVXMVV2eVpEd3lYY1d5bFExa1pXcTlZVnllN3hoQmfSAbMBQVVfeXFMT0syVExjZnotV1djLUJaZWVLWEEybWdUNjdzNjJSTVpEellGa19LS2NIQWg1U0xILTlLcUloVFgzTzBFWFdNd1lqUngxS0M0S2pRN1FKZ3M3emI5dkEwS09lN2phUDVVeWQxM3J3MHdKYmlVVW5vSG1NWERiRHZINkxnanE5Q19MOTc2U2JCeXM2ZVRIU25qZ2xxWTlZZlJOWlhmMUs5UGVHUzBXZ2szMTlzMkE?oc=5
@@ -184,12 +184,12 @@
 ## CVE watch: CVE-2026-35273
 
 ### Stories
-- **[CVE LINKED]** ShinyHunters Bypass WAF Rules to Resume Oracle PeopleSoft Attacks
-    first report 2026-09-26 (Hackread) · last 2026-09-27 · 5 articles / 4 outlets
+- **[CVE LINKED]** ShinyHunters uses WAF bypass trick in Oracle PeopleSoft attacks
+    first report 2026-09-26 (bleepingcomputer.com) · last 2026-09-27 · 5 articles / 5 outlets
     status: CVE CVE-2026-35273
     · BleepingComputer: https://www.bleepingcomputer.com/news/security/shinyhunters-uses-waf-bypass-trick-in-oracle-peoplesoft-attacks/
+    · bleepingcomputer.com: https://news.google.com/rss/articles/CBMisAFBVV95cUxOQmRDU1p5Q3ZIZUtiRUMzRi10ZWI0RjliZUV2aVB0TXF6YVJmdnhZY0w5azkwNTZ1djQzNVlsR3ZudFF2MkVzWHZOdkg2bjZUbVZNMTk0SUdpdXVvODRqa1NzU1hUS2p5bjYyd19qb21XaXE2LXM0a0M2ejV4Ynh3TlRGejR1Uk43TW1sUmpmSjJwZUN6eWM0cEVRMHlMcHczLV9vcDhtRVFvc21oUEpOZtIBtgFBVV95cUxNN2FkRGRYem5TWEZtcHdiOEJVbThpbWFBemVtbVBnSTczZmFZR2ktbEtsWlZQd2FTUk9TamtUa0ZReGZ6UXhCUnFENmVQVUVtcmJTVTJiaUJ0VnVhd3dpdGgtZXZmNEVRQ0pxYUJXSUtOOFMwQVBTMmlGMG9lLXZ5eVZmVmRqZUl3MkZGeVdTaS03dkJ2VE1CaXFlbmt4bHYzblprTnJjYU9xQ1UwT2ZDWkxSSElvQQ?oc=5
     · Hackread: https://news.google.com/rss/articles/CBMigwFBVV95cUxNSmpWMTd3LV9ZVGRLYU85RERacDVWTlZSSnpSNWNGSjg4ajZkVGM5VlpSQXhuV3lQajhCNGhHdm9jMDNqS29nMDk5VTNjRU9kYlFpTDlONWcxZ0pIdTYyQTU4b0JCVkNrTzZoX3VjZTQtb3NJV1BJYlNZSzJEVVRmRldKNA?oc=5
-    · BleepingComputer: https://news.google.com/rss/articles/CBMitgFBVV95cUxNN2FkRGRYem5TWEZtcHdiOEJVbThpbWFBemVtbVBnSTczZmFZR2ktbEtsWlZQd2FTUk9TamtUa0ZReGZ6UXhCUnFENmVQVUVtcmJTVTJiaUJ0VnVhd3dpdGgtZXZmNEVRQ0pxYUJXSUtOOFMwQVBTMmlGMG9lLXZ5eVZmVmRqZUl3MkZGeVdTaS03dkJ2VE1CaXFlbmt4bHYzblprTnJjYU9xQ1UwT2ZDWkxSSElvQdIBtgFBVV95cUxNN2FkRGRYem5TWEZtcHdiOEJVbThpbWFBemVtbVBnSTczZmFZR2ktbEtsWlZQd2FTUk9TamtUa0ZReGZ6UXhCUnFENmVQVUVtcmJTVTJiaUJ0VnVhd3dpdGgtZXZmNEVRQ0pxYUJXSUtOOFMwQVBTMmlGMG9lLXZ5eVZmVmRqZUl3MkZGeVdTaS03dkJ2VE1CaXFlbmt4bHYzblprTnJjYU9xQ1UwT2ZDWkxSSElvQQ?oc=5
 
 ### Also mentioned (product not in headline)
 - 2026-09-26  Attackers Bypass WAFs to Exploit Oracle PeopleSoft Flaw and Deploy Web Shells (The Hacker News)

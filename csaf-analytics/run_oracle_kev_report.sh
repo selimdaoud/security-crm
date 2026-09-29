@@ -5,7 +5,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LEDGER_DIR="$SCRIPT_DIR/var/oracle-kev"
-PUBLISH_DIR="/var/www/html/security-crm/kev-reports"
+PUBLISH_DIR="/var/www/itx0/security-crm/kev-reports"
 
 mkdir -p "$LEDGER_DIR" "$PUBLISH_DIR"
 
@@ -24,4 +24,5 @@ python3 oracle_kev_report.py \
 # alongside the other runtime data rather than in the source checkout.
 python3 osint/product_watch.py \
   --db "$LEDGER_DIR/product_watch.db" \
-  --out "$PUBLISH_DIR"
+  --out "$PUBLISH_DIR" \
+  --full
